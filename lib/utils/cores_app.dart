@@ -5,4 +5,6 @@ class CoresApp {
   static const branco = Colors.white;
   static const vinho = Color(0xFFa22628);
   static const verdeClaro = Color(0xFF3a8a14);
+  static const cinzaClaro = Color(0xFFd1d1d1);
+  static const grafite = Color(0xFF41424C);
 }
