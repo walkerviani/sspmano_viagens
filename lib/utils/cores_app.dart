@@ -8,4 +8,5 @@ class CoresApp {
   static const verdeClaro = Color(0xFF3a8a14);
   static const cinzaClaro = Color(0xFFd1d1d1);
   static const grafite = Color(0xFF41424C);
+  static const laranja = Color(0xFFd66104);
 }
