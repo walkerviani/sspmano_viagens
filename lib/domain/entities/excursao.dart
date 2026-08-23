@@ -4,6 +4,7 @@ class Excursao {
   String nome;
   DateTime dataHora;  
   String telefone;
+  int idStatus;
 
   // Construtor
   Excursao(
@@ -11,6 +12,7 @@ class Excursao {
     this.nome,
     this.dataHora,
     this.telefone,
+    {this.idStatus = 1} // 1 - Em Aberto
   );
 
   // Getters
@@ -23,6 +25,7 @@ class Excursao {
       'nome': nome,
       'dataHora': dataHora.toIso8601String(),
       'telefone': telefone,
+      'idStatus': idStatus,
     };
   }
   factory Excursao.fromJson(Map<String, dynamic> json) {
@@ -31,6 +34,7 @@ class Excursao {
       json['nome'] as String,
       DateTime.parse(json['dataHora'] as String),
       json['telefone'] as String,
+      idStatus: json['idStatus'] as int,
     );
   }
 }

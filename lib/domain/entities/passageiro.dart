@@ -4,8 +4,8 @@ class Passageiro {
   final int? _idExcursao;
   final int? _idPessoa;
   int numeroAssento;
-  final int _idStatusAssento;
-  final int _idStatusPagamento;
+  int idStatusAssento;
+  int idStatusPagamento;
 
   // Construtor
   Passageiro(
@@ -13,16 +13,16 @@ class Passageiro {
     this._idExcursao,
     this._idPessoa,
     this.numeroAssento,
-    this._idStatusAssento,
-    this._idStatusPagamento,
+    {
+    this.idStatusAssento = 1,
+    this.idStatusPagamento = 1,
+    }
   );
 
   // Getters
   int? get id => _id;
   int? get idExcursao => _idExcursao;
   int? get idPessoa => _idPessoa;
-  int get idStatusAssento => _idStatusAssento;
-  int get idStatusPagamento => _idStatusPagamento;
 
   // Json
   Map<String, dynamic> toJson() {
@@ -31,8 +31,8 @@ class Passageiro {
       'idExcursao': _idExcursao,
       'idPessoa': _idPessoa,
       'numeroAssento': numeroAssento,
-      'idStatusAssento': _idStatusAssento,
-      'idStatusPagamento': _idStatusPagamento,
+      'idStatusAssento': idStatusAssento,
+      'idStatusPagamento': idStatusPagamento,
     };
   }
   factory Passageiro.fromJson(Map<String, dynamic> json) {
@@ -41,8 +41,8 @@ class Passageiro {
       json['idExcursao'] as int?,
       json['idPessoa'] as int?,
       json['numeroAssento'] as int,
-      json['idStatusAssento'] as int,
-      json['idStatusPagamento'] as int,
+      idStatusAssento: json['idStatusAssento'] as int,
+      idStatusPagamento: json['idStatusPagamento'] as int,
     );
   }
 }
