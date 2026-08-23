@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sspmano_viagens/presentation/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 void main() {
@@ -13,113 +14,127 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: CoresApp.vermelho,
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: 'SSPMANO',
-                  style: GoogleFonts.poppins(
-                    color: CoresApp.branco,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-                TextSpan(text: ' '), // Espaço entre textos
-                TextSpan(
-                  text: 'Viagens',
-                  style: GoogleFonts.poppins(
-                    color: CoresApp.branco,
-                    fontSize: 28,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          foregroundColor: CoresApp.branco,
-        ),
-        body: Container(
-          padding: EdgeInsets.all(12),
-          child: Column(
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CoresApp.vermelho,
+        title: Text.rich(
+          TextSpan(
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CoresApp.vinho,
-                  foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.person, size: 40),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Pessoas',
-                      style: GoogleFonts.poppins(
-                        color: CoresApp.branco,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
+              TextSpan(
+                text: 'SSPMANO',
+                style: GoogleFonts.poppins(
+                  color: CoresApp.branco,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                 ),
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CoresApp.vinho,
-                  foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.directions_bus, size: 40),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Excursões',
-                      style: GoogleFonts.poppins(
-                        color: CoresApp.branco,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CoresApp.vinho,
-                  foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.content_paste, size: 40),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Relatório da excursão',
-                      style: GoogleFonts.poppins(
-                        color: CoresApp.branco,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
+              TextSpan(text: ' '), // Espaço entre textos
+              TextSpan(
+                text: 'Viagens',
+                style: GoogleFonts.poppins(
+                  color: CoresApp.branco,
+                  fontSize: 28,
                 ),
               ),
             ],
           ),
+        ),
+        foregroundColor: CoresApp.branco,
+      ),
+      body: Container(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => PessoasListScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CoresApp.vinho,
+                foregroundColor: CoresApp.branco,
+                minimumSize: Size(double.infinity, 70),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.person, size: 40),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Pessoas',
+                    style: GoogleFonts.poppins(
+                      color: CoresApp.branco,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CoresApp.vinho,
+                foregroundColor: CoresApp.branco,
+                minimumSize: Size(double.infinity, 70),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.directions_bus, size: 40),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Excursões',
+                    style: GoogleFonts.poppins(
+                      color: CoresApp.branco,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CoresApp.vinho,
+                foregroundColor: CoresApp.branco,
+                minimumSize: Size(double.infinity, 70),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.content_paste, size: 40),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Relatório da excursão',
+                    style: GoogleFonts.poppins(
+                      color: CoresApp.branco,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
