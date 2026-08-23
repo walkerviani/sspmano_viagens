@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sspmano_viagens/presentation/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
@@ -86,7 +87,12 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => ExcursoesListScreen()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.vinho,
                 foregroundColor: CoresApp.branco,
