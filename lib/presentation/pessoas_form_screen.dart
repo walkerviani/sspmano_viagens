@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
@@ -41,6 +42,11 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Nome',
+                  labelText: 'Nome',
+                  floatingLabelStyle: TextStyle(color: Colors.black),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -55,6 +61,11 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'CPF',
+                  labelText: 'CPF',
+                  floatingLabelStyle: TextStyle(color: Colors.black),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -70,8 +81,14 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Telefone',
+                  labelText: 'Telefone',
+                  floatingLabelStyle: TextStyle(color: Colors.black),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               const SizedBox(height: 10),
               ElevatedButton(
