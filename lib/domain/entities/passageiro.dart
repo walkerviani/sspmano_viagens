@@ -5,19 +5,17 @@ class Passageiro {
   final int? _idPessoa;
   int numeroAssento;
   int idStatusAssento;
-  int idStatusPagamento;
+  bool foiPago;
 
   // Construtor
   Passageiro(
     this._id,
     this._idExcursao,
     this._idPessoa,
-    this.numeroAssento,
-    {
+    this.numeroAssento, {
     this.idStatusAssento = 1,
-    this.idStatusPagamento = 1,
-    }
-  );
+    this.foiPago = false,
+  });
 
   // Getters
   int? get id => _id;
@@ -32,9 +30,10 @@ class Passageiro {
       'idPessoa': _idPessoa,
       'numeroAssento': numeroAssento,
       'idStatusAssento': idStatusAssento,
-      'idStatusPagamento': idStatusPagamento,
+      'foiPago': foiPago,
     };
   }
+
   factory Passageiro.fromJson(Map<String, dynamic> json) {
     return Passageiro(
       json['id'] as int?,
@@ -42,7 +41,7 @@ class Passageiro {
       json['idPessoa'] as int?,
       json['numeroAssento'] as int,
       idStatusAssento: json['idStatusAssento'] as int,
-      idStatusPagamento: json['idStatusPagamento'] as int,
+      foiPago: json['foiPago'] as bool,
     );
   }
 }
