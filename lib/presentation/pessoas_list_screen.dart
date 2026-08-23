@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sspmano_viagens/presentation/pessoas_form_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class PessoasListScreen extends StatefulWidget {
@@ -23,7 +24,14 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PessoasFormScreen(modoEdicao: false),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.verdeClaro,
                 foregroundColor: CoresApp.branco,
