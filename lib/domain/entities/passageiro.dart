@@ -1,7 +1,7 @@
 class Passageiro {
   // Atributos
   final int? _id;
-  final int? _idExcursao;
+  final int _idExcursao;
   final int? _idPessoa;
   int numeroAssento;
   int idStatusAssento;
@@ -19,7 +19,7 @@ class Passageiro {
 
   // Getters
   int? get id => _id;
-  int? get idExcursao => _idExcursao;
+  int get idExcursao => _idExcursao;
   int? get idPessoa => _idPessoa;
 
   // Json
@@ -37,7 +37,7 @@ class Passageiro {
   factory Passageiro.fromJson(Map<String, dynamic> json) {
     return Passageiro(
       json['id'] as int?,
-      json['idExcursao'] as int?,
+      json['idExcursao'] as int,
       json['idPessoa'] as int?,
       json['numeroAssento'] as int,
       idStatusAssento: json['idStatusAssento'] as int,
