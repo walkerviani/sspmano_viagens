@@ -46,7 +46,7 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   Future<void> atualizar(Passageiro passageiro) async {
     if (passageiro.id == null) {
       throw ArgumentError(
-        'Não é possível atualizar um item de empréstimo sem id',
+        'Não é possível atualizar um passageiro sem id',
       );
     }
     await (_database.update(_database.passageiros)..where((p) => p.id.equals(passageiro.id!))).write(passageiro.toCompanion());
@@ -75,6 +75,7 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
     }
 
     passageiro.idPessoa = pessoa.id;
+    passageiro.idStatusAssento = 2; // Ocupado
 
     await atualizar(passageiro);
 }
@@ -93,6 +94,7 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
 
     passageiro.idPessoa = null;
     passageiro.foiPago = false;
+    passageiro.idStatusAssento = 1; // Livre
 
     await atualizar(passageiro);
   }
