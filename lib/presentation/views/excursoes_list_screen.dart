@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sspmano_viagens/presentation/excursoes_form_screen.dart';
+import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class ExcursoesListScreen extends StatefulWidget {

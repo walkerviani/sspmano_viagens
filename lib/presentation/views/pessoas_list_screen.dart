@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sspmano_viagens/presentation/pessoas_form_screen.dart';
+import 'package:sspmano_viagens/presentation/views/pessoas_form_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class PessoasListScreen extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sspmano_viagens/presentation/excursoes_list_screen.dart';
-import 'package:sspmano_viagens/presentation/pessoas_list_screen.dart';
+import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
+import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
