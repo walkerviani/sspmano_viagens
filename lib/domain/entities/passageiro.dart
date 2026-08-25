@@ -2,7 +2,7 @@ class Passageiro {
   // Atributos
   final int? _id;
   final int _idExcursao;
-  final int? _idPessoa;
+  int? idPessoa;
   int numeroAssento;
   int idStatusAssento;
   bool foiPago;
@@ -11,7 +11,7 @@ class Passageiro {
   Passageiro(
     this._id,
     this._idExcursao,
-    this._idPessoa,
+    this.idPessoa,
     this.numeroAssento, {
     this.idStatusAssento = 1,
     this.foiPago = false,
@@ -20,14 +20,13 @@ class Passageiro {
   // Getters
   int? get id => _id;
   int get idExcursao => _idExcursao;
-  int? get idPessoa => _idPessoa;
 
   // Json
   Map<String, dynamic> toJson() {
     return {
       'id': _id,
       'idExcursao': _idExcursao,
-      'idPessoa': _idPessoa,
+      'idPessoa': idPessoa,
       'numeroAssento': numeroAssento,
       'idStatusAssento': idStatusAssento,
       'foiPago': foiPago,
