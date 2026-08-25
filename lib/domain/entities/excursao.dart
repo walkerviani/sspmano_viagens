@@ -3,7 +3,7 @@ class Excursao {
   final int? _id;
   String nome;
   DateTime dataHora;  
-  String telefone;
+  int qtdAssentos;
   int idStatus;
 
   // Construtor
@@ -11,7 +11,7 @@ class Excursao {
     this._id,
     this.nome,
     this.dataHora,
-    this.telefone,
+    this.qtdAssentos,
     {this.idStatus = 1} // 1 - Em Aberto
   );
 
@@ -24,7 +24,7 @@ class Excursao {
       'id': _id,
       'nome': nome,
       'dataHora': dataHora.toIso8601String(),
-      'telefone': telefone,
+      'telefone': qtdAssentos,
       'idStatus': idStatus,
     };
   }
@@ -33,7 +33,7 @@ class Excursao {
       json['id'] as int?,
       json['nome'] as String,
       DateTime.parse(json['dataHora'] as String),
-      json['telefone'] as String,
+      json['qtdAssentos'] as int,
       idStatus: json['idStatus'] as int,
     );
   }
