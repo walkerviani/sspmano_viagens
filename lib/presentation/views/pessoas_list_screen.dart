@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/pessoas_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_form_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
@@ -28,7 +31,12 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => PessoasFormScreen(modoEdicao: false),
+                    builder: (context) => ChangeNotifierProvider(
+                      create: (_) => PessoasFormViewmodel(
+                        context.read<PessoaRepository>(),
+                      ),
+                      child: PessoasFormScreen(null, false),
+                    ),
                   ),
                 );
               },

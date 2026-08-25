@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/data/database.dart';
+import 'package:sspmano_viagens/data/repositories/pessoa_repository_impl.dart';
+import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
-  runApp(const MyApp());
+  final database = AppDatabase();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<PessoaRepository>(
+          create: (_) => PessoaRepositoryImpl(database),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
