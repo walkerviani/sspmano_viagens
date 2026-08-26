@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/data/database.dart';
 import 'package:sspmano_viagens/data/repositories/pessoa_repository_impl.dart';
 import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
@@ -17,6 +18,10 @@ void main() {
       providers: [
         Provider<PessoaRepository>(
           create: (_) => PessoaRepositoryImpl(database),
+        ),
+        ChangeNotifierProvider<PessoasListViewmodel>(
+          create: ((context) =>
+              PessoasListViewmodel(context.read<PessoaRepository>())),
         ),
       ],
       child: const MyApp(),

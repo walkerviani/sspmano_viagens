@@ -28,7 +28,9 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
     _telefoneController = TextEditingController();
 
     if (widget.pessoaId != null) {
-      _carregarDados();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _carregarDados();
+      });
     }
   }
 
