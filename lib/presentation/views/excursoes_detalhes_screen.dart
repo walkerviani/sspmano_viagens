@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
+import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class ExcursoesDetalhesScreen extends StatefulWidget {
@@ -83,7 +84,14 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
         const SizedBox(height: 10),
 
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VeiculoListScreen(widget.excursaoId),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: CoresApp.azulPetroleo,
             foregroundColor: CoresApp.branco,
