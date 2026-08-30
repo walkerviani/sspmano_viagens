@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class ExcursoesFormScreen extends StatefulWidget {
+  final int? excursaoId;
   final bool modoEdicao;
-  const ExcursoesFormScreen({super.key, required this.modoEdicao});
+
+  const ExcursoesFormScreen({
+    super.key,
+    this.excursaoId,
+    required this.modoEdicao,
+  });
 
   @override
   State<StatefulWidget> createState() => _ExcursoesFormScreenState();
@@ -14,13 +21,77 @@ class ExcursoesFormScreen extends StatefulWidget {
 
 class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _dataController = TextEditingController();
-  final TextEditingController _horaController = TextEditingController();
+  late final TextEditingController _nomeController;
+  late final TextEditingController _dataController;
+  late final TextEditingController _horaController;
+
+  DateTime? _dataSelecionada;
+  TimeOfDay? _horaSelecionada;
+
+  @override
+  void initState() {
+    super.initState();
+    _nomeController = TextEditingController();
+    _dataController = TextEditingController();
+    _horaController = TextEditingController();
+
+    if (widget.excursaoId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _carregarDados();
+      });
+    }
+  }
+
+  Future<void> _carregarDados() async {
+    final viewmodel = context.read<ExcursoesFormViewmodel>();
+    await viewmodel.carregarExcursao(widget.excursaoId!);
+    if (!mounted) return;
+
+    final dataHora = viewmodel.excursao!.dataHora;
+    _dataSelecionada = DateTime(dataHora.year, dataHora.month, dataHora.day);
+    _horaSelecionada = TimeOfDay(hour: dataHora.hour, minute: dataHora.minute);
+    _dataController.text = _formatarData(_dataSelecionada!);
+    _horaController.text = _horaSelecionada!.format(context);
+  }
+
+  Future<void> _salvar() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final viewmodel = context.read<ExcursoesFormViewmodel>();
+
+    final nome = _nomeController.text.trim();
+
+    final sucesso = await viewmodel.salvarExcursao(
+      id: widget.excursaoId,
+      nome: nome,
+      data: _dataSelecionada!,
+      hora: _horaSelecionada!,
+      qntAssentos: 0,
+      idStatus: 1,
+    );
+    if (!mounted) return;
+
+    if (sucesso) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            viewmodel.mensagemErro ?? 'Houve algum erro desconhecido',
+            style: GoogleFonts.poppins(color: CoresApp.branco),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   Future<void> _selecionarData(BuildContext context) async {
     final DateTime? selecionado = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: _dataSelecionada ?? DateTime.now(),
       firstDate: DateTime(DateTime.now().year - 5),
       lastDate: DateTime(DateTime.now().year + 5),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -37,6 +108,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
     );
     if (selecionado != null) {
       setState(() {
+        _dataSelecionada = selecionado;
         _dataController.text = _formatarData(selecionado);
       });
     }
@@ -45,7 +117,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
   Future<void> _selecionarHora(BuildContext context) async {
     final TimeOfDay? selecionado = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: _horaSelecionada ?? TimeOfDay.now(),
       initialEntryMode: TimePickerEntryMode.dialOnly,
       builder: (context, child) {
         return Theme(
@@ -77,6 +149,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
     );
     if (selecionado != null) {
       setState(() {
+        _horaSelecionada = selecionado;
         _horaController.text = selecionado.format(context);
       });
     }
@@ -87,7 +160,16 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
   }
 
   @override
+  void dispose() {
+    _nomeController.dispose();
+    _dataController.dispose();
+    _horaController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final viewmodel = context.watch<ExcursoesFormViewmodel>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -117,6 +199,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                   }
                   return null;
                 },
+                controller: _nomeController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
@@ -134,7 +217,9 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
               // Data do evento
               TextFormField(
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      _dataSelecionada == null) {
                     return 'A data não pode estar vazia';
                   }
                   return null;
@@ -159,7 +244,9 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
               // Hora do evento
               TextFormField(
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      _horaSelecionada == null) {
                     return 'A Hora não pode estar vazia';
                   }
                   return null;
@@ -182,51 +269,21 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
               const SizedBox(height: 10),
 
               ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CoresApp.azulPetroleo,
-                  foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.airport_shuttle, size: 40),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Adicionar veículo',
-                      style: GoogleFonts.poppins(
-                        color: CoresApp.branco,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              // Botão Salvar
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    return;
-                  }
-                },
+                onPressed: viewmodel.estaCarregando ? null : _salvar,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CoresApp.verdeClaro,
                   foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
+                  minimumSize: Size(double.infinity, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-                child: Text(
-                  widget.modoEdicao ? 'Editar' : 'Criar',
-                  style: GoogleFonts.poppins(fontSize: 20),
-                ),
+                child: viewmodel.estaCarregando
+                    ? const CircularProgressIndicator(color: CoresApp.grafite)
+                    : Text(
+                        widget.modoEdicao ? 'Editar' : 'Criar',
+                        style: GoogleFonts.poppins(fontSize: 20),
+                      ),
               ),
             ],
           ),
