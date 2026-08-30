@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/data/database.dart';
+import 'package:sspmano_viagens/data/repositories/excursao_repository_impl.dart';
 import 'package:sspmano_viagens/data/repositories/pessoa_repository_impl.dart';
+import 'package:sspmano_viagens/data/repositories/veiculo_repository_impl.dart';
+import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
+import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
@@ -19,9 +25,23 @@ void main() {
         Provider<PessoaRepository>(
           create: (_) => PessoaRepositoryImpl(database),
         ),
+        Provider<ExcursaoRepository>(
+          create: (_) => ExcursaoRepositoryImpl(database),
+        ),
+        Provider<VeiculoRepository>(
+          create: (_) => VeiculoRepositoryImpl(database),
+        ),
         ChangeNotifierProvider<PessoasListViewmodel>(
           create: ((context) =>
               PessoasListViewmodel(context.read<PessoaRepository>())),
+        ),
+        ChangeNotifierProvider<ExcursoesFormViewmodel>(
+          create: ((context) =>
+              ExcursoesFormViewmodel(context.read<ExcursaoRepository>())),
+        ),
+        ChangeNotifierProvider<ExcursoesListViewmodel>(
+          create: (context) =>
+              ExcursoesListViewmodel(context.read<ExcursaoRepository>()),
         ),
       ],
       child: const MyApp(),
