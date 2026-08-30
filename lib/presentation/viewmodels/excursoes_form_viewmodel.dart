@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sspmano_viagens/domain/entities/excursao.dart';
+import 'package:sspmano_viagens/domain/entities/veiculo.dart';
 import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
 
 class ExcursoesFormViewmodel extends ChangeNotifier {
@@ -9,6 +10,7 @@ class ExcursoesFormViewmodel extends ChangeNotifier {
   bool estaCarregando = false;
   String? mensagemErro;
   Excursao? excursao;
+  List<Veiculo> veiculos = [];
 
   Future<void> carregarExcursao(int id) async {
     mensagemErro = null;
@@ -43,15 +45,10 @@ class ExcursoesFormViewmodel extends ChangeNotifier {
       mensagemErro = 'O Nome precisa ser menor que 100 caracteres';
       return false;
     }
-
-    if (qntAssentos == 0) {
-      mensagemErro = 'É preciso adicionar pelo menos um veículo';
-      return false;
-    }
     DateTime dataHora = DateTime(
-      data.day,
-      data.month,
       data.year,
+      data.month,
+      data.day,
       hora.minute,
       hora.hour,
     );
