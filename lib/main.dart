@@ -11,6 +11,8 @@ import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/veiculo_form_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/veiculo_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
@@ -42,6 +44,14 @@ void main() {
         ChangeNotifierProvider<ExcursoesListViewmodel>(
           create: (context) =>
               ExcursoesListViewmodel(context.read<ExcursaoRepository>()),
+        ),
+        ChangeNotifierProvider<VeiculoFormViewmodel>(
+          create: (context) =>
+              VeiculoFormViewmodel(context.read<VeiculoRepository>()),
+        ),
+        ChangeNotifierProvider<VeiculoListViewmodel>(
+          create: (context) =>
+              VeiculoListViewmodel(context.read<VeiculoRepository>()),
         ),
       ],
       child: const MyApp(),
