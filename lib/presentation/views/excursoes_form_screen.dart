@@ -47,6 +47,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
     await viewmodel.carregarExcursao(widget.excursaoId!);
     if (!mounted) return;
 
+    _nomeController.text = viewmodel.excursao!.nome;
     final dataHora = viewmodel.excursao!.dataHora;
     _dataSelecionada = DateTime(dataHora.year, dataHora.month, dataHora.day);
     _horaSelecionada = TimeOfDay(hour: dataHora.hour, minute: dataHora.minute);

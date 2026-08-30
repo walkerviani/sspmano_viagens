@@ -129,7 +129,10 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ExcursoesDetalhesScreen(statusFinalizado: false),
+              builder: (_) => ExcursoesDetalhesScreen(
+                excursao.id!,
+                statusFinalizado: false,
+              ),
             ),
           );
         },

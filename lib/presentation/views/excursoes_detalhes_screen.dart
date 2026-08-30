@@ -1,16 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
+import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
+import 'package:sspmano_viagens/presentation/views/veiculo_selecionar_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class ExcursoesDetalhesScreen extends StatefulWidget {
+  final int excursaoId;
   final bool statusFinalizado;
-  const ExcursoesDetalhesScreen({super.key, required this.statusFinalizado});
+  const ExcursoesDetalhesScreen(
+    this.excursaoId, {
+    super.key,
+    required this.statusFinalizado,
+  });
 
   @override
   State<StatefulWidget> createState() => _ExcursoesDetalhesScreenState();
 }
 
 class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
+  void _abrirFormulario(int id, bool modoEdicao) async {
+    final viewmodel = context.read<ExcursoesListViewmodel>();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            ExcursoesFormScreen(excursaoId: id, modoEdicao: modoEdicao),
+      ),
+    );
+    if (!mounted) return;
+    viewmodel.carregarExcursoes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +58,16 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VeiculoSelecionarScreen(widget.excursaoId),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.vinho,
+            backgroundColor: CoresApp.azulPetroleo,
             foregroundColor: CoresApp.branco,
             minimumSize: Size(double.infinity, 70),
             shape: RoundedRectangleBorder(
@@ -62,9 +92,16 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
         const SizedBox(height: 10),
 
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VeiculoListScreen(widget.excursaoId),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.vinho,
+            backgroundColor: CoresApp.azulPetroleo,
             foregroundColor: CoresApp.branco,
             minimumSize: Size(double.infinity, 70),
             shape: RoundedRectangleBorder(
@@ -76,7 +113,7 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
               Icon(Icons.airport_shuttle, size: 40),
               const SizedBox(width: 10),
               Text(
-                'Alterar assentos',
+                'Gerenciar veículos',
                 style: GoogleFonts.poppins(
                   color: CoresApp.branco,
                   fontSize: 20,
@@ -91,7 +128,7 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
         ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.vinho,
+            backgroundColor: CoresApp.azulPetroleo,
             foregroundColor: CoresApp.branco,
             minimumSize: Size(double.infinity, 70),
             shape: RoundedRectangleBorder(
@@ -116,9 +153,9 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
         const SizedBox(height: 10),
 
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () => _abrirFormulario(widget.excursaoId, true),
           style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.vinho,
+            backgroundColor: CoresApp.azulPetroleo,
             foregroundColor: CoresApp.branco,
             minimumSize: Size(double.infinity, 70),
             shape: RoundedRectangleBorder(
