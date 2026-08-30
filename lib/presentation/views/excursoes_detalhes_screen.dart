@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
+import 'package:sspmano_viagens/presentation/views/veiculo_selecionar_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class ExcursoesDetalhesScreen extends StatefulWidget {
@@ -57,7 +58,14 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VeiculoSelecionarScreen(widget.excursaoId),
+              ),
+            );
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: CoresApp.azulPetroleo,
             foregroundColor: CoresApp.branco,
