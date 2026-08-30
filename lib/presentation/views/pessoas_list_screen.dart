@@ -168,25 +168,30 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
   Widget _cardPessoa(Pessoa pessoa) {
     return Card(
       key: ValueKey(pessoa.id),
+      color: CoresApp.cinzaGrafite,
       child: ListTile(
         title: Text(
-          pessoa.nome,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+          pessoa.nome.toUpperCase(),
+          style: GoogleFonts.poppins(
+            color: CoresApp.branco,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         subtitle: Text(
-          '${pessoa.cpf}\n${pessoa.telefone}',
-          style: GoogleFonts.poppins(fontSize: 17),
+          'CPF: ${pessoa.cpf}\nTel: ${pessoa.telefone}',
+          style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 17),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
               onPressed: () => _abrirFormulario(pessoa.id, true),
-              icon: const Icon(Icons.edit),
+              icon: const Icon(Icons.edit, color: CoresApp.branco),
             ),
             IconButton(
               onPressed: () => _confirmarExcluir(pessoa),
-              icon: const Icon(Icons.delete),
+              icon: const Icon(Icons.delete, color: CoresApp.branco),
             ),
           ],
         ),
