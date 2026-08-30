@@ -92,8 +92,10 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
                         'Nenhuma excursão encontrada',
                         style: GoogleFonts.poppins(
                           color: CoresApp.grafite,
+                          fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     );
                   }
