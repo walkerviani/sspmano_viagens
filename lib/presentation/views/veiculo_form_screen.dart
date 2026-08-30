@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_form_viewmodel.dart';
@@ -103,7 +104,6 @@ class _VeiculoFormScreenState extends State<VeiculoFormScreen> {
                   return null;
                 },
                 controller: _capacidadeController,
-                maxLength: 11,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
@@ -115,6 +115,7 @@ class _VeiculoFormScreenState extends State<VeiculoFormScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
 
               const SizedBox(height: 10),
