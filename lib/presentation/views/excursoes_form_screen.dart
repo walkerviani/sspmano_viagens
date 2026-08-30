@@ -60,10 +60,10 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                 if (states.contains(WidgetState.selected)) {
                   return CoresApp.vinho;
                 }
-                return CoresApp.grafite;
+                return Colors.blueGrey;
               })),
               dialTextColor: CoresApp.branco,
-              dialBackgroundColor: CoresApp.grafite,
+              dialBackgroundColor: Colors.blueGrey,
               hourMinuteTextColor: CoresApp.branco,
               dialHandColor: CoresApp.vinho,
             ),
@@ -107,6 +107,12 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'O nome não pode estar vazio';
+                  }
+                  if (value.trim().length > 100) {
+                    return 'O Nome precisa ser menor que 100 caracteres';
+                  }
+                  if (value.trim().length < 3) {
+                    return 'O nome precisa ter mais que 3 caracteres';
                   }
                   return null;
                 },
@@ -163,29 +169,6 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                   alignLabelWithHint: true,
                   hintText: 'Hora do evento',
                   labelText: 'Hora do evento',
-                  floatingLabelStyle: TextStyle(color: Colors.black),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'A quantidade não pode estar vazia';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  alignLabelWithHint: true,
-                  hintText: 'Quantidade de assentos',
-                  labelText: 'Quantidade de assentos',
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
