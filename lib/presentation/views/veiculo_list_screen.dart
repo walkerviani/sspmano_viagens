@@ -144,8 +144,10 @@ class _VeiculoListScreenState extends State<VeiculoListScreen> {
                         'Nenhum veículo encontrado',
                         style: GoogleFonts.poppins(
                           color: CoresApp.grafite,
+                          fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     );
                   }

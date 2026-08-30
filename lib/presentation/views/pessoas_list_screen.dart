@@ -146,8 +146,10 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
                         'Nenhuma pessoa encontrada',
                         style: GoogleFonts.poppins(
                           color: CoresApp.grafite,
+                          fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     );
                   }
