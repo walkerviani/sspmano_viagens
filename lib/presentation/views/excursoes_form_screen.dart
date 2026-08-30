@@ -103,6 +103,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
           key: _formKey,
           child: Column(
             children: [
+              // Nome do evento
               TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -130,6 +131,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
 
               const SizedBox(height: 10),
 
+              // Data do evento
               TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -154,6 +156,7 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
 
               const SizedBox(height: 10),
 
+              // Hora do evento
               TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -178,6 +181,34 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
 
               const SizedBox(height: 10),
 
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CoresApp.azulPetroleo,
+                  foregroundColor: CoresApp.branco,
+                  minimumSize: Size(double.infinity, 70),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.airport_shuttle, size: 40),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Adicionar veículo',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Botão Salvar
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
