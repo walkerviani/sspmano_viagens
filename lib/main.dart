@@ -92,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.vinho,
+                backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
                 minimumSize: Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
@@ -113,7 +113,9 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(height: 10),
+
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -122,7 +124,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.vinho,
+                backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
                 minimumSize: Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
@@ -143,11 +145,13 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(height: 10),
+
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.vinho,
+                backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
                 minimumSize: Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
