@@ -44,6 +44,10 @@ class ExcursoesFormViewmodel extends ChangeNotifier {
       return false;
     }
 
+    if (qntAssentos == 0) {
+      mensagemErro = 'É preciso adicionar pelo menos um veículo';
+      return false;
+    }
     DateTime dataHora = DateTime(
       data.day,
       data.month,
