@@ -6,7 +6,7 @@ extension PassageiroMapper on PassageiroData {
   Passageiro toEntity() {
     return Passageiro(
       id,
-      idExcursao,
+      idVeiculo,
       idPessoa,
       numeroAssento,
       idStatusAssento: idStatusAssento,
@@ -19,7 +19,7 @@ extension PassageiroCompanionMapper on Passageiro {
   PassageirosCompanion toCompanion() {
     return PassageirosCompanion.insert(
       id: id != null ? Value(id!) : const Value.absent(),
-      idExcursao: idExcursao,
+      idVeiculo: idVeiculo,
       idPessoa: idPessoa != null ? Value(idPessoa!) : const Value.absent(),
       numeroAssento: numeroAssento,
       idStatusAssento: idStatusAssento,

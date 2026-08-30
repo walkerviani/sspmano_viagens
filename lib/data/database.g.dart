@@ -651,12 +651,12 @@ class PessoasCompanion extends UpdateCompanion<PessoaData> {
   }
 }
 
-class $PassageirosTable extends Passageiros
-    with TableInfo<$PassageirosTable, PassageiroData> {
+class $VeiculosTable extends Veiculos
+    with TableInfo<$VeiculosTable, VeiculoData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PassageirosTable(this.attachedDatabase, [this._alias]);
+  $VeiculosTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -677,11 +677,273 @@ class $PassageirosTable extends Passageiros
   late final GeneratedColumn<int> idExcursao = GeneratedColumn<int>(
     'id_excursao',
     aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES excursoes (id)',
+    ),
+  );
+  static const VerificationMeta _capacidadeMeta = const VerificationMeta(
+    'capacidade',
+  );
+  @override
+  late final GeneratedColumn<int> capacidade = GeneratedColumn<int>(
+    'capacidade',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, idExcursao, capacidade];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'veiculos';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<VeiculoData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('id_excursao')) {
+      context.handle(
+        _idExcursaoMeta,
+        idExcursao.isAcceptableOrUnknown(data['id_excursao']!, _idExcursaoMeta),
+      );
+    }
+    if (data.containsKey('capacidade')) {
+      context.handle(
+        _capacidadeMeta,
+        capacidade.isAcceptableOrUnknown(data['capacidade']!, _capacidadeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_capacidadeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  VeiculoData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return VeiculoData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      idExcursao: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id_excursao'],
+      ),
+      capacidade: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}capacidade'],
+      )!,
+    );
+  }
+
+  @override
+  $VeiculosTable createAlias(String alias) {
+    return $VeiculosTable(attachedDatabase, alias);
+  }
+}
+
+class VeiculoData extends DataClass implements Insertable<VeiculoData> {
+  final int id;
+  final int? idExcursao;
+  final int capacidade;
+  const VeiculoData({
+    required this.id,
+    this.idExcursao,
+    required this.capacidade,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || idExcursao != null) {
+      map['id_excursao'] = Variable<int>(idExcursao);
+    }
+    map['capacidade'] = Variable<int>(capacidade);
+    return map;
+  }
+
+  VeiculosCompanion toCompanion(bool nullToAbsent) {
+    return VeiculosCompanion(
+      id: Value(id),
+      idExcursao: idExcursao == null && nullToAbsent
+          ? const Value.absent()
+          : Value(idExcursao),
+      capacidade: Value(capacidade),
+    );
+  }
+
+  factory VeiculoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return VeiculoData(
+      id: serializer.fromJson<int>(json['id']),
+      idExcursao: serializer.fromJson<int?>(json['idExcursao']),
+      capacidade: serializer.fromJson<int>(json['capacidade']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'idExcursao': serializer.toJson<int?>(idExcursao),
+      'capacidade': serializer.toJson<int>(capacidade),
+    };
+  }
+
+  VeiculoData copyWith({
+    int? id,
+    Value<int?> idExcursao = const Value.absent(),
+    int? capacidade,
+  }) => VeiculoData(
+    id: id ?? this.id,
+    idExcursao: idExcursao.present ? idExcursao.value : this.idExcursao,
+    capacidade: capacidade ?? this.capacidade,
+  );
+  VeiculoData copyWithCompanion(VeiculosCompanion data) {
+    return VeiculoData(
+      id: data.id.present ? data.id.value : this.id,
+      idExcursao: data.idExcursao.present
+          ? data.idExcursao.value
+          : this.idExcursao,
+      capacidade: data.capacidade.present
+          ? data.capacidade.value
+          : this.capacidade,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('VeiculoData(')
+          ..write('id: $id, ')
+          ..write('idExcursao: $idExcursao, ')
+          ..write('capacidade: $capacidade')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, idExcursao, capacidade);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is VeiculoData &&
+          other.id == this.id &&
+          other.idExcursao == this.idExcursao &&
+          other.capacidade == this.capacidade);
+}
+
+class VeiculosCompanion extends UpdateCompanion<VeiculoData> {
+  final Value<int> id;
+  final Value<int?> idExcursao;
+  final Value<int> capacidade;
+  const VeiculosCompanion({
+    this.id = const Value.absent(),
+    this.idExcursao = const Value.absent(),
+    this.capacidade = const Value.absent(),
+  });
+  VeiculosCompanion.insert({
+    this.id = const Value.absent(),
+    this.idExcursao = const Value.absent(),
+    required int capacidade,
+  }) : capacidade = Value(capacidade);
+  static Insertable<VeiculoData> custom({
+    Expression<int>? id,
+    Expression<int>? idExcursao,
+    Expression<int>? capacidade,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (idExcursao != null) 'id_excursao': idExcursao,
+      if (capacidade != null) 'capacidade': capacidade,
+    });
+  }
+
+  VeiculosCompanion copyWith({
+    Value<int>? id,
+    Value<int?>? idExcursao,
+    Value<int>? capacidade,
+  }) {
+    return VeiculosCompanion(
+      id: id ?? this.id,
+      idExcursao: idExcursao ?? this.idExcursao,
+      capacidade: capacidade ?? this.capacidade,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (idExcursao.present) {
+      map['id_excursao'] = Variable<int>(idExcursao.value);
+    }
+    if (capacidade.present) {
+      map['capacidade'] = Variable<int>(capacidade.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('VeiculosCompanion(')
+          ..write('id: $id, ')
+          ..write('idExcursao: $idExcursao, ')
+          ..write('capacidade: $capacidade')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PassageirosTable extends Passageiros
+    with TableInfo<$PassageirosTable, PassageiroData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PassageirosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _idVeiculoMeta = const VerificationMeta(
+    'idVeiculo',
+  );
+  @override
+  late final GeneratedColumn<int> idVeiculo = GeneratedColumn<int>(
+    'id_veiculo',
+    aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES excursoes (id)',
+      'REFERENCES veiculos (id)',
     ),
   );
   static const VerificationMeta _idPessoaMeta = const VerificationMeta(
@@ -737,7 +999,7 @@ class $PassageirosTable extends Passageiros
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    idExcursao,
+    idVeiculo,
     idPessoa,
     numeroAssento,
     idStatusAssento,
@@ -758,13 +1020,13 @@ class $PassageirosTable extends Passageiros
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('id_excursao')) {
+    if (data.containsKey('id_veiculo')) {
       context.handle(
-        _idExcursaoMeta,
-        idExcursao.isAcceptableOrUnknown(data['id_excursao']!, _idExcursaoMeta),
+        _idVeiculoMeta,
+        idVeiculo.isAcceptableOrUnknown(data['id_veiculo']!, _idVeiculoMeta),
       );
     } else if (isInserting) {
-      context.missing(_idExcursaoMeta);
+      context.missing(_idVeiculoMeta);
     }
     if (data.containsKey('id_pessoa')) {
       context.handle(
@@ -815,9 +1077,9 @@ class $PassageirosTable extends Passageiros
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      idExcursao: attachedDatabase.typeMapping.read(
+      idVeiculo: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}id_excursao'],
+        data['${effectivePrefix}id_veiculo'],
       )!,
       idPessoa: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -846,14 +1108,14 @@ class $PassageirosTable extends Passageiros
 
 class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   final int id;
-  final int idExcursao;
+  final int idVeiculo;
   final int? idPessoa;
   final int numeroAssento;
   final int idStatusAssento;
   final bool foiPago;
   const PassageiroData({
     required this.id,
-    required this.idExcursao,
+    required this.idVeiculo,
     this.idPessoa,
     required this.numeroAssento,
     required this.idStatusAssento,
@@ -863,7 +1125,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['id_excursao'] = Variable<int>(idExcursao);
+    map['id_veiculo'] = Variable<int>(idVeiculo);
     if (!nullToAbsent || idPessoa != null) {
       map['id_pessoa'] = Variable<int>(idPessoa);
     }
@@ -876,7 +1138,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   PassageirosCompanion toCompanion(bool nullToAbsent) {
     return PassageirosCompanion(
       id: Value(id),
-      idExcursao: Value(idExcursao),
+      idVeiculo: Value(idVeiculo),
       idPessoa: idPessoa == null && nullToAbsent
           ? const Value.absent()
           : Value(idPessoa),
@@ -893,7 +1155,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PassageiroData(
       id: serializer.fromJson<int>(json['id']),
-      idExcursao: serializer.fromJson<int>(json['idExcursao']),
+      idVeiculo: serializer.fromJson<int>(json['idVeiculo']),
       idPessoa: serializer.fromJson<int?>(json['idPessoa']),
       numeroAssento: serializer.fromJson<int>(json['numeroAssento']),
       idStatusAssento: serializer.fromJson<int>(json['idStatusAssento']),
@@ -905,7 +1167,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'idExcursao': serializer.toJson<int>(idExcursao),
+      'idVeiculo': serializer.toJson<int>(idVeiculo),
       'idPessoa': serializer.toJson<int?>(idPessoa),
       'numeroAssento': serializer.toJson<int>(numeroAssento),
       'idStatusAssento': serializer.toJson<int>(idStatusAssento),
@@ -915,14 +1177,14 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
 
   PassageiroData copyWith({
     int? id,
-    int? idExcursao,
+    int? idVeiculo,
     Value<int?> idPessoa = const Value.absent(),
     int? numeroAssento,
     int? idStatusAssento,
     bool? foiPago,
   }) => PassageiroData(
     id: id ?? this.id,
-    idExcursao: idExcursao ?? this.idExcursao,
+    idVeiculo: idVeiculo ?? this.idVeiculo,
     idPessoa: idPessoa.present ? idPessoa.value : this.idPessoa,
     numeroAssento: numeroAssento ?? this.numeroAssento,
     idStatusAssento: idStatusAssento ?? this.idStatusAssento,
@@ -931,9 +1193,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   PassageiroData copyWithCompanion(PassageirosCompanion data) {
     return PassageiroData(
       id: data.id.present ? data.id.value : this.id,
-      idExcursao: data.idExcursao.present
-          ? data.idExcursao.value
-          : this.idExcursao,
+      idVeiculo: data.idVeiculo.present ? data.idVeiculo.value : this.idVeiculo,
       idPessoa: data.idPessoa.present ? data.idPessoa.value : this.idPessoa,
       numeroAssento: data.numeroAssento.present
           ? data.numeroAssento.value
@@ -949,7 +1209,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   String toString() {
     return (StringBuffer('PassageiroData(')
           ..write('id: $id, ')
-          ..write('idExcursao: $idExcursao, ')
+          ..write('idVeiculo: $idVeiculo, ')
           ..write('idPessoa: $idPessoa, ')
           ..write('numeroAssento: $numeroAssento, ')
           ..write('idStatusAssento: $idStatusAssento, ')
@@ -961,7 +1221,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   @override
   int get hashCode => Object.hash(
     id,
-    idExcursao,
+    idVeiculo,
     idPessoa,
     numeroAssento,
     idStatusAssento,
@@ -972,7 +1232,7 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
       identical(this, other) ||
       (other is PassageiroData &&
           other.id == this.id &&
-          other.idExcursao == this.idExcursao &&
+          other.idVeiculo == this.idVeiculo &&
           other.idPessoa == this.idPessoa &&
           other.numeroAssento == this.numeroAssento &&
           other.idStatusAssento == this.idStatusAssento &&
@@ -981,14 +1241,14 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
 
 class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
   final Value<int> id;
-  final Value<int> idExcursao;
+  final Value<int> idVeiculo;
   final Value<int?> idPessoa;
   final Value<int> numeroAssento;
   final Value<int> idStatusAssento;
   final Value<bool> foiPago;
   const PassageirosCompanion({
     this.id = const Value.absent(),
-    this.idExcursao = const Value.absent(),
+    this.idVeiculo = const Value.absent(),
     this.idPessoa = const Value.absent(),
     this.numeroAssento = const Value.absent(),
     this.idStatusAssento = const Value.absent(),
@@ -996,18 +1256,18 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
   });
   PassageirosCompanion.insert({
     this.id = const Value.absent(),
-    required int idExcursao,
+    required int idVeiculo,
     this.idPessoa = const Value.absent(),
     required int numeroAssento,
     required int idStatusAssento,
     required bool foiPago,
-  }) : idExcursao = Value(idExcursao),
+  }) : idVeiculo = Value(idVeiculo),
        numeroAssento = Value(numeroAssento),
        idStatusAssento = Value(idStatusAssento),
        foiPago = Value(foiPago);
   static Insertable<PassageiroData> custom({
     Expression<int>? id,
-    Expression<int>? idExcursao,
+    Expression<int>? idVeiculo,
     Expression<int>? idPessoa,
     Expression<int>? numeroAssento,
     Expression<int>? idStatusAssento,
@@ -1015,7 +1275,7 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (idExcursao != null) 'id_excursao': idExcursao,
+      if (idVeiculo != null) 'id_veiculo': idVeiculo,
       if (idPessoa != null) 'id_pessoa': idPessoa,
       if (numeroAssento != null) 'numero_assento': numeroAssento,
       if (idStatusAssento != null) 'id_status_assento': idStatusAssento,
@@ -1025,7 +1285,7 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
 
   PassageirosCompanion copyWith({
     Value<int>? id,
-    Value<int>? idExcursao,
+    Value<int>? idVeiculo,
     Value<int?>? idPessoa,
     Value<int>? numeroAssento,
     Value<int>? idStatusAssento,
@@ -1033,7 +1293,7 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
   }) {
     return PassageirosCompanion(
       id: id ?? this.id,
-      idExcursao: idExcursao ?? this.idExcursao,
+      idVeiculo: idVeiculo ?? this.idVeiculo,
       idPessoa: idPessoa ?? this.idPessoa,
       numeroAssento: numeroAssento ?? this.numeroAssento,
       idStatusAssento: idStatusAssento ?? this.idStatusAssento,
@@ -1047,8 +1307,8 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (idExcursao.present) {
-      map['id_excursao'] = Variable<int>(idExcursao.value);
+    if (idVeiculo.present) {
+      map['id_veiculo'] = Variable<int>(idVeiculo.value);
     }
     if (idPessoa.present) {
       map['id_pessoa'] = Variable<int>(idPessoa.value);
@@ -1069,7 +1329,7 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
   String toString() {
     return (StringBuffer('PassageirosCompanion(')
           ..write('id: $id, ')
-          ..write('idExcursao: $idExcursao, ')
+          ..write('idVeiculo: $idVeiculo, ')
           ..write('idPessoa: $idPessoa, ')
           ..write('numeroAssento: $numeroAssento, ')
           ..write('idStatusAssento: $idStatusAssento, ')
@@ -1084,6 +1344,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $ExcursoesTable excursoes = $ExcursoesTable(this);
   late final $PessoasTable pessoas = $PessoasTable(this);
+  late final $VeiculosTable veiculos = $VeiculosTable(this);
   late final $PassageirosTable passageiros = $PassageirosTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -1092,6 +1353,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     excursoes,
     pessoas,
+    veiculos,
     passageiros,
   ];
 }
@@ -1117,19 +1379,19 @@ final class $$ExcursoesTableReferences
     extends BaseReferences<_$AppDatabase, $ExcursoesTable, ExcursaoData> {
   $$ExcursoesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$PassageirosTable, List<PassageiroData>>
-  _passageirosRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.passageiros,
-    aliasName: 'excursoes__id__passageiros__id_excursao',
+  static MultiTypedResultKey<$VeiculosTable, List<VeiculoData>>
+  _veiculosRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.veiculos,
+    aliasName: 'excursoes__id__veiculos__id_excursao',
   );
 
-  $$PassageirosTableProcessedTableManager get passageirosRefs {
-    final manager = $$PassageirosTableTableManager(
+  $$VeiculosTableProcessedTableManager get veiculosRefs {
+    final manager = $$VeiculosTableTableManager(
       $_db,
-      $_db.passageiros,
+      $_db.veiculos,
     ).filter((f) => f.idExcursao.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_passageirosRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_veiculosRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -1170,22 +1432,22 @@ class $$ExcursoesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> passageirosRefs(
-    Expression<bool> Function($$PassageirosTableFilterComposer f) f,
+  Expression<bool> veiculosRefs(
+    Expression<bool> Function($$VeiculosTableFilterComposer f) f,
   ) {
-    final $$PassageirosTableFilterComposer composer = $composerBuilder(
+    final $$VeiculosTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.passageiros,
+      referencedTable: $db.veiculos,
       getReferencedColumn: (t) => t.idExcursao,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$PassageirosTableFilterComposer(
+          }) => $$VeiculosTableFilterComposer(
             $db: $db,
-            $table: $db.passageiros,
+            $table: $db.veiculos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1257,22 +1519,22 @@ class $$ExcursoesTableAnnotationComposer
   GeneratedColumn<int> get idStatus =>
       $composableBuilder(column: $table.idStatus, builder: (column) => column);
 
-  Expression<T> passageirosRefs<T extends Object>(
-    Expression<T> Function($$PassageirosTableAnnotationComposer a) f,
+  Expression<T> veiculosRefs<T extends Object>(
+    Expression<T> Function($$VeiculosTableAnnotationComposer a) f,
   ) {
-    final $$PassageirosTableAnnotationComposer composer = $composerBuilder(
+    final $$VeiculosTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.passageiros,
+      referencedTable: $db.veiculos,
       getReferencedColumn: (t) => t.idExcursao,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$PassageirosTableAnnotationComposer(
+          }) => $$VeiculosTableAnnotationComposer(
             $db: $db,
-            $table: $db.passageiros,
+            $table: $db.veiculos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1296,7 +1558,7 @@ class $$ExcursoesTableTableManager
           $$ExcursoesTableUpdateCompanionBuilder,
           (ExcursaoData, $$ExcursoesTableReferences),
           ExcursaoData,
-          PrefetchHooks Function({bool passageirosRefs})
+          PrefetchHooks Function({bool veiculosRefs})
         > {
   $$ExcursoesTableTableManager(_$AppDatabase db, $ExcursoesTable table)
     : super(
@@ -1345,28 +1607,28 @@ class $$ExcursoesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({passageirosRefs = false}) {
+          prefetchHooksCallback: ({veiculosRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (passageirosRefs) db.passageiros],
+              explicitlyWatchedTables: [if (veiculosRefs) db.veiculos],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (passageirosRefs)
+                  if (veiculosRefs)
                     await $_getPrefetchedData<
                       ExcursaoData,
                       $ExcursoesTable,
-                      PassageiroData
+                      VeiculoData
                     >(
                       currentTable: table,
                       referencedTable: $$ExcursoesTableReferences
-                          ._passageirosRefsTable(db),
+                          ._veiculosRefsTable(db),
                       managerFromTypedResult: (p0) =>
                           $$ExcursoesTableReferences(
                             db,
                             table,
                             p0,
-                          ).passageirosRefs,
+                          ).veiculosRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.idExcursao == item.id),
                       typedResults: items,
@@ -1391,7 +1653,7 @@ typedef $$ExcursoesTableProcessedTableManager =
       $$ExcursoesTableUpdateCompanionBuilder,
       (ExcursaoData, $$ExcursoesTableReferences),
       ExcursaoData,
-      PrefetchHooks Function({bool passageirosRefs})
+      PrefetchHooks Function({bool veiculosRefs})
     >;
 typedef $$PessoasTableCreateCompanionBuilder =
     PessoasCompanion Function({
@@ -1668,10 +1930,378 @@ typedef $$PessoasTableProcessedTableManager =
       PessoaData,
       PrefetchHooks Function({bool passageirosRefs})
     >;
+typedef $$VeiculosTableCreateCompanionBuilder =
+    VeiculosCompanion Function({
+      Value<int> id,
+      Value<int?> idExcursao,
+      required int capacidade,
+    });
+typedef $$VeiculosTableUpdateCompanionBuilder =
+    VeiculosCompanion Function({
+      Value<int> id,
+      Value<int?> idExcursao,
+      Value<int> capacidade,
+    });
+
+final class $$VeiculosTableReferences
+    extends BaseReferences<_$AppDatabase, $VeiculosTable, VeiculoData> {
+  $$VeiculosTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $ExcursoesTable _idExcursaoTable(_$AppDatabase db) =>
+      db.excursoes.createAlias('veiculos__id_excursao__excursoes__id');
+
+  $$ExcursoesTableProcessedTableManager? get idExcursao {
+    final $_column = $_itemColumn<int>('id_excursao');
+    if ($_column == null) return null;
+    final manager = $$ExcursoesTableTableManager(
+      $_db,
+      $_db.excursoes,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_idExcursaoTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$PassageirosTable, List<PassageiroData>>
+  _passageirosRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.passageiros,
+    aliasName: 'veiculos__id__passageiros__id_veiculo',
+  );
+
+  $$PassageirosTableProcessedTableManager get passageirosRefs {
+    final manager = $$PassageirosTableTableManager(
+      $_db,
+      $_db.passageiros,
+    ).filter((f) => f.idVeiculo.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_passageirosRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$VeiculosTableFilterComposer
+    extends Composer<_$AppDatabase, $VeiculosTable> {
+  $$VeiculosTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get capacidade => $composableBuilder(
+    column: $table.capacidade,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$ExcursoesTableFilterComposer get idExcursao {
+    final $$ExcursoesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.idExcursao,
+      referencedTable: $db.excursoes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExcursoesTableFilterComposer(
+            $db: $db,
+            $table: $db.excursoes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> passageirosRefs(
+    Expression<bool> Function($$PassageirosTableFilterComposer f) f,
+  ) {
+    final $$PassageirosTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.passageiros,
+      getReferencedColumn: (t) => t.idVeiculo,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PassageirosTableFilterComposer(
+            $db: $db,
+            $table: $db.passageiros,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$VeiculosTableOrderingComposer
+    extends Composer<_$AppDatabase, $VeiculosTable> {
+  $$VeiculosTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get capacidade => $composableBuilder(
+    column: $table.capacidade,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$ExcursoesTableOrderingComposer get idExcursao {
+    final $$ExcursoesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.idExcursao,
+      referencedTable: $db.excursoes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExcursoesTableOrderingComposer(
+            $db: $db,
+            $table: $db.excursoes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$VeiculosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $VeiculosTable> {
+  $$VeiculosTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get capacidade => $composableBuilder(
+    column: $table.capacidade,
+    builder: (column) => column,
+  );
+
+  $$ExcursoesTableAnnotationComposer get idExcursao {
+    final $$ExcursoesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.idExcursao,
+      referencedTable: $db.excursoes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExcursoesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.excursoes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> passageirosRefs<T extends Object>(
+    Expression<T> Function($$PassageirosTableAnnotationComposer a) f,
+  ) {
+    final $$PassageirosTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.passageiros,
+      getReferencedColumn: (t) => t.idVeiculo,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PassageirosTableAnnotationComposer(
+            $db: $db,
+            $table: $db.passageiros,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$VeiculosTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $VeiculosTable,
+          VeiculoData,
+          $$VeiculosTableFilterComposer,
+          $$VeiculosTableOrderingComposer,
+          $$VeiculosTableAnnotationComposer,
+          $$VeiculosTableCreateCompanionBuilder,
+          $$VeiculosTableUpdateCompanionBuilder,
+          (VeiculoData, $$VeiculosTableReferences),
+          VeiculoData,
+          PrefetchHooks Function({bool idExcursao, bool passageirosRefs})
+        > {
+  $$VeiculosTableTableManager(_$AppDatabase db, $VeiculosTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$VeiculosTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$VeiculosTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$VeiculosTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> idExcursao = const Value.absent(),
+                Value<int> capacidade = const Value.absent(),
+              }) => VeiculosCompanion(
+                id: id,
+                idExcursao: idExcursao,
+                capacidade: capacidade,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> idExcursao = const Value.absent(),
+                required int capacidade,
+              }) => VeiculosCompanion.insert(
+                id: id,
+                idExcursao: idExcursao,
+                capacidade: capacidade,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$VeiculosTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({idExcursao = false, passageirosRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (passageirosRefs) db.passageiros,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (idExcursao) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.idExcursao,
+                                    referencedTable: $$VeiculosTableReferences
+                                        ._idExcursaoTable(db),
+                                    referencedColumn: $$VeiculosTableReferences
+                                        ._idExcursaoTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (passageirosRefs)
+                        await $_getPrefetchedData<
+                          VeiculoData,
+                          $VeiculosTable,
+                          PassageiroData
+                        >(
+                          currentTable: table,
+                          referencedTable: $$VeiculosTableReferences
+                              ._passageirosRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$VeiculosTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).passageirosRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.idVeiculo == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$VeiculosTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $VeiculosTable,
+      VeiculoData,
+      $$VeiculosTableFilterComposer,
+      $$VeiculosTableOrderingComposer,
+      $$VeiculosTableAnnotationComposer,
+      $$VeiculosTableCreateCompanionBuilder,
+      $$VeiculosTableUpdateCompanionBuilder,
+      (VeiculoData, $$VeiculosTableReferences),
+      VeiculoData,
+      PrefetchHooks Function({bool idExcursao, bool passageirosRefs})
+    >;
 typedef $$PassageirosTableCreateCompanionBuilder =
     PassageirosCompanion Function({
       Value<int> id,
-      required int idExcursao,
+      required int idVeiculo,
       Value<int?> idPessoa,
       required int numeroAssento,
       required int idStatusAssento,
@@ -1680,7 +2310,7 @@ typedef $$PassageirosTableCreateCompanionBuilder =
 typedef $$PassageirosTableUpdateCompanionBuilder =
     PassageirosCompanion Function({
       Value<int> id,
-      Value<int> idExcursao,
+      Value<int> idVeiculo,
       Value<int?> idPessoa,
       Value<int> numeroAssento,
       Value<int> idStatusAssento,
@@ -1691,17 +2321,17 @@ final class $$PassageirosTableReferences
     extends BaseReferences<_$AppDatabase, $PassageirosTable, PassageiroData> {
   $$PassageirosTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $ExcursoesTable _idExcursaoTable(_$AppDatabase db) =>
-      db.excursoes.createAlias('passageiros__id_excursao__excursoes__id');
+  static $VeiculosTable _idVeiculoTable(_$AppDatabase db) =>
+      db.veiculos.createAlias('passageiros__id_veiculo__veiculos__id');
 
-  $$ExcursoesTableProcessedTableManager get idExcursao {
-    final $_column = $_itemColumn<int>('id_excursao')!;
+  $$VeiculosTableProcessedTableManager get idVeiculo {
+    final $_column = $_itemColumn<int>('id_veiculo')!;
 
-    final manager = $$ExcursoesTableTableManager(
+    final manager = $$VeiculosTableTableManager(
       $_db,
-      $_db.excursoes,
+      $_db.veiculos,
     ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_idExcursaoTable($_db));
+    final item = $_typedResult.readTableOrNull(_idVeiculoTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -1755,20 +2385,20 @@ class $$PassageirosTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$ExcursoesTableFilterComposer get idExcursao {
-    final $$ExcursoesTableFilterComposer composer = $composerBuilder(
+  $$VeiculosTableFilterComposer get idVeiculo {
+    final $$VeiculosTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.idExcursao,
-      referencedTable: $db.excursoes,
+      getCurrentColumn: (t) => t.idVeiculo,
+      referencedTable: $db.veiculos,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ExcursoesTableFilterComposer(
+          }) => $$VeiculosTableFilterComposer(
             $db: $db,
-            $table: $db.excursoes,
+            $table: $db.veiculos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1831,20 +2461,20 @@ class $$PassageirosTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$ExcursoesTableOrderingComposer get idExcursao {
-    final $$ExcursoesTableOrderingComposer composer = $composerBuilder(
+  $$VeiculosTableOrderingComposer get idVeiculo {
+    final $$VeiculosTableOrderingComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.idExcursao,
-      referencedTable: $db.excursoes,
+      getCurrentColumn: (t) => t.idVeiculo,
+      referencedTable: $db.veiculos,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ExcursoesTableOrderingComposer(
+          }) => $$VeiculosTableOrderingComposer(
             $db: $db,
-            $table: $db.excursoes,
+            $table: $db.veiculos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1903,20 +2533,20 @@ class $$PassageirosTableAnnotationComposer
   GeneratedColumn<bool> get foiPago =>
       $composableBuilder(column: $table.foiPago, builder: (column) => column);
 
-  $$ExcursoesTableAnnotationComposer get idExcursao {
-    final $$ExcursoesTableAnnotationComposer composer = $composerBuilder(
+  $$VeiculosTableAnnotationComposer get idVeiculo {
+    final $$VeiculosTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.idExcursao,
-      referencedTable: $db.excursoes,
+      getCurrentColumn: (t) => t.idVeiculo,
+      referencedTable: $db.veiculos,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ExcursoesTableAnnotationComposer(
+          }) => $$VeiculosTableAnnotationComposer(
             $db: $db,
-            $table: $db.excursoes,
+            $table: $db.veiculos,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1963,7 +2593,7 @@ class $$PassageirosTableTableManager
           $$PassageirosTableUpdateCompanionBuilder,
           (PassageiroData, $$PassageirosTableReferences),
           PassageiroData,
-          PrefetchHooks Function({bool idExcursao, bool idPessoa})
+          PrefetchHooks Function({bool idVeiculo, bool idPessoa})
         > {
   $$PassageirosTableTableManager(_$AppDatabase db, $PassageirosTable table)
     : super(
@@ -1979,14 +2609,14 @@ class $$PassageirosTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> idExcursao = const Value.absent(),
+                Value<int> idVeiculo = const Value.absent(),
                 Value<int?> idPessoa = const Value.absent(),
                 Value<int> numeroAssento = const Value.absent(),
                 Value<int> idStatusAssento = const Value.absent(),
                 Value<bool> foiPago = const Value.absent(),
               }) => PassageirosCompanion(
                 id: id,
-                idExcursao: idExcursao,
+                idVeiculo: idVeiculo,
                 idPessoa: idPessoa,
                 numeroAssento: numeroAssento,
                 idStatusAssento: idStatusAssento,
@@ -1995,14 +2625,14 @@ class $$PassageirosTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required int idExcursao,
+                required int idVeiculo,
                 Value<int?> idPessoa = const Value.absent(),
                 required int numeroAssento,
                 required int idStatusAssento,
                 required bool foiPago,
               }) => PassageirosCompanion.insert(
                 id: id,
-                idExcursao: idExcursao,
+                idVeiculo: idVeiculo,
                 idPessoa: idPessoa,
                 numeroAssento: numeroAssento,
                 idStatusAssento: idStatusAssento,
@@ -2016,7 +2646,7 @@ class $$PassageirosTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({idExcursao = false, idPessoa = false}) {
+          prefetchHooksCallback: ({idVeiculo = false, idPessoa = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -2036,15 +2666,15 @@ class $$PassageirosTableTableManager
                       dynamic
                     >
                   >(state) {
-                    if (idExcursao) {
+                    if (idVeiculo) {
                       state =
                           state.withJoin(
                                 currentTable: table,
-                                currentColumn: table.idExcursao,
+                                currentColumn: table.idVeiculo,
                                 referencedTable: $$PassageirosTableReferences
-                                    ._idExcursaoTable(db),
+                                    ._idVeiculoTable(db),
                                 referencedColumn: $$PassageirosTableReferences
-                                    ._idExcursaoTable(db)
+                                    ._idVeiculoTable(db)
                                     .id,
                               )
                               as T;
@@ -2086,7 +2716,7 @@ typedef $$PassageirosTableProcessedTableManager =
       $$PassageirosTableUpdateCompanionBuilder,
       (PassageiroData, $$PassageirosTableReferences),
       PassageiroData,
-      PrefetchHooks Function({bool idExcursao, bool idPessoa})
+      PrefetchHooks Function({bool idVeiculo, bool idPessoa})
     >;
 
 class $AppDatabaseManager {
@@ -2096,6 +2726,8 @@ class $AppDatabaseManager {
       $$ExcursoesTableTableManager(_db, _db.excursoes);
   $$PessoasTableTableManager get pessoas =>
       $$PessoasTableTableManager(_db, _db.pessoas);
+  $$VeiculosTableTableManager get veiculos =>
+      $$VeiculosTableTableManager(_db, _db.veiculos);
   $$PassageirosTableTableManager get passageiros =>
       $$PassageirosTableTableManager(_db, _db.passageiros);
 }

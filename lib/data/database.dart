@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:sspmano_viagens/data/tables/excursao_table.dart';
 import 'package:sspmano_viagens/data/tables/passageiro_table.dart';
 import 'package:sspmano_viagens/data/tables/pessoa_table.dart';
+import 'package:sspmano_viagens/data/tables/veiculo_table.dart';
 
 part 'database.g.dart';
 
@@ -15,6 +16,7 @@ part 'database.g.dart';
     Excursoes,
     Pessoas,
     Passageiros,
+    Veiculos,
   ],
 )
 class AppDatabase extends _$AppDatabase {
