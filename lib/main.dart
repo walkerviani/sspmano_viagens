@@ -36,10 +36,8 @@ void main() {
               PessoasListViewmodel(context.read<PessoaRepository>())),
         ),
         ChangeNotifierProvider<ExcursoesFormViewmodel>(
-          create: ((context) => ExcursoesFormViewmodel(
-            context.read<ExcursaoRepository>(),
-            context.read<VeiculoRepository>(),
-          )),
+          create: ((context) =>
+              ExcursoesFormViewmodel(context.read<ExcursaoRepository>())),
         ),
         ChangeNotifierProvider<ExcursoesListViewmodel>(
           create: (context) =>
