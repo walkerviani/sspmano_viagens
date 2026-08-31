@@ -37,6 +37,20 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
     viewmodel.carregarExcursoes();
   }
 
+  Future<void> _abrirDetalhes(int idExcursao, bool statusFinalizado) async {
+    final viewmodel = context.read<ExcursoesListViewmodel>();
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ExcursoesDetalhesScreen(
+          idExcursao,
+          statusFinalizado: statusFinalizado,
+        ),
+      ),
+    );
+    await viewmodel.carregarExcursoes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +128,7 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
   }
 
   Widget _cardExcursoes(Excursao excursao) {
-    String statusExcursao = ExcursaoStatus.values
+    String statusAtual = ExcursaoStatus.values
         .firstWhere((e) => e.id == excursao.idStatus)
         .excursaoStatus;
     String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
@@ -122,28 +136,21 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
     String nomeCortado = excursao.nome.length > 20
         ? '${excursao.nome.substring(0, 20)}...'
         : excursao.nome;
+    bool statusExcursao = excursao.idStatus == ExcursaoStatus.finalizado.id;
 
     return Card(
       key: ValueKey(excursao.id),
       color: CoresApp.azulPetroleo,
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ExcursoesDetalhesScreen(
-                excursao.id!,
-                statusFinalizado: false,
-              ),
-            ),
-          );
+        onTap: () async {
+          await _abrirDetalhes(excursao.id!, statusExcursao);
         },
         child: Container(
           padding: EdgeInsets.all(12),
           child: Column(
             children: [
               Text(
-                statusExcursao.toUpperCase(),
+                statusAtual.toUpperCase(),
                 style: GoogleFonts.poppins(
                   color: CoresApp.branco,
                   fontWeight: FontWeight.bold,

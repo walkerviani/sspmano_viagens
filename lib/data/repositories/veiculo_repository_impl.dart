@@ -60,4 +60,14 @@ class VeiculoRepositoryImpl implements VeiculoRepository {
       _database.veiculos,
     )..where((v) => v.id.equals(id))).go();
   }
+
+  @override
+  Future<int> calcularCapacidadePorExcursao(int idExcursao) async {
+    int capacidade = 0;
+    final veiculos = await listarPorExcursao(idExcursao);
+    for (final veiculo in veiculos) {
+      capacidade += veiculo.capacidade;
+    }
+    return capacidade;
+  }
 }

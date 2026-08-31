@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sspmano_viagens/domain/entities/veiculo.dart';
+import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
 
 class VeiculoFormViewmodel extends ChangeNotifier {
-  final VeiculoRepository _repository;
+  final VeiculoRepository _veiculoRepository;
+  final ExcursaoRepository _excursaoRepository;
 
-  VeiculoFormViewmodel(this._repository);
+  VeiculoFormViewmodel(this._veiculoRepository, this._excursaoRepository);
   bool estaCarregando = false;
   String? mensagemErro;
   Veiculo? veiculo;
@@ -16,7 +18,7 @@ class VeiculoFormViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      veiculo = await _repository.listarPorId(id);
+      veiculo = await _veiculoRepository.listarPorId(id);
     } catch (e) {
       mensagemErro = 'Erro ao carregar o veículo';
     } finally {
@@ -32,7 +34,7 @@ class VeiculoFormViewmodel extends ChangeNotifier {
   }) async {
     mensagemErro = null;
 
-    if (capacidade < 1 || capacidade >= 60) {
+    if (capacidade < 1 || capacidade > 60) {
       mensagemErro = 'Digite uma quantidade de assentos entre 1 e 60';
       return false;
     }
@@ -43,10 +45,11 @@ class VeiculoFormViewmodel extends ChangeNotifier {
     try {
       Veiculo veiculo = Veiculo(id, idExcursao, capacidade);
       if (id != null) {
-        await _repository.atualizar(veiculo);
+        await _veiculoRepository.atualizar(veiculo);
       } else {
-        await _repository.criar(veiculo);
+        await _veiculoRepository.criar(veiculo);
       }
+      await atualizarCapacidadeExcursao(veiculo.idExcursao!);
       return true;
     } catch (e) {
       mensagemErro = 'Erro ao salvar o veículo';
@@ -55,5 +58,12 @@ class VeiculoFormViewmodel extends ChangeNotifier {
       estaCarregando = false;
       notifyListeners();
     }
+  }
+
+  Future<void> atualizarCapacidadeExcursao(int idExcursao) async {
+    final capacidade = await _veiculoRepository.calcularCapacidadePorExcursao(
+      idExcursao,
+    );
+    await _excursaoRepository.definirQuantidadeAssentos(idExcursao, capacidade);
   }
 }
