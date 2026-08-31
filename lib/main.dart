@@ -47,12 +47,16 @@ void main() {
               ExcursoesListViewmodel(context.read<ExcursaoRepository>()),
         ),
         ChangeNotifierProvider<VeiculoFormViewmodel>(
-          create: (context) =>
-              VeiculoFormViewmodel(context.read<VeiculoRepository>()),
+          create: (context) => VeiculoFormViewmodel(
+            context.read<VeiculoRepository>(),
+            context.read<ExcursaoRepository>(),
+          ),
         ),
         ChangeNotifierProvider<VeiculoListViewmodel>(
-          create: (context) =>
-              VeiculoListViewmodel(context.read<VeiculoRepository>()),
+          create: (context) => VeiculoListViewmodel(
+            context.read<VeiculoRepository>(),
+            context.read<ExcursaoRepository>(),
+          ),
         ),
         ChangeNotifierProvider<VeiculoSelecionarViewmodel>(
           create: (context) =>
