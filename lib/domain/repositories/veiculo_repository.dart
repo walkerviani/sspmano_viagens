@@ -4,6 +4,7 @@ abstract class VeiculoRepository {
   Future<List<Veiculo>> listarTodos();
   Future<Veiculo?> listarPorId(int id);
   Future<List<Veiculo>> listarPorExcursao(int idExcursao);
+  Future<int> calcularCapacidadePorExcursao(int idExcursao);
   Future<void> criar(Veiculo veiculo);
   Future<void> atualizar(Veiculo veiculo);
   Future<void> deletar(int id);
