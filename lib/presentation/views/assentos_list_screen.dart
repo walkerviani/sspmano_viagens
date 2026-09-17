@@ -58,12 +58,14 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
         }
 
         // Assento
-        return Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: CoresApp.azulClaro,
-            borderRadius: BorderRadius.circular(5),
+        return TextButton(
+          onPressed: () {},
+          style: TextButton.styleFrom(
+            minimumSize: const Size(10, 10),
+            backgroundColor: CoresApp.azulClaro,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
           ),
           child: Center(
             child: Text(
