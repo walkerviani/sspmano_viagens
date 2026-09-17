@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/domain/entities/veiculo.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_selecionar_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/views/assentos_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class VeiculoSelecionarScreen extends StatefulWidget {
@@ -22,6 +23,16 @@ class _VeiculoSelecionarScreenState extends State<VeiculoSelecionarScreen> {
         widget.excursaoId,
       );
     });
+  }
+
+  void _abrirAssentosVeiculo(Veiculo veiculo) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            AssentosListScreen(quantidadeAssentos: veiculo.capacidade),
+      ),
+    );
   }
 
   @override
@@ -95,7 +106,7 @@ class _VeiculoSelecionarScreenState extends State<VeiculoSelecionarScreen> {
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 17),
         ),
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: () => _abrirAssentosVeiculo(veiculo),
           icon: Icon(Icons.check, color: CoresApp.branco, size: 30),
           style: IconButton.styleFrom(
             backgroundColor: CoresApp.verdeClaro,
