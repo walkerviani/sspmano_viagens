@@ -14,6 +14,7 @@ import 'package:sspmano_viagens/presentation/viewmodels/assentos_list_viewmodel.
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_selecionar_viewmodel.dart';
@@ -71,6 +72,12 @@ void main() {
         ChangeNotifierProvider<AssentosListViewmodel>(
           create: (context) =>
               AssentosListViewmodel(context.read<PassageiroRepository>()),
+        ),
+        ChangeNotifierProvider<SelecionarPassageiroViewmodel>(
+          create: (context) => SelecionarPassageiroViewmodel(
+            context.read<PessoaRepository>(),
+            context.read<PassageiroRepository>(),
+          ),
         ),
       ],
       child: const MyApp(),
