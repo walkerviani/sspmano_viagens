@@ -3,11 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/data/database.dart';
 import 'package:sspmano_viagens/data/repositories/excursao_repository_impl.dart';
+import 'package:sspmano_viagens/data/repositories/passageiro_repository_impl.dart';
 import 'package:sspmano_viagens/data/repositories/pessoa_repository_impl.dart';
 import 'package:sspmano_viagens/data/repositories/veiculo_repository_impl.dart';
 import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
+import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/assentos_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
@@ -33,6 +36,9 @@ void main() {
         ),
         Provider<VeiculoRepository>(
           create: (_) => VeiculoRepositoryImpl(database),
+        ),
+        Provider<PassageiroRepository>(
+          create: (_) => PassageiroRepositoryImpl(database),
         ),
         ChangeNotifierProvider<PessoasListViewmodel>(
           create: ((context) =>
@@ -61,6 +67,10 @@ void main() {
         ChangeNotifierProvider<VeiculoSelecionarViewmodel>(
           create: (context) =>
               VeiculoSelecionarViewmodel(context.read<VeiculoRepository>()),
+        ),
+        ChangeNotifierProvider<AssentosListViewmodel>(
+          create: (context) =>
+              AssentosListViewmodel(context.read<PassageiroRepository>()),
         ),
       ],
       child: const MyApp(),
