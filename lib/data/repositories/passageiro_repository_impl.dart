@@ -20,10 +20,14 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   }
 
   @override
-  Future<Passageiro?> listarPorAssento(int numAssento) async {
-    final passageiro = await (_database.select(
-      _database.passageiros,
-    )..where((p) => p.numeroAssento.equals(numAssento))).getSingleOrNull();
+  Future<Passageiro?> listarPorAssento(int idVeiculo, int numAssento) async {
+    final passageiro =
+        await (_database.select(_database.passageiros)..where(
+              (p) =>
+                  p.idVeiculo.equals(idVeiculo) &
+                  p.numeroAssento.equals(numAssento),
+            ))
+            .getSingleOrNull();
 
     return passageiro?.toEntity();
   }
