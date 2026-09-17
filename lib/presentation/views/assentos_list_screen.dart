@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class AssentosListScreen extends StatefulWidget {
-  const AssentosListScreen({super.key});
+  final int quantidadeAssentos;
+  const AssentosListScreen({super.key, required this.quantidadeAssentos});
 
   @override
   State<StatefulWidget> createState() => _AssentosListScreenState();
@@ -18,7 +19,7 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),
-      body: SafeArea(child: _mapearAssentos(15)),
+      body: SafeArea(child: _mapearAssentos(widget.quantidadeAssentos)),
     );
   }
 
