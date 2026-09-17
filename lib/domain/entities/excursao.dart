@@ -24,7 +24,7 @@ class Excursao {
       'id': _id,
       'nome': nome,
       'dataHora': dataHora.toIso8601String(),
-      'telefone': qtdAssentos,
+      'qtdAssentos': qtdAssentos,
       'idStatus': idStatus,
     };
   }

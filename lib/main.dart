@@ -6,24 +6,45 @@ import 'package:sspmano_viagens/data/repositories/excursao_repository_impl.dart'
 import 'package:sspmano_viagens/data/repositories/passageiro_repository_impl.dart';
 import 'package:sspmano_viagens/data/repositories/pessoa_repository_impl.dart';
 import 'package:sspmano_viagens/data/repositories/veiculo_repository_impl.dart';
+import 'package:sspmano_viagens/data/services/backup_background_service.dart';
+import 'package:sspmano_viagens/domain/repositories/backup_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/assentos_list_viewmodel.dart';
+import 'package:sspmano_viagens/data/datasources/backup/backup_config_datasource.dart';
+import 'package:sspmano_viagens/data/datasources/backup/backup_file_datasource.dart';
+import 'package:sspmano_viagens/data/datasources/backup/json_backup_datasource.dart';
+import 'package:sspmano_viagens/data/repositories/backup_repository_impl.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/backup_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_selecionar_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/views/backup_screen.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await BackupBackgroundService.initialize();
+
   final database = AppDatabase();
+
+  final jsonBackupDatasource = JsonBackupDatasource(database);
+  final backupFileDatasource = BackupFileDatasource();
+  final backupConfigDatasource = BackupConfigDatasource();
+  final backupRepository = BackupRepositoryImpl(
+    database,
+    jsonBackupDatasource,
+    backupFileDatasource,
+    backupConfigDatasource,
+  );
 
   runApp(
     MultiProvider(
@@ -51,6 +72,17 @@ void main() {
         ChangeNotifierProvider<ExcursoesListViewmodel>(
           create: (context) =>
               ExcursoesListViewmodel(context.read<ExcursaoRepository>()),
+
+        ),
+        
+        Provider<BackupRepository>.value(
+          value: backupRepository,
+        ),
+        ChangeNotifierProvider<BackupViewModel>(
+          create: (context) =>
+              BackupViewModel(
+                context.read<BackupRepository>(),
+              ),
         ),
         ChangeNotifierProvider<VeiculoFormViewmodel>(
           create: (context) => VeiculoFormViewmodel(
@@ -69,8 +101,7 @@ void main() {
               VeiculoSelecionarViewmodel(context.read<VeiculoRepository>()),
         ),
         ChangeNotifierProvider<AssentosListViewmodel>(
-          create: (context) =>
-              AssentosListViewmodel(context.read<PassageiroRepository>()),
+          create: (context) => AssentosListViewmodel(),
         ),
       ],
       child: const MyApp(),
@@ -213,6 +244,36 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Text(
                     'Relatório da excursão',
+                    style: GoogleFonts.poppins(
+                      color: CoresApp.branco,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => BackupScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CoresApp.azulPetroleo,
+                foregroundColor: CoresApp.branco,
+                minimumSize: Size(double.infinity, 70),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.backup_outlined, size: 40),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Backup',
                     style: GoogleFonts.poppins(
                       color: CoresApp.branco,
                       fontSize: 20,
