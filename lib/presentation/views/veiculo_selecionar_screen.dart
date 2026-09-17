@@ -29,8 +29,10 @@ class _VeiculoSelecionarScreenState extends State<VeiculoSelecionarScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            AssentosListScreen(quantidadeAssentos: veiculo.capacidade),
+        builder: (context) => AssentosListScreen(
+          quantidadeAssentos: veiculo.capacidade,
+          idVeiculo: veiculo.id!,
+        ),
       ),
     );
   }
