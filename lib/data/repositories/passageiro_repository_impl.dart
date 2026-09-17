@@ -12,16 +12,27 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
 
   @override
   Future<Passageiro?> listarPorId(int id) async {
-    final passageiros = await (_database.select(_database.passageiros)
-      ..where((p) => p.id.equals(id))).getSingleOrNull();
+    final passageiros = await (_database.select(
+      _database.passageiros,
+    )..where((p) => p.id.equals(id))).getSingleOrNull();
 
     return passageiros?.toEntity();
   }
 
   @override
   Future<List<Passageiro>> listarTodos() async {
-    final passageiros = await (_database.select(_database.passageiros)
-      ..orderBy([(p) => OrderingTerm.asc(p.numeroAssento)])).get();
+    final passageiros = await (_database.select(
+      _database.passageiros,
+    )..orderBy([(p) => OrderingTerm.asc(p.numeroAssento)])).get();
+
+    return passageiros.map((p) => p.toEntity()).toList();
+  }
+
+  @override
+  Future<List<Passageiro>> listarPorVeiculo(int idVeiculo) async {
+    final passageiros = await (_database.select(
+      _database.passageiros,
+    )..where((p) => p.idVeiculo.equals(idVeiculo))).get();
 
     return passageiros.map((p) => p.toEntity()).toList();
   }
@@ -45,21 +56,25 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   @override
   Future<void> atualizar(Passageiro passageiro) async {
     if (passageiro.id == null) {
-      throw ArgumentError(
-        'Não é possível atualizar um passageiro sem id',
-      );
+      throw ArgumentError('Não é possível atualizar um passageiro sem id');
     }
-    await (_database.update(_database.passageiros)..where((p) => p.id.equals(passageiro.id!))).write(passageiro.toCompanion());
+    await (_database.update(_database.passageiros)
+          ..where((p) => p.id.equals(passageiro.id!)))
+        .write(passageiro.toCompanion());
   }
 
   @override
   Future<void> criar(Passageiro passageiro) async {
-    await _database.into(_database.passageiros).insert(passageiro.toCompanion());
+    await _database
+        .into(_database.passageiros)
+        .insert(passageiro.toCompanion());
   }
 
   @override
   Future<void> deletar(int id) async {
-    await (_database.delete(_database.passageiros)..where((p) => p.id.equals(id))).go();
+    await (_database.delete(
+      _database.passageiros,
+    )..where((p) => p.id.equals(id))).go();
   }
 
   @override
@@ -78,18 +93,18 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
     passageiro.idStatusAssento = 2; // Ocupado
 
     await atualizar(passageiro);
-}
+  }
 
   @override
   Future<void> removerPessoa(int id, Pessoa pessoa) async {
     final passageiros = await listarTodos();
 
-    final passageiro = passageiros.where((p) => p.idPessoa == pessoa.id).firstOrNull;
+    final passageiro = passageiros
+        .where((p) => p.idPessoa == pessoa.id)
+        .firstOrNull;
 
     if (passageiro == null) {
-      throw ArgumentError(
-        'A pessoa não está associada a nenhum passageiro',
-      );
+      throw ArgumentError('A pessoa não está associada a nenhum passageiro');
     }
 
     passageiro.idPessoa = null;
