@@ -4,6 +4,7 @@ import 'package:sspmano_viagens/domain/entities/pessoa.dart';
 abstract class PassageiroRepository {
   Future<List<Passageiro>> listarTodos();
   Future<Passageiro?> listarPorId(int id);
+  Future<Passageiro?> listarPorAssento(int numAssento);
   Future<List<Passageiro>> listarPorVeiculo(int idVeiculo);
   Future<void> criar(Passageiro passageiro);
   Future<void> atualizar(Passageiro passageiro);
