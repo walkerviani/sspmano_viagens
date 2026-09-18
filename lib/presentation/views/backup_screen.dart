@@ -1,0 +1,257 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import 'package:sspmano_viagens/presentation/viewmodels/backup_viewmodel.dart';
+import 'package:sspmano_viagens/utils/cores_app.dart';
+
+class BackupScreen extends StatefulWidget {
+  const BackupScreen({super.key});
+
+  @override
+  State<BackupScreen> createState() => _BackupScreenState();
+}
+
+class _BackupScreenState extends State<BackupScreen> {
+  bool _snackbarMostrado = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BackupViewModel>().inicializar();
+    });
+  }
+
+  void _mostrarSnackBar() {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Backup realizado com sucesso.',
+          style: GoogleFonts.poppins(color: CoresApp.branco),
+        ),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<BackupViewModel>();
+
+    if (viewModel.sucesso && !_snackbarMostrado) {
+      _snackbarMostrado = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _mostrarSnackBar();
+      });
+    }
+
+    if (!viewModel.sucesso && _snackbarMostrado && !viewModel.carregando) {
+      _snackbarMostrado = false;
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CoresApp.vermelho,
+        foregroundColor: CoresApp.branco,
+        title: Text(
+          'Backup',
+          style: GoogleFonts.poppins(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(12),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Local do backup
+              Text(
+                'Local do backup',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  viewModel.pasta != null
+                    ? '${viewModel.pasta}/SSPMANOViagens/backup.json'
+                    : 'Nenhuma pasta selecionada.',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              ElevatedButton.icon(
+                onPressed: viewModel.carregando
+                    ? null
+                    : viewModel.escolherPasta,
+                icon: const Icon(Icons.folder),
+                label: Text(
+                  'Escolher pasta',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CoresApp.azulPetroleo,
+                  foregroundColor: CoresApp.branco,
+                  minimumSize: const Size(double.infinity, 70),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Frequência
+              Text(
+                'Frequência do backup',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              DropdownButtonFormField<FrequenciaBackup>(
+                initialValue: viewModel.frequencia,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Frequência',
+                  hintText: 'Selecione a frequência',
+                  floatingLabelStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: FrequenciaBackup.diario,
+                    child: Text('Diário'),
+                  ),
+                  DropdownMenuItem(
+                    value: FrequenciaBackup.semanal,
+                    child: Text('Semanal'),
+                  ),
+                  DropdownMenuItem(
+                    value: FrequenciaBackup.mensal,
+                    child: Text('Mensal'),
+                  ),
+                  DropdownMenuItem(
+                    value: FrequenciaBackup.desativado,
+                    child: Text('Desativado'),
+                  ),
+                ],
+                onChanged: viewModel.carregando
+                    ? null
+                    : (valor) {
+                        if (valor != null) {
+                          viewModel.alterarFrequencia(valor);
+                        }
+                      },
+              ),
+
+              const SizedBox(height: 20),
+
+              // Ações
+              Text(
+                'Operações',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              ElevatedButton.icon(
+                onPressed: viewModel.carregando
+                    ? null
+                    : viewModel.criarBackup,
+                icon: const Icon(Icons.backup),
+                label: Text(
+                  'Fazer backup agora',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CoresApp.azulPetroleo,
+                  foregroundColor: CoresApp.branco,
+                  minimumSize: const Size(double.infinity, 70),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              ElevatedButton.icon(
+                onPressed: viewModel.carregando
+                    ? null
+                    : viewModel.restaurarBackup,
+                icon: const Icon(Icons.restore),
+                label: Text(
+                  'Restaurar backup',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CoresApp.azulPetroleo,
+                  foregroundColor: CoresApp.branco,
+                  minimumSize: const Size(double.infinity, 70),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+
+              if (viewModel.erro != null) ...[
+                const SizedBox(height: 15),
+                Text(
+                  viewModel.erro!,
+                  style: GoogleFonts.poppins(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
