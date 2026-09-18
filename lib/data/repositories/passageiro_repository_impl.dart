@@ -20,6 +20,20 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   }
 
   @override
+  Future<List<int>> listarIdsPessoasNaExcursao(int idExcursao) async {
+    final resultados = await (_database.select(_database.passageiros).join([
+      innerJoin(
+        _database.veiculos,
+        _database.passageiros.idVeiculo.equalsExp(_database.veiculos.id),
+      ),
+    ])..where(_database.veiculos.idExcursao.equals(idExcursao))).get();
+    return resultados
+        .map((r) => r.readTable(_database.passageiros).idPessoa)
+        .whereType<int>()
+        .toList();
+  }
+
+  @override
   Future<Passageiro?> listarPorAssento(int idVeiculo, int numAssento) async {
     final passageiro =
         await (_database.select(_database.passageiros)..where(
