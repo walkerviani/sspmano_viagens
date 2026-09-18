@@ -98,7 +98,6 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   Future<void> definirStatusAssento(int id, int status) async {
     final passageiro = await listarPorId(id);
     if (passageiro == null) throw ArgumentError('Passageiro não encontrado');
-    passageiro.idStatusAssento = status;
     await atualizar(passageiro);
   }
 
@@ -152,7 +151,6 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
     }
 
     passageiro.idPessoa = pessoa.id;
-    passageiro.idStatusAssento = 2; // Ocupado
 
     await atualizar(passageiro);
   }
@@ -171,7 +169,6 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
 
     passageiro.idPessoa = null;
     passageiro.foiPago = false;
-    passageiro.idStatusAssento = 1; // Livre
 
     await atualizar(passageiro);
   }

@@ -8,6 +8,5 @@ class Passageiros extends Table {
   IntColumn get idVeiculo => integer().references(Veiculos, #id)();
   IntColumn get idPessoa => integer().references(Pessoas, #id).nullable()();
   IntColumn get numeroAssento => integer()();
-  IntColumn get idStatusAssento => integer()();
   BoolColumn get foiPago => boolean()();
 }

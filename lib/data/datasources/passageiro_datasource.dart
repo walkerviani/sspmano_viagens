@@ -9,7 +9,6 @@ extension PassageiroMapper on PassageiroData {
       idVeiculo,
       idPessoa,
       numeroAssento,
-      idStatusAssento: idStatusAssento,
       foiPago: foiPago,
     );
   }
@@ -22,7 +21,6 @@ extension PassageiroCompanionMapper on Passageiro {
       idVeiculo: idVeiculo,
       idPessoa: idPessoa != null ? Value(idPessoa!) : const Value.absent(),
       numeroAssento: numeroAssento,
-      idStatusAssento: idStatusAssento,
       foiPago: foiPago,
     );
   }

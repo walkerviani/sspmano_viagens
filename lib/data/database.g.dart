@@ -971,17 +971,6 @@ class $PassageirosTable extends Passageiros
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _idStatusAssentoMeta = const VerificationMeta(
-    'idStatusAssento',
-  );
-  @override
-  late final GeneratedColumn<int> idStatusAssento = GeneratedColumn<int>(
-    'id_status_assento',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
   static const VerificationMeta _foiPagoMeta = const VerificationMeta(
     'foiPago',
   );
@@ -1002,7 +991,6 @@ class $PassageirosTable extends Passageiros
     idVeiculo,
     idPessoa,
     numeroAssento,
-    idStatusAssento,
     foiPago,
   ];
   @override
@@ -1045,17 +1033,6 @@ class $PassageirosTable extends Passageiros
     } else if (isInserting) {
       context.missing(_numeroAssentoMeta);
     }
-    if (data.containsKey('id_status_assento')) {
-      context.handle(
-        _idStatusAssentoMeta,
-        idStatusAssento.isAcceptableOrUnknown(
-          data['id_status_assento']!,
-          _idStatusAssentoMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_idStatusAssentoMeta);
-    }
     if (data.containsKey('foi_pago')) {
       context.handle(
         _foiPagoMeta,
@@ -1089,10 +1066,6 @@ class $PassageirosTable extends Passageiros
         DriftSqlType.int,
         data['${effectivePrefix}numero_assento'],
       )!,
-      idStatusAssento: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id_status_assento'],
-      )!,
       foiPago: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}foi_pago'],
@@ -1111,14 +1084,12 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
   final int idVeiculo;
   final int? idPessoa;
   final int numeroAssento;
-  final int idStatusAssento;
   final bool foiPago;
   const PassageiroData({
     required this.id,
     required this.idVeiculo,
     this.idPessoa,
     required this.numeroAssento,
-    required this.idStatusAssento,
     required this.foiPago,
   });
   @override
@@ -1130,7 +1101,6 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
       map['id_pessoa'] = Variable<int>(idPessoa);
     }
     map['numero_assento'] = Variable<int>(numeroAssento);
-    map['id_status_assento'] = Variable<int>(idStatusAssento);
     map['foi_pago'] = Variable<bool>(foiPago);
     return map;
   }
@@ -1143,7 +1113,6 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
           ? const Value.absent()
           : Value(idPessoa),
       numeroAssento: Value(numeroAssento),
-      idStatusAssento: Value(idStatusAssento),
       foiPago: Value(foiPago),
     );
   }
@@ -1158,7 +1127,6 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
       idVeiculo: serializer.fromJson<int>(json['idVeiculo']),
       idPessoa: serializer.fromJson<int?>(json['idPessoa']),
       numeroAssento: serializer.fromJson<int>(json['numeroAssento']),
-      idStatusAssento: serializer.fromJson<int>(json['idStatusAssento']),
       foiPago: serializer.fromJson<bool>(json['foiPago']),
     );
   }
@@ -1170,7 +1138,6 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
       'idVeiculo': serializer.toJson<int>(idVeiculo),
       'idPessoa': serializer.toJson<int?>(idPessoa),
       'numeroAssento': serializer.toJson<int>(numeroAssento),
-      'idStatusAssento': serializer.toJson<int>(idStatusAssento),
       'foiPago': serializer.toJson<bool>(foiPago),
     };
   }
@@ -1180,14 +1147,12 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
     int? idVeiculo,
     Value<int?> idPessoa = const Value.absent(),
     int? numeroAssento,
-    int? idStatusAssento,
     bool? foiPago,
   }) => PassageiroData(
     id: id ?? this.id,
     idVeiculo: idVeiculo ?? this.idVeiculo,
     idPessoa: idPessoa.present ? idPessoa.value : this.idPessoa,
     numeroAssento: numeroAssento ?? this.numeroAssento,
-    idStatusAssento: idStatusAssento ?? this.idStatusAssento,
     foiPago: foiPago ?? this.foiPago,
   );
   PassageiroData copyWithCompanion(PassageirosCompanion data) {
@@ -1198,9 +1163,6 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
       numeroAssento: data.numeroAssento.present
           ? data.numeroAssento.value
           : this.numeroAssento,
-      idStatusAssento: data.idStatusAssento.present
-          ? data.idStatusAssento.value
-          : this.idStatusAssento,
       foiPago: data.foiPago.present ? data.foiPago.value : this.foiPago,
     );
   }
@@ -1212,21 +1174,14 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
           ..write('idVeiculo: $idVeiculo, ')
           ..write('idPessoa: $idPessoa, ')
           ..write('numeroAssento: $numeroAssento, ')
-          ..write('idStatusAssento: $idStatusAssento, ')
           ..write('foiPago: $foiPago')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    idVeiculo,
-    idPessoa,
-    numeroAssento,
-    idStatusAssento,
-    foiPago,
-  );
+  int get hashCode =>
+      Object.hash(id, idVeiculo, idPessoa, numeroAssento, foiPago);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1235,7 +1190,6 @@ class PassageiroData extends DataClass implements Insertable<PassageiroData> {
           other.idVeiculo == this.idVeiculo &&
           other.idPessoa == this.idPessoa &&
           other.numeroAssento == this.numeroAssento &&
-          other.idStatusAssento == this.idStatusAssento &&
           other.foiPago == this.foiPago);
 }
 
@@ -1244,14 +1198,12 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
   final Value<int> idVeiculo;
   final Value<int?> idPessoa;
   final Value<int> numeroAssento;
-  final Value<int> idStatusAssento;
   final Value<bool> foiPago;
   const PassageirosCompanion({
     this.id = const Value.absent(),
     this.idVeiculo = const Value.absent(),
     this.idPessoa = const Value.absent(),
     this.numeroAssento = const Value.absent(),
-    this.idStatusAssento = const Value.absent(),
     this.foiPago = const Value.absent(),
   });
   PassageirosCompanion.insert({
@@ -1259,18 +1211,15 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
     required int idVeiculo,
     this.idPessoa = const Value.absent(),
     required int numeroAssento,
-    required int idStatusAssento,
     required bool foiPago,
   }) : idVeiculo = Value(idVeiculo),
        numeroAssento = Value(numeroAssento),
-       idStatusAssento = Value(idStatusAssento),
        foiPago = Value(foiPago);
   static Insertable<PassageiroData> custom({
     Expression<int>? id,
     Expression<int>? idVeiculo,
     Expression<int>? idPessoa,
     Expression<int>? numeroAssento,
-    Expression<int>? idStatusAssento,
     Expression<bool>? foiPago,
   }) {
     return RawValuesInsertable({
@@ -1278,7 +1227,6 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
       if (idVeiculo != null) 'id_veiculo': idVeiculo,
       if (idPessoa != null) 'id_pessoa': idPessoa,
       if (numeroAssento != null) 'numero_assento': numeroAssento,
-      if (idStatusAssento != null) 'id_status_assento': idStatusAssento,
       if (foiPago != null) 'foi_pago': foiPago,
     });
   }
@@ -1288,7 +1236,6 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
     Value<int>? idVeiculo,
     Value<int?>? idPessoa,
     Value<int>? numeroAssento,
-    Value<int>? idStatusAssento,
     Value<bool>? foiPago,
   }) {
     return PassageirosCompanion(
@@ -1296,7 +1243,6 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
       idVeiculo: idVeiculo ?? this.idVeiculo,
       idPessoa: idPessoa ?? this.idPessoa,
       numeroAssento: numeroAssento ?? this.numeroAssento,
-      idStatusAssento: idStatusAssento ?? this.idStatusAssento,
       foiPago: foiPago ?? this.foiPago,
     );
   }
@@ -1316,9 +1262,6 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
     if (numeroAssento.present) {
       map['numero_assento'] = Variable<int>(numeroAssento.value);
     }
-    if (idStatusAssento.present) {
-      map['id_status_assento'] = Variable<int>(idStatusAssento.value);
-    }
     if (foiPago.present) {
       map['foi_pago'] = Variable<bool>(foiPago.value);
     }
@@ -1332,7 +1275,6 @@ class PassageirosCompanion extends UpdateCompanion<PassageiroData> {
           ..write('idVeiculo: $idVeiculo, ')
           ..write('idPessoa: $idPessoa, ')
           ..write('numeroAssento: $numeroAssento, ')
-          ..write('idStatusAssento: $idStatusAssento, ')
           ..write('foiPago: $foiPago')
           ..write(')'))
         .toString();
@@ -2304,7 +2246,6 @@ typedef $$PassageirosTableCreateCompanionBuilder =
       required int idVeiculo,
       Value<int?> idPessoa,
       required int numeroAssento,
-      required int idStatusAssento,
       required bool foiPago,
     });
 typedef $$PassageirosTableUpdateCompanionBuilder =
@@ -2313,7 +2254,6 @@ typedef $$PassageirosTableUpdateCompanionBuilder =
       Value<int> idVeiculo,
       Value<int?> idPessoa,
       Value<int> numeroAssento,
-      Value<int> idStatusAssento,
       Value<bool> foiPago,
     });
 
@@ -2372,11 +2312,6 @@ class $$PassageirosTableFilterComposer
 
   ColumnFilters<int> get numeroAssento => $composableBuilder(
     column: $table.numeroAssento,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get idStatusAssento => $composableBuilder(
-    column: $table.idStatusAssento,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2451,11 +2386,6 @@ class $$PassageirosTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get idStatusAssento => $composableBuilder(
-    column: $table.idStatusAssento,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<bool> get foiPago => $composableBuilder(
     column: $table.foiPago,
     builder: (column) => ColumnOrderings(column),
@@ -2522,11 +2452,6 @@ class $$PassageirosTableAnnotationComposer
 
   GeneratedColumn<int> get numeroAssento => $composableBuilder(
     column: $table.numeroAssento,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get idStatusAssento => $composableBuilder(
-    column: $table.idStatusAssento,
     builder: (column) => column,
   );
 
@@ -2612,14 +2537,12 @@ class $$PassageirosTableTableManager
                 Value<int> idVeiculo = const Value.absent(),
                 Value<int?> idPessoa = const Value.absent(),
                 Value<int> numeroAssento = const Value.absent(),
-                Value<int> idStatusAssento = const Value.absent(),
                 Value<bool> foiPago = const Value.absent(),
               }) => PassageirosCompanion(
                 id: id,
                 idVeiculo: idVeiculo,
                 idPessoa: idPessoa,
                 numeroAssento: numeroAssento,
-                idStatusAssento: idStatusAssento,
                 foiPago: foiPago,
               ),
           createCompanionCallback:
@@ -2628,14 +2551,12 @@ class $$PassageirosTableTableManager
                 required int idVeiculo,
                 Value<int?> idPessoa = const Value.absent(),
                 required int numeroAssento,
-                required int idStatusAssento,
                 required bool foiPago,
               }) => PassageirosCompanion.insert(
                 id: id,
                 idVeiculo: idVeiculo,
                 idPessoa: idPessoa,
                 numeroAssento: numeroAssento,
-                idStatusAssento: idStatusAssento,
                 foiPago: foiPago,
               ),
           withReferenceMapper: (p0) => p0

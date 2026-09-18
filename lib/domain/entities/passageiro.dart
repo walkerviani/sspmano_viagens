@@ -4,7 +4,6 @@ class Passageiro {
   final int _idVeiculo;
   int? idPessoa;
   int numeroAssento;
-  int idStatusAssento;
   bool foiPago;
 
   // Construtor
@@ -13,7 +12,6 @@ class Passageiro {
     this._idVeiculo,
     this.idPessoa,
     this.numeroAssento, {
-    this.idStatusAssento = 1,
     this.foiPago = false,
   });
 
@@ -28,7 +26,6 @@ class Passageiro {
       'idVeiculo': _idVeiculo,
       'idPessoa': idPessoa,
       'numeroAssento': numeroAssento,
-      'idStatusAssento': idStatusAssento,
       'foiPago': foiPago,
     };
   }
@@ -39,7 +36,6 @@ class Passageiro {
       json['idVeiculo'] as int,
       json['idPessoa'] as int?,
       json['numeroAssento'] as int,
-      idStatusAssento: json['idStatusAssento'] as int,
       foiPago: json['foiPago'] as bool,
     );
   }
