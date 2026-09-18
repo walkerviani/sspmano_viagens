@@ -86,6 +86,7 @@ Future<void> main() async {
           create: (context) => VeiculoFormViewmodel(
             context.read<VeiculoRepository>(),
             context.read<ExcursaoRepository>(),
+            context.read<PassageiroRepository>(),
           ),
         ),
         ChangeNotifierProvider<VeiculoListViewmodel>(

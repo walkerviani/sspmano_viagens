@@ -135,6 +135,11 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   }
 
   @override
+  Future<void> deletarPorVeiculo(int idVeiculo) async {
+    await (_database.delete(_database.passageiros)..where((p) => p.idVeiculo.equals(idVeiculo))).go();
+  }
+
+  @override
   Future<void> adicionarPessoa(int id, Pessoa pessoa) async {
     final passageiro = await listarPorId(id);
 

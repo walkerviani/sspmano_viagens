@@ -43,33 +43,64 @@ class _VeiculoFormScreenState extends State<VeiculoFormScreen> {
     _capacidadeController.text = viewmodel.veiculo!.capacidade.toString();
   }
 
-  Future<void> _salvar() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    final viewmodel = context.read<VeiculoFormViewmodel>();
+  bool possuiCapacidadeMenor(int capacidade) {
+    final veiculoAtual = context.read<VeiculoFormViewmodel>().veiculo;
+    if (veiculoAtual == null) return false;
+    return capacidade < veiculoAtual.capacidade;
+  }
 
+  Future<void> _salvar() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final viewmodel = context.read<VeiculoFormViewmodel>();
     final capacidade = int.parse(_capacidadeController.text.trim());
+
+    if (widget.modoEdicao && possuiCapacidadeMenor(capacidade)) {
+      final confirmar = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(
+            'Atenção',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            'Ao reduzir a quantidade de assentos, todos os passageiros atuais serão removidos. Deseja continuar?',
+            style: GoogleFonts.poppins(),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(
+                'Cancelar',
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(
+                'Continuar',
+                style: GoogleFonts.poppins(color: CoresApp.vermelho),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmar != true) return;
+    }
+
+    
 
     final sucesso = await viewmodel.salvarVeiculo(
       id: widget.veiculoId,
       idExcursao: widget.idExcursao,
       capacidade: capacidade,
     );
-    if (!mounted) return;
 
+    if (!mounted) return;
     if (sucesso) {
       Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            viewmodel.mensagemErro ?? 'Houve algum erro desconhecido',
-            style: GoogleFonts.poppins(color: CoresApp.branco),
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
     }
   }
 

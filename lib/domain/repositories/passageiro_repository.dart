@@ -12,6 +12,7 @@ abstract class PassageiroRepository {
   Future<void> criar(Passageiro passageiro);
   Future<void> atualizar(Passageiro passageiro);
   Future<void> deletar(int id);
+  Future<void> deletarPorVeiculo(int idVeiculo);
   Future<void> adicionarPessoa(int id, Pessoa pessoa);
   Future<void> removerPessoa(int id, Pessoa pessoa);
   Future<void> definirStatusAssento(int id, int status);

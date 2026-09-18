@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sspmano_viagens/domain/entities/veiculo.dart';
 import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
+import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
 
 class VeiculoFormViewmodel extends ChangeNotifier {
   final VeiculoRepository _veiculoRepository;
   final ExcursaoRepository _excursaoRepository;
+  final PassageiroRepository _passageiroRepository;
 
-  VeiculoFormViewmodel(this._veiculoRepository, this._excursaoRepository);
+  VeiculoFormViewmodel(
+    this._veiculoRepository,
+    this._excursaoRepository,
+    this._passageiroRepository,
+  );
   bool estaCarregando = false;
   String? mensagemErro;
   Veiculo? veiculo;
@@ -43,6 +49,12 @@ class VeiculoFormViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      // Deleta passageiros após diminuir o total de passageiros do veículo
+      final veiculoAtual = id != null ? await _veiculoRepository.listarPorId(id) : null;
+      if (id != null && veiculoAtual != null && capacidade < veiculoAtual.capacidade) {
+        await _passageiroRepository.deletarPorVeiculo(id);
+      }
+
       Veiculo veiculo = Veiculo(id, idExcursao, capacidade);
       if (id != null) {
         await _veiculoRepository.atualizar(veiculo);
