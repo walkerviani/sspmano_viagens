@@ -11,5 +11,7 @@ class CoresApp {
   static const grafite = Color(0xFF41424C);
   static const laranja = Color(0xFFd66104);
   static const azulClaro = Color(0xFF2196F3);
+  static const azulEscuro = Color(0xFF0D47A1);
+  static const roxo = Color(0xFF9c27b0);
   static const branco = Colors.white;
 }
