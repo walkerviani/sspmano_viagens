@@ -19,7 +19,7 @@ class _VeiculoListScreenState extends State<VeiculoListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<VeiculoListViewmodel>().carregarVeiculos();
+      context.read<VeiculoListViewmodel>().carregarVeiculos(widget.excursaoId);
     });
   }
 
@@ -32,7 +32,7 @@ class _VeiculoListScreenState extends State<VeiculoListScreen> {
       ),
     );
     if (!mounted) return;
-    viewmodel.carregarVeiculos();
+    viewmodel.carregarVeiculos(widget.excursaoId);
   }
 
   void _confirmarExcluir(Veiculo veiculo) {
@@ -63,7 +63,7 @@ class _VeiculoListScreenState extends State<VeiculoListScreen> {
               final sucesso = await viewModel.deletar(veiculo.id!);
               if (!mounted) return;
               if (sucesso) {
-                viewModel.carregarVeiculos();
+                viewModel.carregarVeiculos(widget.excursaoId);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

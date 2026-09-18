@@ -12,14 +12,14 @@ class VeiculoListViewmodel extends ChangeNotifier {
   String? mensagemErro;
   List<Veiculo> veiculos = [];
 
-  Future<void> carregarVeiculos() async {
+  Future<void> carregarVeiculos(int idExcursao) async {
     mensagemErro = null;
 
     estaCarregando = true;
     notifyListeners();
 
     try {
-      veiculos = await _veiculoRepository.listarTodos();
+      veiculos = await _veiculoRepository.listarPorExcursao(idExcursao);
     } catch (e) {
       mensagemErro = 'Erro ao carregar os veiculos';
     } finally {
