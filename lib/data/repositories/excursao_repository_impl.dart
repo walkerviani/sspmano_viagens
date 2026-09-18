@@ -42,7 +42,17 @@ class ExcursaoRepositoryImpl implements ExcursaoRepository {
 
   @override
   Future<void> deletar(int id) async {
-    await (_database.delete(_database.excursoes)..where((e) => e.id.equals(id))).go();
+    await _database.transaction(() async {
+      final veiculos = await (_database.select(_database.veiculos)..where((v) => v.idExcursao.equals(id))).get();
+
+      for (final veiculo in veiculos) {
+        await (_database.delete(_database.passageiros)..where((p) => p.idVeiculo.equals(veiculo.id))).go();
+      }
+
+      await (_database.delete(_database.veiculos)..where((v) => v.idExcursao.equals(id))).go();
+
+      await (_database.delete(_database.excursoes)..where((e) => e.id.equals(id))).go();
+    });
   }
 
   @override

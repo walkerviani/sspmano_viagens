@@ -681,7 +681,7 @@ class $VeiculosTable extends Veiculos
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES excursoes (id)',
+      'REFERENCES excursoes (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _capacidadeMeta = const VerificationMeta(
@@ -943,7 +943,7 @@ class $PassageirosTable extends Passageiros
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES veiculos (id)',
+      'REFERENCES veiculos (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _idPessoaMeta = const VerificationMeta(
@@ -1298,6 +1298,23 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     veiculos,
     passageiros,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'excursoes',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('veiculos', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'veiculos',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('passageiros', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$ExcursoesTableCreateCompanionBuilder =
