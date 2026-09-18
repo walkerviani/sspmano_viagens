@@ -16,7 +16,7 @@ class SelecionarPassageiroViewmodel extends ChangeNotifier {
   String? mensagemErro;
   List<Pessoa> pessoas = [];
 
-  Future<void> carregarPessoas() async {
+  Future<void> carregarPessoas(int idExcursao) async {
     mensagemErro = null;
 
     estaCarregando = true;
@@ -24,6 +24,9 @@ class SelecionarPassageiroViewmodel extends ChangeNotifier {
 
     try {
       pessoas = await _pessoaRepository.listarTodos();
+      final idsOcupados = await _passageiroRepository
+          .listarIdsPessoasNaExcursao(idExcursao);
+      pessoas = pessoas.where((p) => !idsOcupados.contains(p.id)).toList();
     } catch (e) {
       mensagemErro = 'Erro ao carregar os usuários';
     } finally {

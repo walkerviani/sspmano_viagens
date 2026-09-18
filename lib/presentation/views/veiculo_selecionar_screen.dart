@@ -32,6 +32,7 @@ class _VeiculoSelecionarScreenState extends State<VeiculoSelecionarScreen> {
         builder: (context) => AssentosListScreen(
           quantidadeAssentos: veiculo.capacidade,
           idVeiculo: veiculo.id!,
+          idExcursao: widget.excursaoId,
         ),
       ),
     );

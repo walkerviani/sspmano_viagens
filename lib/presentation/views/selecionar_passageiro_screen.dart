@@ -8,10 +8,12 @@ import 'package:sspmano_viagens/utils/cores_app.dart';
 class SelecionarPassageiroScreen extends StatefulWidget {
   final int numAssento;
   final int idVeiculo;
+  final int idExcursao;
   const SelecionarPassageiroScreen({
     super.key,
     required this.numAssento,
     required this.idVeiculo,
+    required this.idExcursao,
   });
 
   @override
@@ -24,7 +26,9 @@ class _SelecionarPassageiroScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SelecionarPassageiroViewmodel>().carregarPessoas();
+      context.read<SelecionarPassageiroViewmodel>().carregarPessoas(
+        widget.idExcursao,
+      );
     });
   }
 

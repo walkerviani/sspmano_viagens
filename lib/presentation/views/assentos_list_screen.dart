@@ -10,10 +10,12 @@ import 'package:sspmano_viagens/utils/cores_app.dart';
 class AssentosListScreen extends StatefulWidget {
   final int quantidadeAssentos;
   final int idVeiculo;
+  final int idExcursao;
   const AssentosListScreen({
     super.key,
     required this.quantidadeAssentos,
     required this.idVeiculo,
+    required this.idExcursao,
   });
 
   @override
@@ -50,6 +52,7 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
           builder: (_) => SelecionarPassageiroScreen(
             numAssento: numAssento,
             idVeiculo: widget.idVeiculo,
+            idExcursao: widget.idExcursao,
           ),
         ),
       );
