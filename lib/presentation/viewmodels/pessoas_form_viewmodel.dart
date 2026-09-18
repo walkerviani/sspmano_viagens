@@ -58,6 +58,7 @@ class PessoasFormViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      nome = nome.toUpperCase();
       Pessoa pessoa = Pessoa(id, nome, cpf, telefone);
       if (id != null) {
         await _repository.atualizar(pessoa);
