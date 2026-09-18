@@ -19,6 +19,7 @@ import 'package:sspmano_viagens/data/datasources/backup/backup_file_datasource.d
 import 'package:sspmano_viagens/data/datasources/backup/json_backup_datasource.dart';
 import 'package:sspmano_viagens/data/repositories/backup_repository_impl.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/backup_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/excursoes_detalhes_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/passageiro_list_viewmodel.dart';
@@ -118,6 +119,10 @@ Future<void> main() async {
         ChangeNotifierProvider<PassageiroListViewmodel>(
           create: (context) =>
               PassageiroListViewmodel(context.read<PassageiroRepository>()),
+        ),
+        ChangeNotifierProvider<ExcursoesDetalhesViewmodel>(
+          create: (context) =>
+              ExcursoesDetalhesViewmodel(context.read<ExcursaoRepository>()),
         ),
       ],
       child: const MyApp(),

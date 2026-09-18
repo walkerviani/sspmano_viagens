@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/excursoes_detalhes_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
 import 'package:sspmano_viagens/presentation/views/passageiro_list_screen.dart';
@@ -33,6 +34,57 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
     );
     if (!mounted) return;
     viewmodel.carregarExcursoes();
+  }
+
+  void _excluirExcursao() async {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          'Excluir Excursão',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 23),
+        ),
+        content: Text(
+          'Tem certeza que deseja excluir essa excursão?',
+          style: GoogleFonts.poppins(),
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancelar',
+              style: GoogleFonts.poppins(color: Colors.black),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final viewModel = context.read<ExcursoesDetalhesViewmodel>();
+              final sucesso = await viewModel.deletar(widget.excursaoId);
+              if (!mounted) return;
+              if (sucesso) {
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      viewModel.mensagemErro ?? 'Erro ao excluir',
+                      style: GoogleFonts.poppins(),
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Excluir',
+              style: GoogleFonts.poppins(color: CoresApp.vermelho),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -270,7 +322,7 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => _excluirExcursao(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.vermelhoClaro,
                 foregroundColor: CoresApp.branco,
