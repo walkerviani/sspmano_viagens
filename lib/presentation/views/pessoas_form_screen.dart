@@ -147,6 +147,7 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
 
               const SizedBox(height: 10),
