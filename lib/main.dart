@@ -74,17 +74,12 @@ Future<void> main() async {
         ChangeNotifierProvider<ExcursoesListViewmodel>(
           create: (context) =>
               ExcursoesListViewmodel(context.read<ExcursaoRepository>()),
+        ),
 
-        ),
-        
-        Provider<BackupRepository>.value(
-          value: backupRepository,
-        ),
+        Provider<BackupRepository>.value(value: backupRepository),
         ChangeNotifierProvider<BackupViewModel>(
           create: (context) =>
-              BackupViewModel(
-                context.read<BackupRepository>(),
-              ),
+              BackupViewModel(context.read<BackupRepository>()),
         ),
         ChangeNotifierProvider<VeiculoFormViewmodel>(
           create: (context) => VeiculoFormViewmodel(
@@ -103,7 +98,8 @@ Future<void> main() async {
               VeiculoSelecionarViewmodel(context.read<VeiculoRepository>()),
         ),
         ChangeNotifierProvider<AssentosListViewmodel>(
-          create: (context) => AssentosListViewmodel(),
+          create: (context) =>
+              AssentosListViewmodel(context.read<PassageiroRepository>()),
         ),
         ChangeNotifierProvider<SelecionarPassageiroViewmodel>(
           create: (context) => SelecionarPassageiroViewmodel(
