@@ -23,6 +23,10 @@ class AssentosListScreen extends StatefulWidget {
 }
 
 class _AssentosListScreenState extends State<AssentosListScreen> {
+  final assentoLivre = CoresApp.verdeClaro;
+  final assentoOcupadoNaoPago = CoresApp.vinho;
+  final assentoOcupadoPago = CoresApp.azulEscuro;
+  final assentoErro = CoresApp.grafite;
   @override
   void initState() {
     super.initState();
@@ -36,10 +40,16 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
   Color _statusAssento(Passageiro? passageiro) {
     if (passageiro == null) {
       // Assento livre
-      return CoresApp.verdeClaro;
+      return assentoLivre;
+    } else if (passageiro.foiPago == false) {
+      // Assento ocupado, mas não pago
+      return assentoOcupadoNaoPago;
+    } else if (passageiro.foiPago == true) {
+      // Assento ocupado e pago
+      return assentoOcupadoPago;
     } else {
-      // Assento ocupado
-      return CoresApp.vinho;
+      // Caso não esperado
+      return assentoErro;
     }
   }
 
@@ -76,7 +86,49 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),
-      body: SafeArea(child: _mapearAssentos(widget.quantidadeAssentos)),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(12),
+          child: Column(
+            children: [
+              _statusLegenda(),
+              SizedBox(height: 10),
+              Expanded(child: _mapearAssentos(widget.quantidadeAssentos)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _statusLegenda() {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      alignment: WrapAlignment.center,
+      children: [
+        _itemLegenda(assentoLivre, 'Livre'),
+        _itemLegenda(assentoOcupadoNaoPago, 'Ocupado, não pago'),
+        _itemLegenda(assentoOcupadoPago, 'Ocupado, pago'),
+      ],
+    );
+  }
+
+  Widget _itemLegenda(Color cor, String texto) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 18,
+          height: 18,
+          decoration: BoxDecoration(
+            color: cor,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(texto, style: GoogleFonts.poppins(fontSize: 17)),
+      ],
     );
   }
 
