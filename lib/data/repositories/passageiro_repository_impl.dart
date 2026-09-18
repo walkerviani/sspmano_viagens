@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:sspmano_viagens/data/database.dart';
 import 'package:sspmano_viagens/data/datasources/passageiro_datasource.dart';
+import 'package:sspmano_viagens/data/datasources/pessoa_datasource.dart';
+import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
 import 'package:sspmano_viagens/domain/entities/passageiro.dart';
 import 'package:sspmano_viagens/domain/entities/pessoa.dart';
 import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
@@ -62,6 +64,34 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
     )..where((p) => p.idVeiculo.equals(idVeiculo))).get();
 
     return passageiros.map((p) => p.toEntity()).toList();
+  }
+
+  @override
+  Future<List<PassageiroComPessoaDto>> listarPorExcursao(int idExcursao) async {
+    final resultados =
+        await (_database.select(_database.passageiros).join([
+              innerJoin(
+                _database.veiculos,
+                _database.passageiros.idVeiculo.equalsExp(
+                  _database.veiculos.id,
+                ),
+              ),
+              innerJoin(
+                _database.pessoas,
+                _database.passageiros.idPessoa.equalsExp(_database.pessoas.id),
+              ),
+            ])..where(
+              _database.veiculos.idExcursao.equals(idExcursao) &
+                  _database.passageiros.idPessoa.isNotNull(),
+            ))
+            .get();
+
+    return resultados.map((resultado) {
+      return PassageiroComPessoaDto(
+        passageiro: resultado.readTable(_database.passageiros).toEntity(),
+        pessoa: resultado.readTable(_database.pessoas).toEntity(),
+      );
+    }).toList();
   }
 
   @override

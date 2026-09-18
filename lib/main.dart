@@ -21,6 +21,7 @@ import 'package:sspmano_viagens/data/repositories/backup_repository_impl.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/backup_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/passageiro_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_form_viewmodel.dart';
@@ -112,6 +113,10 @@ Future<void> main() async {
             context.read<PassageiroRepository>(),
             context.read<PessoaRepository>(),
           ),
+        ),
+        ChangeNotifierProvider<PassageiroListViewmodel>(
+          create: (context) =>
+              PassageiroListViewmodel(context.read<PassageiroRepository>()),
         ),
       ],
       child: const MyApp(),

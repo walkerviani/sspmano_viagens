@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
+import 'package:sspmano_viagens/presentation/views/passageiro_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_selecionar_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
@@ -168,6 +169,40 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
               const SizedBox(width: 10),
               Text(
                 'Editar excursão',
+                style: GoogleFonts.poppins(
+                  color: CoresApp.branco,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) =>
+                    PassageiroListScreen(idExcursao: widget.excursaoId),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: CoresApp.azulPetroleo,
+            foregroundColor: CoresApp.branco,
+            minimumSize: Size(double.infinity, 70),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.monetization_on, size: 40),
+              const SizedBox(width: 10),
+              Text(
+                'Verificar pagamentos',
                 style: GoogleFonts.poppins(
                   color: CoresApp.branco,
                   fontSize: 20,
