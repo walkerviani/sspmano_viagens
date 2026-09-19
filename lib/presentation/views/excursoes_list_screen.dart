@@ -59,78 +59,88 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),
-      body: Container(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () => _abrirFormulario(false),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.verdeClaro,
-                foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () => _abrirFormulario(false),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CoresApp.verdeClaro,
+                  foregroundColor: CoresApp.branco,
+                  minimumSize: Size(double.infinity, 70),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.add, size: 40),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Criar excursão',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.add, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Criar excursão',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
-            const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
-            Expanded(
-              child: Consumer<ExcursoesListViewmodel>(
-                builder: (context, viewmodel, child) {
-                  if (viewmodel.estaCarregando) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: CoresApp.vermelho,
-                      ),
-                    );
-                  }
-                  if (viewmodel.excursoes.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Nenhuma excursão encontrada',
-                        style: GoogleFonts.poppins(
-                          color: CoresApp.grafite,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+              Expanded(
+                child: Consumer<ExcursoesListViewmodel>(
+                  builder: (context, viewmodel, child) {
+                    if (viewmodel.estaCarregando) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: CoresApp.vermelho,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                      );
+                    }
+                    if (viewmodel.excursoes.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Nenhuma excursão encontrada',
+                          style: GoogleFonts.poppins(
+                            color: CoresApp.grafite,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      itemCount: viewmodel.excursoes.length,
+                      itemBuilder: ((context, index) =>
+                          _cardExcursoes(viewmodel.excursoes[index])),
                     );
-                  }
-                  return ListView.builder(
-                    itemCount: viewmodel.excursoes.length,
-                    itemBuilder: ((context, index) =>
-                        _cardExcursoes(viewmodel.excursoes[index])),
-                  );
-                },
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _cardExcursoes(Excursao excursao) {
-    String statusAtual = ExcursaoStatus.values
-        .firstWhere((e) => e.id == excursao.idStatus)
-        .excursaoStatus;
+    String statusAtual;
+    try {
+      statusAtual = ExcursaoStatus.values
+          .firstWhere((e) => e.id == excursao.idStatus)
+          .excursaoStatus;
+    } catch (e) {
+      debugPrint('Status não encontrado para idStatus: ${excursao.idStatus}');
+      statusAtual = 'DESCONHECIDO';
+    }
+    
     String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
     String hora = DateFormat('HH:mm').format(excursao.dataHora);
     String nomeCortado = excursao.nome.length > 20
@@ -138,9 +148,12 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
         : excursao.nome;
     bool statusExcursao = excursao.idStatus == ExcursaoStatus.finalizado.id;
 
+
     return Card(
       key: ValueKey(excursao.id),
       color: CoresApp.azulPetroleo,
+      margin: const EdgeInsets.only(bottom: 12),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
           await _abrirDetalhes(excursao.id!, statusExcursao);

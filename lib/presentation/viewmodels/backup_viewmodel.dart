@@ -26,7 +26,7 @@ class BackupViewModel extends ChangeNotifier {
       final freq = await _repository.obterFrequencia();
       frequencia = _parseFrequencia(freq ?? 'desativado');
     } catch (e) {
-      erro = 'Erro ao carregar configurações: $e';
+      erro = _formatarErro(e, prefixo: 'Erro ao carregar configurações');
     } finally {
       carregando = false;
       notifyListeners();
@@ -39,7 +39,7 @@ class BackupViewModel extends ChangeNotifier {
       final novaPasta = await _repository.escolherPasta();
       if (novaPasta != null) pasta = novaPasta;
     } catch (e) {
-      erro = 'Erro ao escolher pasta: $e';
+      erro = _formatarErro(e, prefixo: 'Erro ao escolher pasta');
     }
     notifyListeners();
   }
@@ -51,24 +51,27 @@ class BackupViewModel extends ChangeNotifier {
       await BackupBackgroundService.scheduleIfEnabled();
       frequencia = novaFrequencia;
     } catch (e) {
-      erro = 'Erro ao salvar frequência: $e';
+      erro = _formatarErro(e, prefixo: 'Erro ao salvar frequência');
     }
     notifyListeners();
   }
 
   Future<void> criarBackup() => executarOperacao(
     _repository.criarBackup,
-    'backup',
   );
 
-  Future<void> restaurarBackup() => executarOperacao(
-    _repository.restaurarBackup,
-    'restauração',
-  );
+  Future<void> restaurarBackup() => executarOperacao(() async {
+    final conteudoBackup = await _repository.selecionarArquivoBackup();
+
+    if (conteudoBackup == null || conteudoBackup.isEmpty) {
+      throw StateError('Nenhum arquivo de backup selecionado.');
+    }
+
+    await _repository.restaurarBackup(conteudoBackup: conteudoBackup);
+  });
 
   Future<void> executarOperacao( // Método genérico que gerencia estado de carregamento/erro para backup e restauração
     Future<void> Function() operacao,
-    String nome,
   ) async {
     _resetState();
     carregando = true;
@@ -78,7 +81,7 @@ class BackupViewModel extends ChangeNotifier {
       await operacao();
       sucesso = true;
     } catch (e) {
-      erro = 'Erro ao realizar $nome: $e';
+      erro = _formatarErro(e, prefixo: 'Erro ao realizar operação');
     } finally {
       carregando = false;
       notifyListeners();
@@ -88,6 +91,23 @@ class BackupViewModel extends ChangeNotifier {
   void _resetState() {
     erro = null;
     sucesso = false;
+  }
+
+  String _formatarErro(Object erro, {required String prefixo}) {
+    final mensagem = erro.toString();
+    final mensagemLimpa = mensagem
+        .replaceFirst('Exception: ', '')
+        .replaceFirst('FlutterError: ', '')
+        .replaceFirst('StateError: ', '')
+        .replaceFirst('FileSystemException: ', '')
+        .replaceFirst('PlatformException: ', '')
+        .trim();
+
+    if (mensagemLimpa.isEmpty) {
+      return '$prefixo.';
+    }
+
+    return '$prefixo: $mensagemLimpa';
   }
 
   FrequenciaBackup _parseFrequencia(String valor) { // Converte string armazenada em enum FrequenciaBackup

@@ -37,6 +37,11 @@ class BackupRepositoryImpl implements BackupRepository {
   }
 
   @override
+  Future<String?> selecionarArquivoBackup() async {
+    return _arquivo.escolherArquivoBackup();
+  }
+
+  @override
   Future<String?> obterPasta() async { // Retorna pasta configurada
     return _config.obterPasta();
   }
@@ -72,16 +77,20 @@ class BackupRepositoryImpl implements BackupRepository {
   }
 
   @override
-  Future<void> restaurarBackup() async {
-    final pasta = await _config.obterPasta();
+  Future<void> restaurarBackup({String? conteudoBackup}) async {
+    String? conteudo = conteudoBackup;
 
-    if (pasta == null || pasta.isEmpty) {
-      throw StateError('Nenhuma pasta de backup foi configurada.');
+    if (conteudo == null || conteudo.isEmpty) {
+      final pasta = await _config.obterPasta();
+
+      if (pasta == null || pasta.isEmpty) {
+        throw StateError('Nenhuma pasta de backup foi configurada.');
+      }
+
+      conteudo = await _arquivo.lerBackup(pasta: pasta);
     }
 
-    final conteudo = await _arquivo.lerBackup(pasta: pasta);
-
-    if (conteudo == null) {
+    if (conteudo == null || conteudo.isEmpty) {
       throw StateError('Nenhum backup encontrado.');
     }
 

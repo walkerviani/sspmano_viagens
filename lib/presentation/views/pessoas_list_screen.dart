@@ -99,69 +99,72 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),
-      body: Container(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () => _abrirFormulario(null, false),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.verdeClaro,
-                foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () => _abrirFormulario(null, false),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: CoresApp.verdeClaro,
+                  foregroundColor: CoresApp.branco,
+                  minimumSize: Size(double.infinity, 70),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.person_add, size: 40),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Adicionar pessoa',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.person_add, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Adicionar pessoa',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
-            const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
-            Expanded(
-              child: Consumer<PessoasListViewmodel>(
-                builder: (context, viewmodel, child) {
-                  if (viewmodel.estaCarregando) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: CoresApp.vermelho,
-                      ),
-                    );
-                  }
-                  if (viewmodel.pessoas.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Nenhuma pessoa encontrada',
-                        style: GoogleFonts.poppins(
-                          color: CoresApp.grafite,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+              Expanded(
+                child: Consumer<PessoasListViewmodel>(
+                  builder: (context, viewmodel, child) {
+                    if (viewmodel.estaCarregando) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: CoresApp.vermelho,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                      );
+                    }
+                    if (viewmodel.pessoas.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Nenhuma pessoa encontrada',
+                          style: GoogleFonts.poppins(
+                            color: CoresApp.grafite,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      itemCount: viewmodel.pessoas.length,
+                      itemBuilder: ((context, index) =>
+                          _cardPessoa(viewmodel.pessoas[index])),
                     );
-                  }
-                  return ListView.builder(
-                    itemCount: viewmodel.pessoas.length,
-                    itemBuilder: ((context, index) =>
-                        _cardPessoa(viewmodel.pessoas[index])),
-                  );
-                },
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

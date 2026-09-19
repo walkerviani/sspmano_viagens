@@ -13,8 +13,6 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
-  bool _snackbarMostrado = false;
-
   @override
   void initState() {
     super.initState();
@@ -24,17 +22,29 @@ class _BackupScreenState extends State<BackupScreen> {
     });
   }
 
-  void _mostrarSnackBar() {
+  Future<void> _executarOperacao(Future<void> Function() operacao) async {
+    await operacao();
+
+    if (!mounted) return;
+
+    final viewModel = context.read<BackupViewModel>();
+    final mensagem = viewModel.erro ?? 'Backup realizado com sucesso.';
+    final cor = viewModel.erro == null ? Colors.green : Colors.red;
+
+    _mostrarSnackBar(mensagem: mensagem, cor: cor);
+  }
+
+  void _mostrarSnackBar({required String mensagem, required Color cor}) {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Backup realizado com sucesso.',
+          mensagem,
           style: GoogleFonts.poppins(color: CoresApp.branco),
         ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
+        backgroundColor: cor,
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -42,17 +52,6 @@ class _BackupScreenState extends State<BackupScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<BackupViewModel>();
-
-    if (viewModel.sucesso && !_snackbarMostrado) {
-      _snackbarMostrado = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _mostrarSnackBar();
-      });
-    }
-
-    if (!viewModel.sucesso && _snackbarMostrado && !viewModel.carregando) {
-      _snackbarMostrado = false;
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -196,7 +195,7 @@ class _BackupScreenState extends State<BackupScreen> {
               ElevatedButton.icon(
                 onPressed: viewModel.carregando
                     ? null
-                    : viewModel.criarBackup,
+                    : () => _executarOperacao(viewModel.criarBackup),
                 icon: const Icon(Icons.backup),
                 label: Text(
                   'Fazer backup agora',
@@ -219,7 +218,7 @@ class _BackupScreenState extends State<BackupScreen> {
               ElevatedButton.icon(
                 onPressed: viewModel.carregando
                     ? null
-                    : viewModel.restaurarBackup,
+                    : () => _executarOperacao(viewModel.restaurarBackup),
                 icon: const Icon(Icons.restore),
                 label: Text(
                   'Restaurar backup',
@@ -236,17 +235,6 @@ class _BackupScreenState extends State<BackupScreen> {
                   ),
                 ),
               ),
-
-              if (viewModel.erro != null) ...[
-                const SizedBox(height: 15),
-                Text(
-                  viewModel.erro!,
-                  style: GoogleFonts.poppins(
-                    color: Colors.red,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
 
             ],
           ),
