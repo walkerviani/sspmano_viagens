@@ -135,11 +135,13 @@ class _VeiculoFormScreenState extends State<VeiculoFormScreen> {
                   return null;
                 },
                 controller: _capacidadeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Quantidade de assentos',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Quantidade de assentos',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),

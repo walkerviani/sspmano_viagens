@@ -201,11 +201,13 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                   return null;
                 },
                 controller: _nomeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Nome da excursão',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Nome da excursão',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
@@ -228,11 +230,13 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                 onTap: () => _selecionarData(context),
                 readOnly: true,
                 controller: _dataController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Data do evento',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Data do evento',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
@@ -255,11 +259,13 @@ class _ExcursoesFormScreenState extends State<ExcursoesFormScreen> {
                 onTap: () => _selecionarHora(context),
                 readOnly: true,
                 controller: _horaController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Hora do evento',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Hora do evento',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),

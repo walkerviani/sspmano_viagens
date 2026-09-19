@@ -109,11 +109,13 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                 },
                 controller: _nomeController,
                 maxLength: 50,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Nome',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Nome',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
@@ -136,11 +138,13 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                 },
                 controller: _cpfController,
                 maxLength: 11,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'CPF',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'CPF',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),
@@ -165,11 +169,13 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                 },
                 controller: _telefoneController,
                 maxLength: 11,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Telefone',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Telefone',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black),

@@ -139,10 +139,12 @@ class _BackupScreenState extends State<BackupScreen> {
 
               DropdownButtonFormField<FrequenciaBackup>(
                 initialValue: viewModel.frequencia,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Frequência',
+                  labelStyle: GoogleFonts.poppins(fontSize: 18),
                   hintText: 'Selecione a frequência',
+                  hintStyle: GoogleFonts.poppins(fontSize: 18),
                   floatingLabelStyle: TextStyle(
                     color: Colors.black,
                   ),
@@ -152,22 +154,23 @@ class _BackupScreenState extends State<BackupScreen> {
                     ),
                   ),
                 ),
-                items: const [
+                items: [
                   DropdownMenuItem(
                     value: FrequenciaBackup.diario,
-                    child: Text('Diário'),
+                    child: Text('Diário', style: GoogleFonts.poppins()),
+                    
                   ),
                   DropdownMenuItem(
                     value: FrequenciaBackup.semanal,
-                    child: Text('Semanal'),
+                    child: Text('Semanal', style: GoogleFonts.poppins()),
                   ),
                   DropdownMenuItem(
                     value: FrequenciaBackup.mensal,
-                    child: Text('Mensal'),
+                    child: Text('Mensal', style: GoogleFonts.poppins()),
                   ),
                   DropdownMenuItem(
                     value: FrequenciaBackup.desativado,
-                    child: Text('Desativado'),
+                    child: Text('Desativado', style: GoogleFonts.poppins()),
                   ),
                 ],
                 onChanged: viewModel.carregando

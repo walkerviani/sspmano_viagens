@@ -16,12 +16,25 @@ class PessoasListScreen extends StatefulWidget {
 }
 
 class _PessoasListScreenState extends State<PessoasListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PessoasListViewmodel>().carregarPessoas();
     });
+  }
+
+  void _executarPesquisa() {
+    final busca = _searchController.text;
+    context.read<PessoasListViewmodel>().aplicarFiltro(busca);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _abrirFormulario(int? id, bool modoEdicao) async {
@@ -104,19 +117,55 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _searchController,
+                builder: (context, value, child) {
+                  final possuiTexto = value.text.isNotEmpty;
+
+                  return TextField(
+                    controller: _searchController,
+                    textInputAction: TextInputAction.search,
+                    onChanged: (valor) => _executarPesquisa(),
+                    onSubmitted: (_) => _executarPesquisa(),
+                    decoration: InputDecoration(
+                      hintText: 'Digite o nome...',
+                      hintStyle: GoogleFonts.poppins(fontSize: 18),
+                      border: const OutlineInputBorder(),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          possuiTexto
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    _executarPesquisa();
+                                  },
+                                )
+                              : IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: _executarPesquisa,
+                                ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () => _abrirFormulario(null, false),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CoresApp.verdeClaro,
                   foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
+                  minimumSize: const Size(double.infinity, 70),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.person_add, size: 40),
+                    const Icon(Icons.person_add, size: 40),
                     const SizedBox(width: 10),
                     Text(
                       'Adicionar pessoa',
@@ -128,9 +177,7 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 10),
-
               Expanded(
                 child: Consumer<PessoasListViewmodel>(
                   builder: (context, viewmodel, child) {

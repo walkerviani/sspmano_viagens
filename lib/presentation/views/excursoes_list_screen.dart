@@ -17,12 +17,25 @@ class ExcursoesListScreen extends StatefulWidget {
 }
 
 class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ExcursoesListViewmodel>().carregarExcursoes();
     });
+  }
+
+  void _executarPesquisa() {
+    final busca = _searchController.text;
+    context.read<ExcursoesListViewmodel>().aplicarFiltro(busca);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _abrirFormulario(bool modoEdicao) async {
@@ -64,19 +77,55 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _searchController,
+                builder: (context, value, child) {
+                  final possuiTexto = value.text.isNotEmpty;
+
+                  return TextField(
+                    controller: _searchController,
+                    textInputAction: TextInputAction.search,
+                    onChanged: (valor) => _executarPesquisa(),
+                    onSubmitted: (_) => _executarPesquisa(),
+                    decoration: InputDecoration(
+                      hintText: 'Digite o nome da excursão...',
+                      hintStyle: GoogleFonts.poppins(fontSize: 18),
+                      border: const OutlineInputBorder(),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          possuiTexto
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    _executarPesquisa();
+                                  },
+                                )
+                              : IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: _executarPesquisa,
+                                ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () => _abrirFormulario(false),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CoresApp.verdeClaro,
                   foregroundColor: CoresApp.branco,
-                  minimumSize: Size(double.infinity, 70),
+                  minimumSize: const Size(double.infinity, 70),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.add, size: 40),
+                    const Icon(Icons.add, size: 40),
                     const SizedBox(width: 10),
                     Text(
                       'Criar excursão',
@@ -88,9 +137,7 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 10),
-
               Expanded(
                 child: Consumer<ExcursoesListViewmodel>(
                   builder: (context, viewmodel, child) {
@@ -115,7 +162,6 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
                       );
                     }
                     return ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 12),
                       itemCount: viewmodel.excursoes.length,
                       itemBuilder: ((context, index) =>
                           _cardExcursoes(viewmodel.excursoes[index])),
@@ -140,14 +186,13 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
       debugPrint('Status não encontrado para idStatus: ${excursao.idStatus}');
       statusAtual = 'DESCONHECIDO';
     }
-    
+
     String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
     String hora = DateFormat('HH:mm').format(excursao.dataHora);
     String nomeCortado = excursao.nome.length > 20
         ? '${excursao.nome.substring(0, 20)}...'
         : excursao.nome;
     bool statusExcursao = excursao.idStatus == ExcursaoStatus.finalizado.id;
-
 
     return Card(
       key: ValueKey(excursao.id),
@@ -158,9 +203,10 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
         onTap: () async {
           await _abrirDetalhes(excursao.id!, statusExcursao);
         },
-        child: Container(
-          padding: EdgeInsets.all(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 statusAtual.toUpperCase(),
@@ -171,39 +217,35 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  Text.rich(
+              Text.rich(
+                TextSpan(
+                  children: [
                     TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '$nomeCortado\n'.toUpperCase(),
-                          style: GoogleFonts.poppins(
-                            color: CoresApp.branco,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '$data às $hora\n',
-                          style: GoogleFonts.poppins(
-                            color: CoresApp.branco,
-                            fontSize: 16,
-                          ),
-                        ),
-                        TextSpan(
-                          text: excursao.qtdAssentos == 0
-                              ? 'Sem veículos vinculados'
-                              : '${excursao.qtdAssentos} passageiros',
-                          style: GoogleFonts.poppins(
-                            color: CoresApp.branco,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                      text: '$nomeCortado\n'.toUpperCase(),
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                ],
+                    TextSpan(
+                      text: '$data às $hora\n',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 16,
+                      ),
+                    ),
+                    TextSpan(
+                      text: excursao.qtdAssentos == 0
+                          ? 'Sem veículos vinculados'
+                          : '${excursao.qtdAssentos} passageiros',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
