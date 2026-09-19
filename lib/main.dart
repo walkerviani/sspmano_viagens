@@ -121,8 +121,10 @@ Future<void> main() async {
               PassageiroListViewmodel(context.read<PassageiroRepository>()),
         ),
         ChangeNotifierProvider<ExcursoesDetalhesViewmodel>(
-          create: (context) =>
-              ExcursoesDetalhesViewmodel(context.read<ExcursaoRepository>()),
+          create: (context) => ExcursoesDetalhesViewmodel(
+            context.read<ExcursaoRepository>(),
+            context.read<PassageiroRepository>(),
+          ),
         ),
       ],
       child: const MyApp(),

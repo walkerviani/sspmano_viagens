@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_detalhes_viewmodel.dart';
-import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
 import 'package:sspmano_viagens/presentation/views/passageiro_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
@@ -23,8 +23,18 @@ class ExcursoesDetalhesScreen extends StatefulWidget {
 }
 
 class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final viewmodel = context.read<ExcursoesDetalhesViewmodel>();
+      viewmodel.carregarExcursao(widget.excursaoId);
+      viewmodel.carregarPassageiros(widget.excursaoId);
+    });
+  }
+
   void _abrirFormulario(int id, bool modoEdicao) async {
-    final viewmodel = context.read<ExcursoesListViewmodel>();
+    final viewmodel = context.read<ExcursoesDetalhesViewmodel>();
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -33,7 +43,7 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
       ),
     );
     if (!mounted) return;
-    viewmodel.carregarExcursoes();
+    viewmodel.carregarExcursao(id);
   }
 
   void _excluirExcursao() async {
@@ -80,6 +90,57 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
             child: Text(
               'Excluir',
               style: GoogleFonts.poppins(color: CoresApp.vermelho),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _finalizarExcursao(int idExcursao) async {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          'Finalizar Excursão',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 23),
+        ),
+        content: Text(
+          'Tem certeza que deseja finalizar essa excursão?\nRealizar essa ação impedirá que seja realizado qualquer tipo de alteração na excursão',
+          style: GoogleFonts.poppins(),
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancelar',
+              style: GoogleFonts.poppins(color: Colors.black),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final viewModel = context.read<ExcursoesDetalhesViewmodel>();
+              final sucesso = await viewModel.finalizar(widget.excursaoId);
+              if (!mounted) return;
+              if (sucesso) {
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      viewModel.mensagemErro ?? 'Erro ao finalizar',
+                      style: GoogleFonts.poppins(),
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: Text(
+              'Finalizar',
+              style: GoogleFonts.poppins(color: Colors.black),
             ),
           ),
         ],
@@ -267,50 +328,164 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
     );
   }
 
-  Widget _detalhesFinalizado() {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(5),
+  Widget _cabecalhoFinalizado() {
+    return Consumer<ExcursoesDetalhesViewmodel>(
+      builder: (context, viewmodel, child) {
+        final excursao = viewmodel.excursao;
+        if (excursao == null) {
+          return Center(
+            child: Text(
+              'Excursão não encontrada',
+              style: GoogleFonts.poppins(
+                color: CoresApp.grafite,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+        String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
+        String hora = DateFormat('HH:mm').format(excursao.dataHora);
+        return Container(
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black),
             borderRadius: BorderRadius.circular(5),
           ),
           child: Align(
-            alignment: Alignment.topLeft,
-            child: Text.rich(
-              TextSpan(
-                children: [
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(
                   TextSpan(
-                    text: 'Nome da excursão\n',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
+                    children: [
+                      TextSpan(
+                        text: excursao.nome.toUpperCase(),
+                        style: GoogleFonts.poppins(
+                          color: CoresApp.grafite,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '\n$data às $hora',
+                        style: GoogleFonts.poppins(
+                          color: CoresApp.grafite,
+                          fontSize: 20,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '\n${viewmodel.passageiros.length} passageiros',
+                        style: GoogleFonts.poppins(
+                          color: CoresApp.grafite,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: 'Data e hora\n',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'Quantidade de passageiros',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ),
-      ],
+        );
+      },
+    );
+  }
+
+  Widget _listaPassageiros() {
+    return Expanded(
+      child: Consumer<ExcursoesDetalhesViewmodel>(
+        builder: (context, viewmodel, _) {
+          if (viewmodel.estaCarregando) {
+            return Center(
+              child: CircularProgressIndicator(color: CoresApp.vermelho),
+            );
+          } else if (viewmodel.mensagemErro != null) {
+            return Center(
+              child: Text(
+                viewmodel.mensagemErro!,
+                style: GoogleFonts.poppins(
+                  color: CoresApp.grafite,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
+          } else if (viewmodel.passageiros.isEmpty) {
+            return Center(
+              child: Text(
+                'Nenhum passageiro encontrado',
+                style: GoogleFonts.poppins(
+                  color: CoresApp.grafite,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            );
+          } else {
+            return ListView.builder(
+              padding: EdgeInsets.only(bottom: 70),
+              itemCount: viewmodel.passageiros.length,
+              itemBuilder: (context, index) {
+                final item = viewmodel.passageiros[index];
+                return Card(
+                  color: CoresApp.azulPetroleo,
+                  child: ListTile(
+                    title: Text(
+                      item.pessoa.nome,
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'CPF: ${item.pessoa.cpf}\nTelefone: ${item.pessoa.telefone}\nAssento: ${item.passageiro.numeroAssento}',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _detalhesFinalizado() {
+    return Consumer<ExcursoesDetalhesViewmodel>(
+      builder: (context, viewmodel, child) {
+        final excursao = viewmodel.excursao;
+        if (excursao == null) {
+          return Center(
+            child: Text(
+              'Excursão não encontrada',
+              style: GoogleFonts.poppins(
+                color: CoresApp.grafite,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _cabecalhoFinalizado(),
+            const SizedBox(height: 10),
+            _listaPassageiros(),
+          ],
+        );
+      },
     );
   }
 
@@ -341,7 +516,7 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => _finalizarExcursao(widget.excursaoId),
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.verdeClaro,
                 foregroundColor: CoresApp.branco,
