@@ -1,4 +1,5 @@
 import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
+import 'package:sspmano_viagens/data/dto/passageiros_por_veiculo_dto.dart';
 import 'package:sspmano_viagens/domain/entities/passageiro.dart';
 import 'package:sspmano_viagens/domain/entities/pessoa.dart';
 
@@ -8,6 +9,9 @@ abstract class PassageiroRepository {
   Future<Passageiro?> listarPorAssento(int idVeiculo, int numAssento);
   Future<List<Passageiro>> listarPorVeiculo(int idVeiculo);
   Future<List<PassageiroComPessoaDto>> listarPorExcursao(int idExcursao);
+  Future<List<PassageirosPorVeiculoDto>> listarAgrupadoPorVeiculo(
+    int idExcursao,
+  );
   Future<List<int>> listarIdsPessoasNaExcursao(int idExcursao);
   Future<void> criar(Passageiro passageiro);
   Future<void> atualizar(Passageiro passageiro);

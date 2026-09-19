@@ -2,7 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:sspmano_viagens/data/database.dart';
 import 'package:sspmano_viagens/data/datasources/passageiro_datasource.dart';
 import 'package:sspmano_viagens/data/datasources/pessoa_datasource.dart';
+import 'package:sspmano_viagens/data/datasources/veiculo_datasource.dart';
 import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
+import 'package:sspmano_viagens/data/dto/passageiros_por_veiculo_dto.dart';
 import 'package:sspmano_viagens/domain/entities/passageiro.dart';
 import 'package:sspmano_viagens/domain/entities/pessoa.dart';
 import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
@@ -64,6 +66,48 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
     )..where((p) => p.idVeiculo.equals(idVeiculo))).get();
 
     return passageiros.map((p) => p.toEntity()).toList();
+  }
+
+  @override
+  Future<List<PassageirosPorVeiculoDto>> listarAgrupadoPorVeiculo(
+    int idExcursao,
+  ) async {
+    final resultados =
+        await (_database.select(_database.passageiros).join([
+              innerJoin(
+                _database.veiculos,
+                _database.passageiros.idVeiculo.equalsExp(
+                  _database.veiculos.id,
+                ),
+              ),
+              innerJoin(
+                _database.pessoas,
+                _database.passageiros.idPessoa.equalsExp(_database.pessoas.id),
+              ),
+            ])..where(
+              _database.veiculos.idExcursao.equals(idExcursao) &
+                  _database.passageiros.idPessoa.isNotNull(),
+            ))
+            .get();
+    final agrupados = <int, PassageirosPorVeiculoDto>{};
+    for (final resultado in resultados) {
+      final veiculo = resultado.readTable(_database.veiculos).toEntity();
+      final passageiro = resultado.readTable(_database.passageiros).toEntity();
+      final pessoa = resultado.readTable(_database.pessoas).toEntity();
+
+      final passageiroPessoa = PassageiroComPessoaDto(
+        passageiro: passageiro,
+        pessoa: pessoa,
+      );
+
+      agrupados.putIfAbsent(
+        veiculo.id!,
+        () => PassageirosPorVeiculoDto(veiculo: veiculo, passageiros: []),
+      );
+
+      agrupados[veiculo.id!]!.passageiros.add(passageiroPessoa);
+    }
+    return agrupados.values.toList();
   }
 
   @override
@@ -135,7 +179,9 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
 
   @override
   Future<void> deletarPorVeiculo(int idVeiculo) async {
-    await (_database.delete(_database.passageiros)..where((p) => p.idVeiculo.equals(idVeiculo))).go();
+    await (_database.delete(
+      _database.passageiros,
+    )..where((p) => p.idVeiculo.equals(idVeiculo))).go();
   }
 
   @override

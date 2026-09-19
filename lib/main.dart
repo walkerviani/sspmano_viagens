@@ -24,6 +24,8 @@ import 'package:sspmano_viagens/presentation/viewmodels/excursoes_form_viewmodel
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/passageiro_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/selecionar_excursao_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_relatorio_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_form_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/veiculo_list_viewmodel.dart';
@@ -31,6 +33,7 @@ import 'package:sspmano_viagens/presentation/viewmodels/veiculo_selecionar_viewm
 import 'package:sspmano_viagens/presentation/views/backup_screen.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_list_screen.dart';
+import 'package:sspmano_viagens/presentation/views/relatorio_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -125,6 +128,15 @@ Future<void> main() async {
             context.read<ExcursaoRepository>(),
             context.read<PassageiroRepository>(),
           ),
+        ),
+        ChangeNotifierProvider<SelecionarPassageiroRelatorioViewmodel>(
+          create: (context) => SelecionarPassageiroRelatorioViewmodel(
+            context.read<PassageiroRepository>(),
+          ),
+        ),
+        ChangeNotifierProvider<SelecionarExcursaoViewmodel>(
+          create: (context) =>
+              SelecionarExcursaoViewmodel(context.read<ExcursaoRepository>()),
         ),
       ],
       child: const MyApp(),
@@ -252,7 +264,12 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => RelatorioScreen()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
@@ -266,7 +283,7 @@ class HomeScreen extends StatelessWidget {
                   Icon(Icons.content_paste, size: 40),
                   const SizedBox(width: 10),
                   Text(
-                    'Relatório da excursão',
+                    'Relatórios',
                     style: GoogleFonts.poppins(
                       color: CoresApp.branco,
                       fontSize: 20,
