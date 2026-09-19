@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sspmano_viagens/presentation/views/selecionar_excursao_screen.dart';
-import 'package:sspmano_viagens/presentation/views/selecionar_passageiro_relatorio_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class RelatorioScreen extends StatelessWidget {

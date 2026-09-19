@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/excursoes_detalhes_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/excursoes_form_screen.dart';
 import 'package:sspmano_viagens/presentation/views/passageiro_list_screen.dart';
-import 'package:sspmano_viagens/presentation/views/selecionar_passageiro_relatorio_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_selecionar_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
