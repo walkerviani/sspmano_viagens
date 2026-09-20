@@ -34,11 +34,12 @@ class VisualizarPdfScreen extends StatelessWidget {
         ),
         body: PdfPreview(
           build: criarPdf,
-          pdfFileName: nomeArquivo,
+          pdfFileName: '$nomeArquivo.pdf',
           allowPrinting: true,
           allowSharing: true,
           canChangeOrientation: false,
           canChangePageFormat: false,
+          canDebug: false,
         ),
       ),
     );
