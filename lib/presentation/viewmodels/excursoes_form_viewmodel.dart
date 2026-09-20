@@ -57,6 +57,7 @@ class ExcursoesFormViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
+      nome = nome.toUpperCase();
       Excursao excursao = Excursao(id, nome, dataHora, qntAssentos);
       if (id != null) {
         await _repository.atualizar(excursao);
