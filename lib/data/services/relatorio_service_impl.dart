@@ -1,4 +1,5 @@
 import 'package:sspmano_viagens/data/dto/excursao_relatorio_dto.dart';
+import 'package:sspmano_viagens/domain/entities/excursao.dart';
 import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
 import 'package:sspmano_viagens/presentation/services/relatorio_service.dart';
@@ -9,7 +10,8 @@ class RelatorioServiceImpl implements RelatorioService {
 
   RelatorioServiceImpl(this._excursaoRepository, this._passageiroRepository);
 
-  Future<ExcursaoRelatorioDto> montarRelatorio(int idExcursao) async {
+  @override
+  Future<ExcursaoRelatorioDto> montarRelatorioExcursao(int idExcursao) async {
     final excursao = await _excursaoRepository.listarPorId(idExcursao);
     if (excursao == null) {
       throw ArgumentError('Excursão não encontrada');
@@ -20,5 +22,16 @@ class RelatorioServiceImpl implements RelatorioService {
     );
 
     return ExcursaoRelatorioDto(excursao: excursao, veiculos: veiculos);
+  }
+
+  @override
+  Future<Excursao> buscarExcursao(int idExcursao) async {
+    final excursao = await _excursaoRepository.listarPorId(idExcursao);
+
+    if (excursao == null) {
+      throw ArgumentError('Excursão não encontrada');
+    }
+
+    return excursao;
   }
 }

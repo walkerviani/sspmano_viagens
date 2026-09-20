@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
 import 'package:sspmano_viagens/data/dto/passageiros_por_veiculo_dto.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_relatorio_viewmodel.dart';
+import 'package:sspmano_viagens/presentation/views/visualizar_pdf_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class SelecionarPassageiroRelatorioScreen extends StatefulWidget {
@@ -26,6 +28,42 @@ class _SelecionarPassageiroRelatorioScreenState
       final viewmodel = context.read<SelecionarPassageiroRelatorioViewmodel>();
       viewmodel.carregarPassageiros(widget.idExcursao);
     });
+  }
+
+  void _abrirPdfPassageiro(
+    int idExcursao,
+    PassageiroComPessoaDto passageiro,
+  ) async {
+    final viewmodel = context.read<SelecionarPassageiroRelatorioViewmodel>();
+    if (viewmodel.estaCarregando) return;
+    final bytes = await viewmodel.gerarRelatorioPassageiro(
+      idExcursao,
+      passageiro,
+    );
+
+    if (!mounted) return;
+
+    if (bytes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            viewmodel.mensagemErro ?? 'Não foi possível gerar o PDF',
+          ),
+          backgroundColor: CoresApp.vermelhoClaro,
+        ),
+      );
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VisualizarPdfScreen(
+          'Relatório',
+          (format) async => bytes,
+          'relatorio_passageiro_${passageiro.pessoa.nome}',
+        ),
+      ),
+    );
   }
 
   @override
@@ -124,7 +162,9 @@ class _SelecionarPassageiroRelatorioScreenState
                   ),
                 ),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _abrirPdfPassageiro(widget.idExcursao, passageiro);
+                  },
                   style: IconButton.styleFrom(
                     backgroundColor: CoresApp.verdeClaro,
                     shape: RoundedRectangleBorder(

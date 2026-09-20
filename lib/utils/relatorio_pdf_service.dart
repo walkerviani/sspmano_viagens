@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:sspmano_viagens/data/dto/excursao_relatorio_dto.dart';
+import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
+import 'package:sspmano_viagens/domain/entities/excursao.dart';
 
 class RelatorioPdfService {
   Future<pw.ThemeData> _carregarTema() async {
@@ -93,8 +95,8 @@ class RelatorioPdfService {
                 ),
                 pw.Text(
                   'CPF: ${pessoa.cpf} | Telefone: ${pessoa.telefone}'
-                  '\nPagamento: $strPago'
-                  '\nAssento ${passageiro.numeroAssento}',
+                  '\nStatus de pagamento: $strPago'
+                  '\nAssento: ${passageiro.numeroAssento}',
                 ),
               ],
             ),
@@ -106,6 +108,58 @@ class RelatorioPdfService {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: itens,
+    );
+  }
+
+  pw.Widget _infoPassageiro(
+    Excursao excursao,
+    PassageiroComPessoaDto passageiro,
+  ) {
+    String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
+    String hora = DateFormat('HH:mm').format(excursao.dataHora);
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text(
+          'Passageiro(a)',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(passageiro.pessoa.nome, style: pw.TextStyle(fontSize: 18)),
+        pw.Text(
+          'Excursão',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(excursao.nome, style: pw.TextStyle(fontSize: 18)),
+        pw.Text(
+          'Data da excursão',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text('$data - $hora', style: pw.TextStyle(fontSize: 18)),
+        pw.Text(
+          'Endereço do SSPMANO',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(
+          'Rua Independência, 627 - Jardim Bela Vista, Nova Odessa - SP',
+          style: pw.TextStyle(fontSize: 18),
+        ),
+        pw.Text(
+          'Assento',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(
+          passageiro.passageiro.numeroAssento.toString(),
+          style: pw.TextStyle(fontSize: 18),
+        ),
+        pw.Text(
+          'Pagamento',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(
+          '${passageiro.passageiro.foiPago ? 'Pago' : 'Pendente'} ',
+          style: pw.TextStyle(fontSize: 18),
+        ),
+      ],
     );
   }
 
@@ -126,6 +180,27 @@ class RelatorioPdfService {
           _itensPassageiros(excursao),
           pw.Divider(),
         ],
+      ),
+    );
+    return pdf.save();
+  }
+
+  Future<Uint8List> gerarPdfPassageiro(
+    Excursao excursao,
+    PassageiroComPessoaDto passageiro,
+  ) async {
+    final bytesLogo = await rootBundle.load(
+      'assets/icon/sspmano_fundo-transparente.png',
+    );
+    final logo = pw.MemoryImage(bytesLogo.buffer.asUint8List());
+
+    final pdf = pw.Document(theme: await _carregarTema());
+
+    pdf.addPage(
+      pw.MultiPage(
+        header: (context) =>
+            _cabecalhoRelatorio(logo, 'INFORMAÇÕES PASSAGEIRO'),
+        build: (context) => [_infoPassageiro(excursao, passageiro)],
       ),
     );
     return pdf.save();
