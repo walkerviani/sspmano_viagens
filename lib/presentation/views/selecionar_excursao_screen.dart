@@ -119,6 +119,9 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
               _abrirSelecaoPassageiro(excursao.id!);
             } else {
               final viewmodel = context.read<SelecionarExcursaoViewmodel>();
+              if (viewmodel.estaCarregando) {
+                return;
+              }
               final bytes = await viewmodel.gerarRelatorioExcursao(
                 excursao.id!,
               );
