@@ -1,0 +1,11 @@
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/icons/splash-icon.png
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+  fullscreen: true
+
+  android_12:
+    color: "#FFFFFF"
+    image: assets/icons/splash-icon.png
+    icon_background_color: "#FFFFFF"
