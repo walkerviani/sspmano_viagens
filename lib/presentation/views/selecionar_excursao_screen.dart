@@ -42,6 +42,36 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
     viewmodel.carregarExcursoes();
   }
 
+  void _abrirPdfExcursao(Excursao excursao) async {
+    final viewmodel = context.read<SelecionarExcursaoViewmodel>();
+    if (viewmodel.estaCarregando) return;
+    final bytes = await viewmodel.gerarRelatorioExcursao(excursao.id!);
+
+    if (!mounted) return;
+
+    if (bytes == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            viewmodel.mensagemErro ?? 'Não foi possível gerar o PDF',
+          ),
+          backgroundColor: CoresApp.vermelhoClaro,
+        ),
+      );
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VisualizarPdfScreen(
+          'Excursão',
+          (format) async => bytes,
+          'relatorio_excursao_${excursao.nome}',
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,41 +144,11 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 16),
         ),
         trailing: IconButton(
-          onPressed: () async {
+          onPressed: () {
             if (widget.relatorioPassageiro) {
               _abrirSelecaoPassageiro(excursao.id!);
             } else {
-              final viewmodel = context.read<SelecionarExcursaoViewmodel>();
-              if (viewmodel.estaCarregando) {
-                return;
-              }
-              final bytes = await viewmodel.gerarRelatorioExcursao(
-                excursao.id!,
-              );
-
-              if (!mounted) return;
-
-              if (bytes == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      viewmodel.mensagemErro ?? 'Não foi possível gerar o PDF',
-                    ),
-                    backgroundColor: CoresApp.vermelhoClaro,
-                  ),
-                );
-                return;
-              }
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => VisualizarPdfScreen(
-                    'Excursão',
-                    (format) async => bytes,
-                    'relatorio_excursao_${excursao.nome}',
-                  ),
-                ),
-              );
+              _abrirPdfExcursao(excursao);
             }
           },
           style: IconButton.styleFrom(

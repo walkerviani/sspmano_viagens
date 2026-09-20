@@ -41,7 +41,9 @@ class SelecionarExcursaoViewmodel extends ChangeNotifier {
     estaCarregando = true;
     notifyListeners();
     try {
-      final excursao = await _relatorioService.montarRelatorio(idExcursao);
+      final excursao = await _relatorioService.montarRelatorioExcursao(
+        idExcursao,
+      );
       return await _pdfService.gerarPdfExcursao(excursao);
     } catch (e) {
       mensagemErro = 'Erro ao gerar relatório';
