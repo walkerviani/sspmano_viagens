@@ -144,6 +144,8 @@ Future<void> main() async {
         ChangeNotifierProvider<SelecionarPassageiroRelatorioViewmodel>(
           create: (context) => SelecionarPassageiroRelatorioViewmodel(
             context.read<PassageiroRepository>(),
+            RelatorioPdfService(),
+            context.read<RelatorioService>(),
           ),
         ),
         ChangeNotifierProvider<SelecionarExcursaoViewmodel>(
