@@ -38,13 +38,17 @@ class SelecionarExcursaoViewmodel extends ChangeNotifier {
 
   Future<Uint8List?> gerarRelatorioExcursao(int idExcursao) async {
     mensagemErro = null;
+    estaCarregando = true;
+    notifyListeners();
     try {
       final excursao = await _relatorioService.montarRelatorio(idExcursao);
       return await _pdfService.gerarPdfExcursao(excursao);
     } catch (e) {
-      print(e);
       mensagemErro = 'Erro ao gerar relatório';
       return null;
+    } finally {
+      estaCarregando = false;
+      notifyListeners();
     }
   }
 }
