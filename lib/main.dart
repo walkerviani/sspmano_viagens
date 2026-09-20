@@ -7,11 +7,14 @@ import 'package:sspmano_viagens/data/repositories/passageiro_repository_impl.dar
 import 'package:sspmano_viagens/data/repositories/pessoa_repository_impl.dart';
 import 'package:sspmano_viagens/data/repositories/veiculo_repository_impl.dart';
 import 'package:sspmano_viagens/data/services/backup_background_service.dart';
+import 'package:sspmano_viagens/data/services/relatorio_service_impl.dart';
 import 'package:sspmano_viagens/domain/repositories/backup_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/excursao_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/veiculo_repository.dart';
+import 'package:sspmano_viagens/utils/relatorio_pdf_service.dart';
+import 'package:sspmano_viagens/presentation/services/relatorio_service.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/assento_detalhes_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/assentos_list_viewmodel.dart';
 import 'package:sspmano_viagens/data/datasources/backup/backup_config_datasource.dart';
@@ -64,6 +67,15 @@ Future<void> main() async {
         ),
         Provider<VeiculoRepository>(
           create: (_) => VeiculoRepositoryImpl(database),
+        ),
+        Provider<PassageiroRepository>(
+          create: (_) => PassageiroRepositoryImpl(database),
+        ),
+        Provider<RelatorioService>(
+          create: (context) => RelatorioServiceImpl(
+            context.read<ExcursaoRepository>(),
+            context.read<PassageiroRepository>(),
+          ),
         ),
         Provider<PassageiroRepository>(
           create: (_) => PassageiroRepositoryImpl(database),
@@ -135,8 +147,11 @@ Future<void> main() async {
           ),
         ),
         ChangeNotifierProvider<SelecionarExcursaoViewmodel>(
-          create: (context) =>
-              SelecionarExcursaoViewmodel(context.read<ExcursaoRepository>()),
+          create: (context) => SelecionarExcursaoViewmodel(
+            context.read<ExcursaoRepository>(),
+            RelatorioPdfService(),
+            context.read<RelatorioService>(),
+          ),
         ),
       ],
       child: const MyApp(),

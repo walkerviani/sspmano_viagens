@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/domain/entities/excursao.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/selecionar_excursao_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/selecionar_passageiro_relatorio_screen.dart';
+import 'package:sspmano_viagens/presentation/views/visualizar_pdf_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 
 class SelecionarExcursaoScreen extends StatefulWidget {
@@ -113,10 +114,39 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 16),
         ),
         trailing: IconButton(
-          onPressed: () {
-            widget.relatorioPassageiro
-                ? _abrirSelecaoPassageiro(excursao.id!)
-                : null;
+          onPressed: () async {
+            if (widget.relatorioPassageiro) {
+              _abrirSelecaoPassageiro(excursao.id!);
+            } else {
+              final viewmodel = context.read<SelecionarExcursaoViewmodel>();
+              final bytes = await viewmodel.gerarRelatorioExcursao(
+                excursao.id!,
+              );
+
+              if (!mounted) return;
+
+              if (bytes == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      viewmodel.mensagemErro ?? 'Não foi possível gerar o PDF',
+                    ),
+                    backgroundColor: CoresApp.vermelhoClaro,
+                  ),
+                );
+                return;
+              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => VisualizarPdfScreen(
+                    'Excursão',
+                    (format) async => bytes,
+                    'relatorio_excursao_${excursao.nome}',
+                  ),
+                ),
+              );
+            }
           },
           style: IconButton.styleFrom(
             backgroundColor: CoresApp.verdeClaro,

@@ -74,20 +74,26 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   ) async {
     final resultados =
         await (_database.select(_database.passageiros).join([
-              innerJoin(
-                _database.veiculos,
-                _database.passageiros.idVeiculo.equalsExp(
-                  _database.veiculos.id,
+                innerJoin(
+                  _database.veiculos,
+                  _database.passageiros.idVeiculo.equalsExp(
+                    _database.veiculos.id,
+                  ),
                 ),
-              ),
-              innerJoin(
-                _database.pessoas,
-                _database.passageiros.idPessoa.equalsExp(_database.pessoas.id),
-              ),
-            ])..where(
-              _database.veiculos.idExcursao.equals(idExcursao) &
-                  _database.passageiros.idPessoa.isNotNull(),
-            ))
+                innerJoin(
+                  _database.pessoas,
+                  _database.passageiros.idPessoa.equalsExp(
+                    _database.pessoas.id,
+                  ),
+                ),
+              ])
+              ..where(
+                _database.veiculos.idExcursao.equals(idExcursao) &
+                    _database.passageiros.idPessoa.isNotNull(),
+              )
+              ..orderBy([
+                OrderingTerm.asc(_database.passageiros.numeroAssento),
+              ]))
             .get();
     final agrupados = <int, PassageirosPorVeiculoDto>{};
     for (final resultado in resultados) {

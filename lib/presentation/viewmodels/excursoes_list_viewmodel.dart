@@ -40,7 +40,7 @@ class ExcursoesListViewmodel extends ChangeNotifier {
 
     excursoes = todasExcursoes.where((excursao) {
       final nome = excursao.nome.toLowerCase();
-      return nome.contains(termoBusca); 
+      return nome.contains(termoBusca);
     }).toList();
 
     notifyListeners();
