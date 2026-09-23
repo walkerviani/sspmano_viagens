@@ -957,7 +957,7 @@ class $PassageirosTable extends Passageiros
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES pessoas (id)',
+      'REFERENCES pessoas (id) ON DELETE RESTRICT',
     ),
   );
   static const VerificationMeta _numeroAssentoMeta = const VerificationMeta(
