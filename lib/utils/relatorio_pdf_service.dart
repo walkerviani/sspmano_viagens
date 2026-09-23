@@ -165,7 +165,7 @@ class RelatorioPdfService {
 
   Future<Uint8List> gerarPdfExcursao(ExcursaoRelatorioDto excursao) async {
     final bytesLogo = await rootBundle.load(
-      'assets/icon/sspmano_fundo-transparente.png',
+      'assets/icons/sspmano_fundo-transparente.png',
     );
     final logo = pw.MemoryImage(bytesLogo.buffer.asUint8List());
 
@@ -190,7 +190,7 @@ class RelatorioPdfService {
     PassageiroComPessoaDto passageiro,
   ) async {
     final bytesLogo = await rootBundle.load(
-      'assets/icon/sspmano_fundo-transparente.png',
+      'assets/icons/sspmano_fundo-transparente.png',
     );
     final logo = pw.MemoryImage(bytesLogo.buffer.asUint8List());
 
