@@ -11,14 +11,7 @@ import 'package:sspmano_viagens/data/tables/veiculo_table.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(
-  tables: [
-    Excursoes,
-    Pessoas,
-    Passageiros,
-    Veiculos,
-  ],
-)
+@DriftDatabase(tables: [Excursoes, Pessoas, Passageiros, Veiculos])
 class AppDatabase extends _$AppDatabase {
   // Singleton pattern para garantir uma única instância
   static AppDatabase? _instance;
@@ -42,6 +35,11 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'sspmano_viagens.db'));
-    return NativeDatabase.createInBackground(file);
+    return NativeDatabase.createInBackground(
+      file,
+      setup: (database) {
+        database.execute('PRAGMA foreign_keys = ON');
+      },
+    );
   });
 }
