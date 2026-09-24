@@ -57,7 +57,7 @@ class BackupRepositoryImpl implements BackupRepository {
   }
 
   @override
-  Future<void> criarBackup() async { // Gera JSON e salva arquivo no disco
+  Future<void> criarBackup({bool solicitarPermissao = true}) async { // Gera JSON e salva arquivo no disco
     final pasta = await _config.obterPasta();
 
     if (pasta == null || pasta.isEmpty) {
@@ -72,7 +72,11 @@ class BackupRepositoryImpl implements BackupRepository {
 
     final json = await _jsonBackup.gerarJson();
 
-    await _arquivo.salvarBackup(pasta: pasta, conteudo: json);
+    await _arquivo.salvarBackup(
+      pasta: pasta,
+      conteudo: json,
+      solicitarPermissao: solicitarPermissao,
+    );
     await _config.salvarUltimoBackup(DateTime.now());
   }
 

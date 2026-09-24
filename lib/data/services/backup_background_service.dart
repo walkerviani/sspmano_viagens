@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:sspmano_viagens/data/database.dart';
 import 'package:sspmano_viagens/data/datasources/backup/backup_config_datasource.dart';
@@ -36,33 +35,36 @@ class BackupBackgroundService {
   static Duration _intervalForFrequencia(String frequencia) => switch (frequencia) { // Retorna duração (7 dias, 30 dias ou 1 dia) conforme frequência
     'semanal' => const Duration(days: 7),
     'mensal' => const Duration(days: 30),
-    _ => const Duration(seconds: 10), // default
+    _ => const Duration(days: 1), // diário
   };
 
   static Future<void> cancel() => Workmanager().cancelByUniqueName(_backupTaskName);
-
 }
 
 @pragma('vm:entry-point')
 void callbackDispatcher() { // Função executada em background; verifica se precisa fazer backup e executa
   Workmanager().executeTask((taskName, inputData) async {
+    
     try {
+      // Criação de instancias de datasource
+      final database = AppDatabase();
+      final config = BackupConfigDatasource();
+      final arquivo = BackupFileDatasource();
+      final jsonBackup = JsonBackupDatasource(database);
+
       final repo = BackupRepositoryImpl(
-        AppDatabase(),
-        JsonBackupDatasource(AppDatabase()),
-        BackupFileDatasource(),
-        BackupConfigDatasource(),
+        database,
+        jsonBackup,
+        arquivo,
+        config,
       );
 
       if (await repo.precisaFazerBackup()) {
-        await repo.criarBackup();
+        await repo.criarBackup(solicitarPermissao: false);
       }
-      return true;
-    } catch (error, stackTrace) {
-      debugPrint('Erro ao realizar o backup em background: $error\n$stackTrace');
 
-      // O plugin de notificações não deve ser inicializado no isolate de background,
-      // porque o contexto Android fica indisponível e isso gera NPE.
+      return true;
+    } catch (_) {
       return true;
     }
   });

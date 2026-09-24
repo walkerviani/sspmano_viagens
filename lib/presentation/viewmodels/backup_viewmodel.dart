@@ -1,5 +1,6 @@
 // backup_viewmodel.dart
 import 'package:flutter/foundation.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sspmano_viagens/data/services/backup_background_service.dart';
 import 'package:sspmano_viagens/domain/repositories/backup_repository.dart';
 
@@ -26,7 +27,7 @@ class BackupViewModel extends ChangeNotifier {
       final freq = await _repository.obterFrequencia();
       frequencia = _parseFrequencia(freq ?? 'desativado');
     } catch (e) {
-      erro = _formatarErro(e, prefixo: 'Erro ao carregar configurações');
+      erro = 'Erro ao carregar configurações: ';
     } finally {
       carregando = false;
       notifyListeners();
@@ -39,7 +40,7 @@ class BackupViewModel extends ChangeNotifier {
       final novaPasta = await _repository.escolherPasta();
       if (novaPasta != null) pasta = novaPasta;
     } catch (e) {
-      erro = _formatarErro(e, prefixo: 'Erro ao escolher pasta');
+      erro = 'Erro ao escolher pasta.';
     }
     notifyListeners();
   }
@@ -51,7 +52,7 @@ class BackupViewModel extends ChangeNotifier {
       await BackupBackgroundService.scheduleIfEnabled();
       frequencia = novaFrequencia;
     } catch (e) {
-      erro = _formatarErro(e, prefixo: 'Erro ao salvar frequência');
+      erro = 'Erro ao salvar frequência.';
     }
     notifyListeners();
   }
@@ -81,7 +82,7 @@ class BackupViewModel extends ChangeNotifier {
       await operacao();
       sucesso = true;
     } catch (e) {
-      erro = _formatarErro(e, prefixo: 'Erro ao realizar operação');
+      erro = 'Erro ao realizar operação.';
     } finally {
       carregando = false;
       notifyListeners();
@@ -93,24 +94,35 @@ class BackupViewModel extends ChangeNotifier {
     sucesso = false;
   }
 
-  String _formatarErro(Object erro, {required String prefixo}) {
-    final mensagem = erro.toString();
-    final mensagemLimpa = mensagem
-        .replaceFirst('Exception: ', '')
-        .replaceFirst('FlutterError: ', '')
-        .replaceFirst('StateError: ', '')
-        .replaceFirst('FileSystemException: ', '')
-        .replaceFirst('PlatformException: ', '')
-        .trim();
-
-    if (mensagemLimpa.isEmpty) {
-      return '$prefixo.';
-    }
-
-    return '$prefixo: $mensagemLimpa';
-  }
-
   FrequenciaBackup _parseFrequencia(String valor) { // Converte string armazenada em enum FrequenciaBackup
     return FrequenciaBackup.values.firstWhere((f) => f.name == valor, orElse: () => FrequenciaBackup.desativado);
   }
+
+  Future<void> criarBackupComPermissao() async {
+  _resetState();
+  carregando = true;
+  notifyListeners();
+
+  try {
+    // Solicitar permissão
+    PermissionStatus permissao = await Permission.manageExternalStorage.request();
+    
+    if (permissao.isDenied) {
+      permissao = await Permission.manageExternalStorage.request();
+    }
+
+    if (!permissao.isGranted) {
+      throw StateError('Permissão de armazenamento necessária para realizar backup.');
+    }
+
+    // Executar backup sem solicitar permissão novamente
+    await _repository.criarBackup(solicitarPermissao: false);
+    sucesso = true;
+  } catch (e) {
+    erro = 'Erro ao realizar backup.';
+  } finally {
+    carregando = false;
+    notifyListeners();
+  }
+}
 }
