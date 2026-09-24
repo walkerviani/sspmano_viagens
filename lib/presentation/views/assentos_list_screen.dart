@@ -110,6 +110,17 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
         _itemLegenda(assentoLivre, 'Livre'),
         _itemLegenda(assentoOcupadoNaoPago, 'Ocupado, não pago'),
         _itemLegenda(assentoOcupadoPago, 'Ocupado, pago'),
+        SizedBox(
+          width: double.infinity,
+          child: Text(
+            'Segure o botão do assento para ver detalhes',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ],
     );
   }
