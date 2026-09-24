@@ -97,7 +97,7 @@ class _SelecionarPassageiroRelatorioScreenState
               child: Column(
                 children: [
                   Text(
-                    'Informe o endereço de ponto de encontro com o passageiro ou selecione o endereço padrão (Sede do SSPMANO)',
+                    'Informe o endereço de ponto de encontro com o passageiro',
                     style: GoogleFonts.poppins(),
                   ),
                   SizedBox(height: 5),
