@@ -190,25 +190,43 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
             final passageiro = viewmodel.buscarPassageiroPeloAssento(
               numeroAssento,
             );
-
+            final pessoa = viewmodel.buscarPessoaPeloAssento(numeroAssento);
             // Botão do assento
-            return TextButton(
-              onPressed: () {
-                _abrirDetalhesAssento(numeroAssento, passageiro);
-              },
-              style: TextButton.styleFrom(
-                minimumSize: const Size(10, 10),
-                backgroundColor: _statusAssento(passageiro),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
+            return Tooltip(
+              message: passageiro == null
+                  ? 'Assento $numeroAssento\nLivre'
+                  : 'Assento $numeroAssento\n'
+                        'Nome: ${pessoa?.nome ?? 'Sem nome'}\n'
+                        'CPF: ${pessoa?.cpf ?? 'Sem CPF'} | '
+                        'Telefone: ${pessoa?.telefone ?? 'Sem Telefone'}\n'
+                        'Pagamento: ${passageiro.foiPago ? 'Pago' : 'Pendente'}',
+              preferBelow: false,
+              showDuration: const Duration(milliseconds: 3),
+              textAlign: TextAlign.center,
+              verticalOffset: 50,
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: CoresApp.azulPetroleo,
+                borderRadius: BorderRadius.circular(5),
               ),
-              child: Center(
-                child: Text(
-                  '$numeroAssento',
-                  style: GoogleFonts.poppins(
-                    color: CoresApp.branco,
-                    fontWeight: FontWeight.bold,
+              child: TextButton(
+                onPressed: () {
+                  _abrirDetalhesAssento(numeroAssento, passageiro);
+                },
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(10, 10),
+                  backgroundColor: _statusAssento(passageiro),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    '$numeroAssento',
+                    style: GoogleFonts.poppins(
+                      color: CoresApp.branco,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
