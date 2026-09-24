@@ -43,13 +43,18 @@ class SelecionarPassageiroRelatorioViewmodel extends ChangeNotifier {
   Future<Uint8List?> gerarRelatorioPassageiro(
     int idExcursao,
     PassageiroComPessoaDto passageiro,
+    String endereco,
   ) async {
     mensagemErro = null;
     estaCarregando = true;
     notifyListeners();
     try {
       final excursao = await _relatorioService.buscarExcursao(idExcursao);
-      return await _pdfService.gerarPdfPassageiro(excursao, passageiro);
+      return await _pdfService.gerarPdfPassageiro(
+        excursao,
+        passageiro,
+        endereco,
+      );
     } catch (e) {
       mensagemErro = 'Erro ao gerar relatório';
       return null;

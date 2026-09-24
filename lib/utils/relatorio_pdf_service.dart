@@ -114,6 +114,7 @@ class RelatorioPdfService {
   pw.Widget _infoPassageiro(
     Excursao excursao,
     PassageiroComPessoaDto passageiro,
+    String endereco,
   ) {
     String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
     String hora = DateFormat('HH:mm').format(excursao.dataHora);
@@ -139,10 +140,7 @@ class RelatorioPdfService {
           'Endereço do SSPMANO',
           style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
         ),
-        pw.Text(
-          'Rua Independência, 627 - Jardim Bela Vista, Nova Odessa - SP',
-          style: pw.TextStyle(fontSize: 18),
-        ),
+        pw.Text(endereco, style: pw.TextStyle(fontSize: 18)),
         pw.Text(
           'Assento',
           style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
@@ -188,6 +186,7 @@ class RelatorioPdfService {
   Future<Uint8List> gerarPdfPassageiro(
     Excursao excursao,
     PassageiroComPessoaDto passageiro,
+    String endereco,
   ) async {
     final bytesLogo = await rootBundle.load(
       'assets/icons/sspmano_fundo-transparente.png',
@@ -200,7 +199,7 @@ class RelatorioPdfService {
       pw.MultiPage(
         header: (context) =>
             _cabecalhoRelatorio(logo, 'INFORMAÇÕES PASSAGEIRO'),
-        build: (context) => [_infoPassageiro(excursao, passageiro)],
+        build: (context) => [_infoPassageiro(excursao, passageiro, endereco)],
       ),
     );
     return pdf.save();

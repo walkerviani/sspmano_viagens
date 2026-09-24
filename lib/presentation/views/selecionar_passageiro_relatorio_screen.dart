@@ -33,12 +33,14 @@ class _SelecionarPassageiroRelatorioScreenState
   void _abrirPdfPassageiro(
     int idExcursao,
     PassageiroComPessoaDto passageiro,
+    String endereco,
   ) async {
     final viewmodel = context.read<SelecionarPassageiroRelatorioViewmodel>();
     if (viewmodel.estaCarregando) return;
     final bytes = await viewmodel.gerarRelatorioPassageiro(
       idExcursao,
       passageiro,
+      endereco,
     );
 
     if (!mounted) return;
@@ -61,6 +63,113 @@ class _SelecionarPassageiroRelatorioScreenState
           'Relatório',
           (format) async => bytes,
           'relatorio_passageiro_${passageiro.pessoa.nome}',
+        ),
+      ),
+    );
+  }
+
+  void _abrirInformarEndereco(PassageiroComPessoaDto passageiro) {
+    String enderecoPadrao =
+        'Rua Independência, 627 - Jardim Bela Vista, Nova Odessa - SP';
+    String endereco = enderecoPadrao;
+    String tipoEndereco = 'padrao';
+    TextEditingController enderecoController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text(
+            'Endereço',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: RadioGroup<String>(
+              groupValue: tipoEndereco,
+              onChanged: (value) {
+                setState(() {
+                  tipoEndereco = value!;
+                  endereco = tipoEndereco == 'padrao'
+                      ? enderecoPadrao
+                      : enderecoController.text;
+                });
+              },
+              child: Column(
+                children: [
+                  Text(
+                    'Informe o endereço de ponto de encontro com o passageiro ou selecione o endereço padrão (Sede do SSPMANO)',
+                    style: GoogleFonts.poppins(),
+                  ),
+                  SizedBox(height: 5),
+
+                  RadioListTile<String>(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      'Endereço padrão',
+                      style: GoogleFonts.poppins(fontSize: 14),
+                    ),
+                    subtitle: Text(
+                      enderecoPadrao,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    value: 'padrao',
+                    activeColor: CoresApp.azulPetroleo,
+                  ),
+                  RadioListTile<String>(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      'Personalizado',
+                      style: GoogleFonts.poppins(fontSize: 14),
+                    ),
+                    value: 'personalizado',
+                    activeColor: CoresApp.azulPetroleo,
+                  ),
+
+                  if (tipoEndereco == 'personalizado')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: TextField(
+                        controller: enderecoController,
+                        style: GoogleFonts.poppins(fontSize: 14),
+                        decoration: InputDecoration(
+                          hintText: 'Digite o endereço',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            endereco = value;
+                          });
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancelar',
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _abrirPdfPassageiro(widget.idExcursao, passageiro, endereco);
+              },
+              child: Text(
+                'Confirmar',
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -163,7 +272,7 @@ class _SelecionarPassageiroRelatorioScreenState
                 ),
                 trailing: IconButton(
                   onPressed: () {
-                    _abrirPdfPassageiro(widget.idExcursao, passageiro);
+                    _abrirInformarEndereco(passageiro);
                   },
                   style: IconButton.styleFrom(
                     backgroundColor: CoresApp.verdeClaro,
