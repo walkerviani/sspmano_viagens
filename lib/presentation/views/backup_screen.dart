@@ -198,7 +198,7 @@ class _BackupScreenState extends State<BackupScreen> {
               ElevatedButton.icon(
                 onPressed: viewModel.carregando
                     ? null
-                    : () => _executarOperacao(viewModel.criarBackup),
+                    : () => _executarOperacao(viewModel.criarBackupComPermissao),
                 icon: const Icon(Icons.backup),
                 label: Text(
                   'Fazer backup agora',
