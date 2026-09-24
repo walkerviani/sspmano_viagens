@@ -12,6 +12,7 @@ abstract class PassageiroRepository {
   Future<List<PassageirosPorVeiculoDto>> listarAgrupadoPorVeiculo(
     int idExcursao,
   );
+  Future<List<PassageiroComPessoaDto>> listarComPessoaPorVeiculo(int idVeiculo);
   Future<List<int>> listarIdsPessoasNaExcursao(int idExcursao);
   Future<void> criar(Passageiro passageiro);
   Future<void> atualizar(Passageiro passageiro);

@@ -145,6 +145,30 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   }
 
   @override
+  Future<List<PassageiroComPessoaDto>> listarComPessoaPorVeiculo(
+    int idVeiculo,
+  ) async {
+    final resultados =
+        await (_database.select(_database.passageiros).join([
+              innerJoin(
+                _database.pessoas,
+                _database.passageiros.idPessoa.equalsExp(_database.pessoas.id),
+              ),
+            ])..where(
+              _database.passageiros.idVeiculo.equals(idVeiculo) &
+                  _database.passageiros.idPessoa.isNotNull(),
+            ))
+            .get();
+
+    return resultados.map((resultado) {
+      return PassageiroComPessoaDto(
+        passageiro: resultado.readTable(_database.passageiros).toEntity(),
+        pessoa: resultado.readTable(_database.pessoas).toEntity(),
+      );
+    }).toList();
+  }
+
+  @override
   Future<void> definirStatusAssento(int id, int status) async {
     final passageiro = await listarPorId(id);
     if (passageiro == null) throw ArgumentError('Passageiro não encontrado');
