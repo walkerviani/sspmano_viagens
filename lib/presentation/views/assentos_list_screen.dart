@@ -208,9 +208,10 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
                   ? 'Assento $numeroAssento\nLivre'
                   : 'Assento $numeroAssento\n'
                         'Nome: ${pessoa?.nome ?? 'Sem nome'}\n'
-                        'CPF: ${pessoa?.cpf ?? 'Sem CPF'} | '
+                        'CPF: ${pessoa?.cpf ?? 'Sem CPF'}\n'
                         'Telefone: ${pessoa?.telefone ?? 'Sem Telefone'}\n'
                         'Pagamento: ${passageiro.foiPago ? 'Pago' : 'Pendente'}',
+              textStyle: GoogleFonts.poppins(fontSize: 17),
               preferBelow: false,
               showDuration: const Duration(milliseconds: 3),
               textAlign: TextAlign.center,
