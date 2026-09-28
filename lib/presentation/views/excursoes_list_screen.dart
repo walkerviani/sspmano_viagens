@@ -32,12 +32,6 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
     context.read<ExcursoesListViewmodel>().aplicarFiltro(busca);
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   void _abrirFormulario(bool modoEdicao) async {
     final viewmodel = context.read<ExcursoesListViewmodel>();
     await Navigator.push(
@@ -176,32 +170,42 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
     );
   }
 
+  Color _corCardStatus(int statusExcursao) {
+    switch (statusExcursao) {
+      case 1: // Em aberto
+        return CoresApp.azulPetroleo;
+      case 2:
+        return CoresApp.azulPetroleoEscuro;
+      default:
+        return CoresApp.azulQuasePreto;
+    }
+  }
+
   Widget _cardExcursoes(Excursao excursao) {
     String statusAtual;
+
     try {
       statusAtual = ExcursaoStatus.values
           .firstWhere((e) => e.id == excursao.idStatus)
           .excursaoStatus;
     } catch (e) {
-      debugPrint('Status não encontrado para idStatus: ${excursao.idStatus}');
-      statusAtual = 'DESCONHECIDO';
+      statusAtual = "Desconhecido";
     }
-
     String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
     String hora = DateFormat('HH:mm').format(excursao.dataHora);
     String nomeCortado = excursao.nome.length > 20
         ? '${excursao.nome.substring(0, 20)}...'
         : excursao.nome;
-    bool statusExcursao = excursao.idStatus == ExcursaoStatus.finalizado.id;
+    bool estaFinalizado = excursao.idStatus == ExcursaoStatus.finalizado.id;
 
     return Card(
       key: ValueKey(excursao.id),
-      color: CoresApp.azulPetroleo,
+      color: _corCardStatus(excursao.idStatus),
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
-          await _abrirDetalhes(excursao.id!, statusExcursao);
+          await _abrirDetalhes(excursao.id!, estaFinalizado);
         },
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -221,7 +225,7 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: '$nomeCortado\n'.toUpperCase(),
+                      text: '$nomeCortado\n',
                       style: GoogleFonts.poppins(
                         color: CoresApp.branco,
                         fontWeight: FontWeight.bold,
@@ -252,5 +256,11 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }
