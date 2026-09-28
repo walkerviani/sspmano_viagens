@@ -223,7 +223,7 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
       color: CoresApp.cinzaGrafite,
       child: ListTile(
         title: Text(
-          pessoa.nome.toUpperCase(),
+          pessoa.nome,
           style: GoogleFonts.poppins(
             color: CoresApp.branco,
             fontWeight: FontWeight.bold,
