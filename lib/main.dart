@@ -226,7 +226,7 @@ class HomeScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
+                minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -258,7 +258,7 @@ class HomeScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
+                minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -290,7 +290,7 @@ class HomeScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
+                minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -320,7 +320,7 @@ class HomeScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: CoresApp.azulPetroleo,
                 foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
+                minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
