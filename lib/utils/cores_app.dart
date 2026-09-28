@@ -6,6 +6,8 @@ class CoresApp {
   static const vinho = Color(0xFFa22628);
   static const cinzaGrafite = Color(0xFF383e41);
   static const azulPetroleo = Color(0xFF173649);
+  static const azulPetroleoEscuro = Color(0xFF112836);
+  static const azulQuasePreto = Color(0xFF060E13);
   static const verdeClaro = Color(0xFF3a8a14);
   static const cinzaClaro = Color(0xFFd1d1d1);
   static const grafite = Color(0xFF41424C);
