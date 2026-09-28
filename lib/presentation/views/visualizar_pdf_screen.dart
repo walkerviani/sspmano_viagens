@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
@@ -28,7 +29,7 @@ class VisualizarPdfScreen extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(tituloPagina),
+          title: Text(tituloPagina, style: GoogleFonts.poppins(fontSize: 28)),
           backgroundColor: CoresApp.vermelhoClaro,
           foregroundColor: CoresApp.branco,
         ),
