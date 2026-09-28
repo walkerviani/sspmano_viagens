@@ -57,13 +57,7 @@ class _BackupScreenState extends State<BackupScreen> {
       appBar: AppBar(
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
-        title: Text(
-          'Backup',
-          style: GoogleFonts.poppins(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Backup', style: GoogleFonts.poppins(fontSize: 28)),
       ),
       body: Container(
         padding: const EdgeInsets.all(12),
@@ -85,15 +79,13 @@ class _BackupScreenState extends State<BackupScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
+                  border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
                   viewModel.pasta != null
-                    ? '${viewModel.pasta}/SSPMANOViagens/backup.json'
-                    : 'Nenhuma pasta selecionada.',
+                      ? '${viewModel.pasta}/SSPMANOViagens/backup.json'
+                      : 'Nenhuma pasta selecionada.',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: Colors.grey[700],
@@ -103,17 +95,11 @@ class _BackupScreenState extends State<BackupScreen> {
 
               const SizedBox(height: 10),
 
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: viewModel.carregando
                     ? null
                     : viewModel.escolherPasta,
-                icon: const Icon(Icons.folder),
-                label: Text(
-                  'Escolher pasta',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                  ),
-                ),
+
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CoresApp.azulPetroleo,
                   foregroundColor: CoresApp.branco,
@@ -121,6 +107,20 @@ class _BackupScreenState extends State<BackupScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.folder, size: 40),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Escolher pasta',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -145,20 +145,15 @@ class _BackupScreenState extends State<BackupScreen> {
                   labelStyle: GoogleFonts.poppins(fontSize: 18),
                   hintText: 'Selecione a frequência',
                   hintStyle: GoogleFonts.poppins(fontSize: 18),
-                  floatingLabelStyle: TextStyle(
-                    color: Colors.black,
-                  ),
+                  floatingLabelStyle: TextStyle(color: Colors.black),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
+                    borderSide: BorderSide(color: Colors.black),
                   ),
                 ),
                 items: [
                   DropdownMenuItem(
                     value: FrequenciaBackup.diario,
                     child: Text('Diário', style: GoogleFonts.poppins()),
-                    
                   ),
                   DropdownMenuItem(
                     value: FrequenciaBackup.semanal,
@@ -195,17 +190,11 @@ class _BackupScreenState extends State<BackupScreen> {
 
               const SizedBox(height: 10),
 
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: viewModel.carregando
                     ? null
-                    : () => _executarOperacao(viewModel.criarBackupComPermissao),
-                icon: const Icon(Icons.backup),
-                label: Text(
-                  'Fazer backup agora',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                  ),
-                ),
+                    : () =>
+                          _executarOperacao(viewModel.criarBackupComPermissao),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CoresApp.azulPetroleo,
                   foregroundColor: CoresApp.branco,
@@ -213,22 +202,29 @@ class _BackupScreenState extends State<BackupScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.backup, size: 40),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Fazer backup agora',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
               const SizedBox(height: 10),
 
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: viewModel.carregando
                     ? null
                     : () => _executarOperacao(viewModel.restaurarBackup),
-                icon: const Icon(Icons.restore),
-                label: Text(
-                  'Restaurar backup',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                  ),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CoresApp.azulPetroleo,
                   foregroundColor: CoresApp.branco,
@@ -237,8 +233,21 @@ class _BackupScreenState extends State<BackupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.restore, size: 40),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Restaurar backup',
+                      style: GoogleFonts.poppins(
+                        color: CoresApp.branco,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-
             ],
           ),
         ),
