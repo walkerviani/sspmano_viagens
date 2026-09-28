@@ -19,7 +19,7 @@ class ExcursoesListViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      todasExcursoes = await _repository.listarTodos();
+      todasExcursoes = await _repository.listarTodosOrdenado();
       aplicarFiltro(termoBusca);
     } catch (e) {
       mensagemErro = 'Erro ao carregar as excursões';

@@ -11,16 +11,31 @@ class ExcursaoRepositoryImpl implements ExcursaoRepository {
 
   @override
   Future<Excursao?> listarPorId(int id) async {
-    final excursoes = await (_database.select(_database.excursoes)
-      ..where((e) => e.id.equals(id))).getSingleOrNull();
+    final excursoes = await (_database.select(
+      _database.excursoes,
+    )..where((e) => e.id.equals(id))).getSingleOrNull();
 
     return excursoes?.toEntity();
   }
 
   @override
   Future<List<Excursao>> listarTodos() async {
-    final excursoes = await (_database.select(_database.excursoes)
-      ..orderBy([(p) => OrderingTerm.asc(p.id)])).get();
+    final excursoes = await (_database.select(
+      _database.excursoes,
+    )..orderBy([(p) => OrderingTerm.asc(p.id)])).get();
+
+    return excursoes.map((p) => p.toEntity()).toList();
+  }
+
+  @override
+  Future<List<Excursao>> listarTodosOrdenado() async {
+    final excursoes =
+        await (_database.select(_database.excursoes)..orderBy([
+              (p) =>
+                  OrderingTerm(expression: p.idStatus, mode: OrderingMode.asc),
+              (p) => OrderingTerm.desc(p.dataHora),
+            ]))
+            .get();
 
     return excursoes.map((p) => p.toEntity()).toList();
   }
@@ -28,11 +43,11 @@ class ExcursaoRepositoryImpl implements ExcursaoRepository {
   @override
   Future<void> atualizar(Excursao excursao) async {
     if (excursao.id == null) {
-      throw ArgumentError(
-        'Não é possível atualizar uma excursão sem id',
-      );
+      throw ArgumentError('Não é possível atualizar uma excursão sem id');
     }
-    await (_database.update(_database.excursoes)..where((e) => e.id.equals(excursao.id!))).write(excursao.toCompanion());
+    await (_database.update(
+      _database.excursoes,
+    )..where((e) => e.id.equals(excursao.id!))).write(excursao.toCompanion());
   }
 
   @override
@@ -43,15 +58,23 @@ class ExcursaoRepositoryImpl implements ExcursaoRepository {
   @override
   Future<void> deletar(int id) async {
     await _database.transaction(() async {
-      final veiculos = await (_database.select(_database.veiculos)..where((v) => v.idExcursao.equals(id))).get();
+      final veiculos = await (_database.select(
+        _database.veiculos,
+      )..where((v) => v.idExcursao.equals(id))).get();
 
       for (final veiculo in veiculos) {
-        await (_database.delete(_database.passageiros)..where((p) => p.idVeiculo.equals(veiculo.id))).go();
+        await (_database.delete(
+          _database.passageiros,
+        )..where((p) => p.idVeiculo.equals(veiculo.id))).go();
       }
 
-      await (_database.delete(_database.veiculos)..where((v) => v.idExcursao.equals(id))).go();
+      await (_database.delete(
+        _database.veiculos,
+      )..where((v) => v.idExcursao.equals(id))).go();
 
-      await (_database.delete(_database.excursoes)..where((e) => e.id.equals(id))).go();
+      await (_database.delete(
+        _database.excursoes,
+      )..where((e) => e.id.equals(id))).go();
     });
   }
 
@@ -69,7 +92,7 @@ class ExcursaoRepositoryImpl implements ExcursaoRepository {
     if (excursao == null) throw ArgumentError('Excursão não encontrada');
     excursao.qtdAssentos = qtd;
     await atualizar(excursao);
-  } 
+  }
 
   @override
   Future<void> finalizarExcursao(int id) async {
