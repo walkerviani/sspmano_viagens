@@ -76,10 +76,7 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Selecione a excursão',
-          style: GoogleFonts.poppins(fontSize: 28),
-        ),
+        title: Text('Excursões', style: GoogleFonts.poppins(fontSize: 28)),
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),
