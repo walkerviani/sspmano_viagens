@@ -22,6 +22,8 @@ class SelecionarPassageiroScreen extends StatefulWidget {
 
 class _SelecionarPassageiroScreenState
     extends State<SelecionarPassageiroScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,18 @@ class _SelecionarPassageiroScreenState
         widget.idExcursao,
       );
     });
+  }
+
+  void _executarPesquisa() {
+    context.read<SelecionarPassageiroViewmodel>().aplicarFiltro(
+      _searchController.text,
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _vincularPassageiro(Pessoa pessoa, bool foiPago) async {
@@ -66,32 +80,76 @@ class _SelecionarPassageiroScreenState
       ),
       body: Container(
         padding: EdgeInsets.all(12),
-        child: Consumer<SelecionarPassageiroViewmodel>(
-          builder: (context, viewmodel, child) {
-            if (viewmodel.estaCarregando) {
-              return const Center(
-                child: CircularProgressIndicator(color: CoresApp.vermelho),
-              );
-            }
-            if (viewmodel.pessoas.isEmpty) {
-              return Center(
-                child: Text(
-                  'Nenhum usuário encontrado',
-                  style: GoogleFonts.poppins(
-                    color: CoresApp.grafite,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
+        child: Column(
+          children: [
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _searchController,
+              builder: (context, value, child) {
+                final possuiTexto = value.text.isNotEmpty;
+
+                return TextField(
+                  controller: _searchController,
+                  textInputAction: TextInputAction.search,
+                  onChanged: (_) => _executarPesquisa(),
+                  onSubmitted: (_) => _executarPesquisa(),
+                  decoration: InputDecoration(
+                    hintText: 'Digite o nome do passageiro...',
+                    hintStyle: GoogleFonts.poppins(fontSize: 18),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        possuiTexto
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  _executarPesquisa();
+                                },
+                              )
+                            : IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: _executarPesquisa,
+                              ),
+                      ],
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            }
-            return ListView.builder(
-              itemCount: viewmodel.pessoas.length,
-              itemBuilder: ((context, index) =>
-                  _cardPassageiro(viewmodel.pessoas[index])),
-            );
-          },
+                );
+              },
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: Consumer<SelecionarPassageiroViewmodel>(
+                builder: (context, viewmodel, child) {
+                  if (viewmodel.estaCarregando) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: CoresApp.vermelho,
+                      ),
+                    );
+                  }
+                  if (viewmodel.pessoas.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'Nenhum usuário encontrado',
+                        style: GoogleFonts.poppins(
+                          color: CoresApp.grafite,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: viewmodel.pessoas.length,
+                    itemBuilder: ((context, index) =>
+                        _cardPassageiro(viewmodel.pessoas[index])),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

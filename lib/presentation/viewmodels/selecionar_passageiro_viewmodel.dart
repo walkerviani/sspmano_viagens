@@ -14,7 +14,9 @@ class SelecionarPassageiroViewmodel extends ChangeNotifier {
   );
   bool estaCarregando = false;
   String? mensagemErro;
+  List<Pessoa> todasPessoas = [];
   List<Pessoa> pessoas = [];
+  String termoBusca = '';
 
   Future<void> carregarPessoas(int idExcursao) async {
     mensagemErro = null;
@@ -23,16 +25,38 @@ class SelecionarPassageiroViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      pessoas = await _pessoaRepository.listarTodos();
+      todasPessoas = await _pessoaRepository.listarTodos();
       final idsOcupados = await _passageiroRepository
           .listarIdsPessoasNaExcursao(idExcursao);
-      pessoas = pessoas.where((p) => !idsOcupados.contains(p.id)).toList();
+      todasPessoas = todasPessoas
+          .where((pessoa) => !idsOcupados.contains(pessoa.id))
+          .toList();
+      aplicarFiltro(termoBusca);
     } catch (e) {
       mensagemErro = 'Erro ao carregar os usuários';
     } finally {
       estaCarregando = false;
       notifyListeners();
     }
+  }
+
+  void aplicarFiltro(String termo) {
+    termoBusca = termo.trim().toLowerCase();
+
+    final List<Pessoa> pessoasFiltradas = termoBusca.isEmpty
+        ? List.from(todasPessoas)
+        : todasPessoas.where((pessoa) {
+            return pessoa.nome.toLowerCase().contains(termoBusca);
+          }).toList();
+
+    pessoas = pessoasFiltradas
+      ..sort((primeira, segunda) =>
+          primeira.nome.toLowerCase().compareTo(
+            segunda.nome.toLowerCase(),
+          ),
+        );
+
+    notifyListeners();
   }
 
   Future<bool> vincularPassageiro(
