@@ -32,21 +32,24 @@ class PessoasListViewmodel extends ChangeNotifier {
   void aplicarFiltro(String termo) {
     termoBusca = termo.trim().toLowerCase();
 
-    if (termoBusca.isEmpty) {
-      pessoas = List.from(todasPessoas);
-      notifyListeners();
-      return;
-    }
+    final List<Pessoa> pessoasFiltradas = termoBusca.isEmpty
+        ? List.from(todasPessoas)
+        : todasPessoas.where((pessoa) {
+            final nome = pessoa.nome.toLowerCase();
+            final cpf = pessoa.cpf.toLowerCase();
+            final telefone = pessoa.telefone.toLowerCase();
 
-    pessoas = todasPessoas.where((pessoa) {
-      final nome = pessoa.nome.toLowerCase();
-      final cpf = pessoa.cpf.toLowerCase();
-      final telefone = pessoa.telefone.toLowerCase();
+            return nome.contains(termoBusca) ||
+                cpf.contains(termoBusca) ||
+                telefone.contains(termoBusca);
+          }).toList();
 
-      return nome.contains(termoBusca) ||
-          cpf.contains(termoBusca) ||
-          telefone.contains(termoBusca);
-    }).toList();
+    pessoas = pessoasFiltradas
+      ..sort((primeira, segunda) =>
+          primeira.nome.toLowerCase().compareTo(
+            segunda.nome.toLowerCase(),
+          ),
+        );
 
     notifyListeners();
   }
