@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/data/database.dart';
 import 'package:sspmano_viagens/data/repositories/excursao_repository_impl.dart';
@@ -175,7 +178,129 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('pt', 'BR')],
-      home: const HomeScreen(),
+      home: const BackupPermissionGate(),
+    );
+  }
+}
+
+class BackupPermissionGate extends StatefulWidget {
+  const BackupPermissionGate({super.key});
+
+  @override
+  State<BackupPermissionGate> createState() => _BackupPermissionGateState();
+}
+
+class _BackupPermissionGateState extends State<BackupPermissionGate> {
+  bool _verificando = true;
+  bool _permisionConcedida = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _verificarPermissao();
+  }
+
+  Future<void> _verificarPermissao() async {
+    if (!Platform.isAndroid) {
+      if (mounted) {
+        setState(() {
+          _verificando = false;
+          _permisionConcedida = true;
+        });
+      }
+      return;
+    }
+
+    final statusAtual = await Permission.manageExternalStorage.status;
+
+    if (statusAtual.isGranted) {
+      if (mounted) {
+        setState(() {
+          _verificando = false;
+          _permisionConcedida = true;
+        });
+      }
+      return;
+    }
+
+    final statusSolicitado = statusAtual.isPermanentlyDenied
+        ? statusAtual
+        : await Permission.manageExternalStorage.request();
+
+    if (statusSolicitado.isGranted) {
+      if (mounted) {
+        setState(() {
+          _verificando = false;
+          _permisionConcedida = true;
+        });
+      }
+      return;
+    }
+
+    if (mounted) {
+      setState(() => _verificando = false);
+      _mostrarDialogoPermissao();
+    }
+  }
+
+  void _mostrarDialogoPermissao() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Permissão de arquivo necessária'),
+        content: const Text(
+          'O backup precisa acessar os arquivos do dispositivo. '
+          'Conceda a permissão para continuar usando o aplicativo.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await openAppSettings();
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('Configurar'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await _verificarPermissao();
+            },
+            child: const Text('Tentar novamente'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_verificando) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_permisionConcedida) {
+      return const HomeScreen();
+    }
+
+    return Scaffold(
+      body: Center(
+        child: Text(
+          'A permissão de arquivo não foi concedida. '
+          'Abra o aplicativo novamente para solicitar a permissão.',
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 }

@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
 
 class BackupFileDatasource {
-  static const _nomePastaApp = 'SSPMANOViagens';
-  static const _nomeArquivo = 'backup.json';
+  static const _prefixoArquivo = 'SSPMANO_Viagens_backup_';
 
   Future<void> solicitarPermissaoBackup({bool permitirSolicitar = true}) async {
     if (!Platform.isAndroid) {
@@ -69,55 +68,47 @@ class BackupFileDatasource {
   }) async {
     await solicitarPermissaoBackup(permitirSolicitar: solicitarPermissao);
 
-    final diretorio = await _resolverDiretorioBackup(pasta);
-    final arquivo = File('$diretorio/$_nomeArquivo');
+    final diretorio = Directory(pasta);
+    await diretorio.create(recursive: true);
+    final dataHora = DateTime.now();
+    final dataHoraFormatada =
+        '${dataHora.year.toString().padLeft(4, '0')}'
+        '${dataHora.month.toString().padLeft(2, '0')}'
+        '${dataHora.day.toString().padLeft(2, '0')}'
+        '${dataHora.hour.toString().padLeft(2, '0')}'
+        '${dataHora.minute.toString().padLeft(2, '0')}'
+        '${dataHora.second.toString().padLeft(2, '0')}';
+    final nomeArquivo = '$_prefixoArquivo$dataHoraFormatada.json';
+    final arquivo = File(path.join(diretorio.path, nomeArquivo));
 
     await arquivo.writeAsString(conteudo);
   }
 
   Future<String?> lerBackup({required String pasta}) async {
-    final diretorio = await _resolverDiretorioBackup(pasta);
-    final arquivo = File('$diretorio/$_nomeArquivo');
+    final arquivos = await Directory(pasta)
+        .list(followLinks: false)
+        .where(
+          (entidade) =>
+              entidade is File &&
+              path.basename(entidade.path).startsWith(_prefixoArquivo),
+        )
+        .map((entidade) => entidade as File)
+        .toList();
 
-    if (!await arquivo.exists()) {
+    if (arquivos.isEmpty) {
       return null;
     }
 
-    return arquivo.readAsString();
-  }
+    final arquivoMaisRecente = arquivos.reduce(
+      (maisRecente, arquivo) => arquivo
+              .lastModifiedSync()
+              .compareTo(maisRecente.lastModifiedSync()) >
+          0
+          ? arquivo
+          : maisRecente,
+    );
 
-  Future<String> _resolverDiretorioBackup(String pasta) async {
-    final appDocumentsPath = (await getApplicationDocumentsDirectory()).path;
-    final diretorios = <Directory>[
-      Directory('$pasta/$_nomePastaApp'),
-      Directory('/storage/emulated/0/Download/$_nomePastaApp'),
-      Directory('$appDocumentsPath/$_nomePastaApp'),
-    ];
-
-    for (final diretorio in diretorios) {
-      if (await _podeEscreverNoDiretorio(diretorio)) {
-        return diretorio.path;
-      }
-    }
-
-    final fallback = Directory('$appDocumentsPath/$_nomePastaApp');
-    await fallback.create(recursive: true);
-    return fallback.path;
-  }
-
-  Future<bool> _podeEscreverNoDiretorio(Directory diretorio) async {
-    try {
-      if (!await diretorio.exists()) {
-        await diretorio.create(recursive: true);
-      }
-
-      final arquivoTeste = File('${diretorio.path}/.backup_write_test');
-      await arquivoTeste.writeAsString('ok');
-      await arquivoTeste.delete();
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return arquivoMaisRecente.readAsString();
   }
 
   Future<String?> lerArquivoBackup(String caminhoArquivo) async {

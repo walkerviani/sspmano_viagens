@@ -23,11 +23,20 @@ class _BackupScreenState extends State<BackupScreen> {
   }
 
   Future<void> _executarOperacao(Future<void> Function() operacao) async {
+    final viewModel = context.read<BackupViewModel>();
+
+    if (viewModel.pasta == null || viewModel.pasta!.trim().isEmpty) {
+      _mostrarSnackBar(
+        mensagem: 'Nenhuma pasta de backup foi selecionada.',
+        cor: Colors.red,
+      );
+      return;
+    }
+
     await operacao();
 
     if (!mounted) return;
 
-    final viewModel = context.read<BackupViewModel>();
     final mensagem = viewModel.erro ?? 'Backup realizado com sucesso.';
     final cor = viewModel.erro == null ? Colors.green : Colors.red;
 
@@ -84,7 +93,7 @@ class _BackupScreenState extends State<BackupScreen> {
                 ),
                 child: Text(
                   viewModel.pasta != null
-                      ? '${viewModel.pasta}/SSPMANOViagens/backup.json'
+                      ? viewModel.pasta!
                       : 'Nenhuma pasta selecionada.',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
