@@ -32,12 +32,13 @@ class _SelecionarPassageiroScreenState
     });
   }
 
-  void _vincularPassageiro(Pessoa pessoa) async {
+  void _vincularPassageiro(Pessoa pessoa, bool foiPago) async {
     final viewmodel = context.read<SelecionarPassageiroViewmodel>();
     bool sucesso = await viewmodel.vincularPassageiro(
       pessoa,
       widget.idVeiculo,
       widget.numAssento,
+      foiPago,
     );
     if (!mounted) return;
     if (sucesso) {
@@ -99,32 +100,66 @@ class _SelecionarPassageiroScreenState
   Widget _cardPassageiro(Pessoa pessoa) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(5),
-        child: ListTile(
-          title: Text(
-            pessoa.nome,
-            style: GoogleFonts.poppins(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          subtitle: Text(
-            '${pessoa.cpf} | ${pessoa.telefone}',
-            style: GoogleFonts.poppins(fontSize: 15),
-          ),
-          trailing: IconButton(
-            onPressed: () {
-              _vincularPassageiro(pessoa);
-            },
-            style: IconButton.styleFrom(
-              backgroundColor: CoresApp.verdeClaro,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
+        padding: EdgeInsets.all(8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    pessoa.nome,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'CPF: ${pessoa.cpf}',
+                    style: GoogleFonts.poppins(fontSize: 14),
+                  ),
+                  Text(
+                    'Tel: ${pessoa.telefone}',
+                    style: GoogleFonts.poppins(fontSize: 14),
+                  ),
+                ],
               ),
             ),
-            icon: Icon(Icons.check, color: CoresApp.branco, size: 30),
-          ),
+            const SizedBox(width: 8),
+            Column(
+              children: [
+                _botaoAdicionar(
+                  'Adicionar pendente',
+                  CoresApp.verdeClaro,
+                  () => _vincularPassageiro(pessoa, false),
+                ),
+                const SizedBox(height: 5),
+                _botaoAdicionar(
+                  'Adicionar pago',
+                  CoresApp.azulEscuro,
+                  () => _vincularPassageiro(pessoa, true),
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _botaoAdicionar(String texto, Color cor, VoidCallback onPressed) {
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        backgroundColor: cor,
+        minimumSize: const Size(180, 50),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      child: Text(
+        texto,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 14),
       ),
     );
   }

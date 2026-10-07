@@ -39,6 +39,7 @@ class SelecionarPassageiroViewmodel extends ChangeNotifier {
     Pessoa pessoa,
     int idVeiculo,
     int numAssento,
+    bool foiPago,
   ) async {
     mensagemErro = null;
 
@@ -56,7 +57,13 @@ class SelecionarPassageiroViewmodel extends ChangeNotifier {
         return false;
       }
 
-      final passageiro = Passageiro(null, idVeiculo, pessoa.id, numAssento);
+      final passageiro = Passageiro(
+        null,
+        idVeiculo,
+        pessoa.id,
+        numAssento,
+        foiPago: foiPago,
+      );
 
       await _passageiroRepository.criar(passageiro);
       return true;
