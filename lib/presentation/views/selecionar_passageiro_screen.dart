@@ -1,9 +1,11 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/domain/entities/pessoa.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_viewmodel.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class SelecionarPassageiroScreen extends StatefulWidget {
   final int numAssento;
@@ -170,7 +172,7 @@ class _SelecionarPassageiroScreenState
               ),
             ),
             Text(
-              'CPF: ${pessoa.cpf}',
+              'CPF: ${formatarCpf(pessoa.cpf)}',
               style: GoogleFonts.poppins(fontSize: 16),
             ),
             Text(

@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:sspmano_viagens/data/dto/passageiros_por_veiculo_dto.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/selecionar_passageiro_relatorio_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/visualizar_pdf_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class SelecionarPassageiroRelatorioScreen extends StatefulWidget {
   final int idExcursao;
@@ -264,7 +266,7 @@ class _SelecionarPassageiroRelatorioScreenState
                   ),
                 ),
                 subtitle: Text(
-                  '${passageiro.pessoa.cpf} | ${passageiro.pessoa.telefone}',
+                  'CPF: ${formatarCpf(passageiro.pessoa.cpf)}\nTel: ${passageiro.pessoa.telefone}',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: CoresApp.branco,

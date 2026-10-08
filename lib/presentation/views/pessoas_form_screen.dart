@@ -1,9 +1,11 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_form_viewmodel.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class PessoasFormScreen extends StatefulWidget {
   final int? pessoaId;
@@ -39,7 +41,7 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
     await viewmodel.carregarPessoa(widget.pessoaId!);
     if (!mounted) return;
     _nomeController.text = viewmodel.pessoa!.nome;
-    _cpfController.text = viewmodel.pessoa!.cpf;
+    _cpfController.text = formatarCpf(viewmodel.pessoa!.cpf);
     _telefoneController.text = viewmodel.pessoa!.telefone;
   }
 
@@ -50,7 +52,7 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
     final viewmodel = context.read<PessoasFormViewmodel>();
 
     final nome = _nomeController.text.trim();
-    final cpf = _cpfController.text.trim();
+    final cpf = UtilBrasilFields.removeCaracteres(_cpfController.text);
     final telefone = _telefoneController.text.trim();
 
     final sucesso = await viewmodel.salvarPessoa(
@@ -113,6 +115,7 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Nome',
+                  counterText: '',
                   hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Nome',
                   labelStyle: GoogleFonts.poppins(fontSize: 18),
@@ -130,14 +133,16 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   if (value == null || value.isEmpty) {
                     return 'O CPF não pode estar vazio';
                   }
-                  final cpf = value.trim();
-                  if (cpf.length < 11 || cpf.length > 11) {
+                  final cpf = UtilBrasilFields.removeCaracteres(value);
+                  if (cpf.length != 11) {
                     return 'O CPF precisa ter 11 dígitos';
+                  }
+                  if (!UtilBrasilFields.isCPFValido(cpf)) {
+                    return 'CPF inválido';
                   }
                   return null;
                 },
                 controller: _cpfController,
-                maxLength: 11,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
@@ -151,7 +156,10 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  CpfInputFormatter(),
+                ],
               ),
 
               const SizedBox(height: 10),
@@ -173,6 +181,7 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
                   hintText: 'Telefone',
+                  counterText: '',
                   hintStyle: GoogleFonts.poppins(fontSize: 18),
                   labelText: 'Telefone',
                   labelStyle: GoogleFonts.poppins(fontSize: 18),

@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'package:sspmano_viagens/presentation/viewmodels/assentos_list_viewmodel.
 import 'package:sspmano_viagens/presentation/views/assento_detalhes_screen.dart';
 import 'package:sspmano_viagens/presentation/views/selecionar_passageiro_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class AssentosListScreen extends StatefulWidget {
   final int quantidadeAssentos;
@@ -202,14 +204,24 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
               numeroAssento,
             );
             final pessoa = viewmodel.buscarPessoaPeloAssento(numeroAssento);
+
+            String nomePessoa = 'Sem nome';
+            String cpf = 'Sem CPF';
+            String telefone = 'Sem Telefone';
+            if (pessoa != null) {
+              nomePessoa = pessoa.nome;
+              cpf = cpf = formatarCpf(pessoa.cpf);
+              telefone = pessoa.telefone;
+            }
+
             // Botão do assento
             return Tooltip(
               message: passageiro == null
                   ? 'Assento $numeroAssento\nLivre'
                   : 'Assento $numeroAssento\n'
-                        'Nome: ${pessoa?.nome ?? 'Sem nome'}\n'
-                        'CPF: ${pessoa?.cpf ?? 'Sem CPF'}\n'
-                        'Telefone: ${pessoa?.telefone ?? 'Sem Telefone'}\n'
+                        'Nome: $nomePessoa\n'
+                        'CPF: $cpf\n'
+                        'Telefone: $telefone\n'
                         'Pagamento: ${passageiro.foiPago ? 'Pago' : 'Pendente'}',
               textStyle: GoogleFonts.poppins(fontSize: 17),
               preferBelow: false,

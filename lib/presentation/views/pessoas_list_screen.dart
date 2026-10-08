@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:sspmano_viagens/presentation/viewmodels/pessoas_form_viewmodel.d
 import 'package:sspmano_viagens/presentation/viewmodels/pessoas_list_viewmodel.dart';
 import 'package:sspmano_viagens/presentation/views/pessoas_form_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class PessoasListScreen extends StatefulWidget {
   const PessoasListScreen({super.key});
@@ -231,7 +233,7 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
           ),
         ),
         subtitle: Text(
-          'CPF: ${pessoa.cpf}\nTel: ${pessoa.telefone}',
+          'CPF: ${formatarCpf(pessoa.cpf)}\nTel: ${pessoa.telefone}',
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 17),
         ),
         trailing: Row(

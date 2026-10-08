@@ -1,8 +1,10 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/assento_detalhes_viewmodel.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class AssentoDetalhesScreen extends StatefulWidget {
   final int numAssento;
@@ -222,7 +224,8 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 15),
               ),
               TextSpan(
-                text: 'CPF: ${pessoa.cpf}\nTelefone: ${pessoa.telefone}\n',
+                text:
+                    'CPF: ${formatarCpf(pessoa.cpf)}\nTel: ${pessoa.telefone}\n',
                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 15),
               ),
 

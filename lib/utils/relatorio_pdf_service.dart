@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -5,6 +6,7 @@ import 'package:printing/printing.dart';
 import 'package:sspmano_viagens/data/dto/excursao_relatorio_dto.dart';
 import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
 import 'package:sspmano_viagens/domain/entities/excursao.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class RelatorioPdfService {
   Future<pw.ThemeData> _carregarTema() async {
@@ -94,7 +96,7 @@ class RelatorioPdfService {
                   style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                 ),
                 pw.Text(
-                  'CPF: ${pessoa.cpf} | Telefone: ${pessoa.telefone}'
+                  'CPF: ${formatarCpf(pessoa.cpf)} | Telefone: ${pessoa.telefone}'
                   '\nStatus de pagamento: $strPago'
                   '\nAssento: ${passageiro.numeroAssento}',
                 ),
