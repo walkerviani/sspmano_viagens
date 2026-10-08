@@ -159,46 +159,35 @@ class _SelecionarPassageiroScreenState
     return Card(
       child: Padding(
         padding: EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pessoa.nome,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'CPF: ${pessoa.cpf}',
-                    style: GoogleFonts.poppins(fontSize: 14),
-                  ),
-                  Text(
-                    'Tel: ${pessoa.telefone}',
-                    style: GoogleFonts.poppins(fontSize: 14),
-                  ),
-                ],
+            Text(
+              pessoa.nome,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(width: 8),
-            Column(
-              children: [
-                _botaoAdicionar(
-                  'Adicionar pendente',
-                  CoresApp.verdeClaro,
-                  () => _vincularPassageiro(pessoa, false),
-                ),
-                const SizedBox(height: 5),
-                _botaoAdicionar(
-                  'Adicionar pago',
-                  CoresApp.azulEscuro,
-                  () => _vincularPassageiro(pessoa, true),
-                ),
-              ],
+            Text(
+              'CPF: ${pessoa.cpf}',
+              style: GoogleFonts.poppins(fontSize: 16),
+            ),
+            Text(
+              'Tel: ${pessoa.telefone}',
+              style: GoogleFonts.poppins(fontSize: 16),
+            ),
+            const SizedBox(height: 15),
+            _botaoAdicionar(
+              'Adicionar (não pago)',
+              CoresApp.verdeClaro,
+              () => _vincularPassageiro(pessoa, false),
+            ),
+            const SizedBox(height: 5),
+            _botaoAdicionar(
+              'Adicionar (pago)',
+              CoresApp.azulEscuro,
+              () => _vincularPassageiro(pessoa, true),
             ),
           ],
         ),
@@ -211,7 +200,7 @@ class _SelecionarPassageiroScreenState
       onPressed: onPressed,
       style: TextButton.styleFrom(
         backgroundColor: cor,
-        minimumSize: const Size(180, 50),
+        minimumSize: const Size(double.infinity, 50),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       ),
       child: Text(
