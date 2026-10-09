@@ -210,7 +210,7 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
             if (pessoa != null) {
               nomePessoa = pessoa.nome;
               cpf = cpf = formatarCpf(pessoa.cpf);
-              telefone = pessoa.telefone;
+              telefone = formatarTelefone(pessoa.telefone);
             }
 
             // Botão do assento
@@ -220,7 +220,7 @@ class _AssentosListScreenState extends State<AssentosListScreen> {
                   : 'Assento $numeroAssento\n'
                         'Nome: $nomePessoa\n'
                         'CPF: $cpf\n'
-                        'Telefone: $telefone\n'
+                        'Tel: $telefone\n'
                         'Pagamento: ${passageiro.foiPago ? 'Pago' : 'Pendente'}',
               textStyle: GoogleFonts.poppins(fontSize: 17),
               preferBelow: false,

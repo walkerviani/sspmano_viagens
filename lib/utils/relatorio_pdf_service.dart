@@ -95,7 +95,7 @@ class RelatorioPdfService {
                   style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                 ),
                 pw.Text(
-                  'CPF: ${formatarCpf(pessoa.cpf)} | Telefone: ${pessoa.telefone}'
+                  'CPF: ${formatarCpf(pessoa.cpf)} | Telefone: ${formatarTelefone(pessoa.telefone)}'
                   '\nStatus de pagamento: $strPago'
                   '\nAssento: ${passageiro.numeroAssento}',
                 ),

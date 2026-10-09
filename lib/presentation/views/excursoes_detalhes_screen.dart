@@ -8,6 +8,7 @@ import 'package:sspmano_viagens/presentation/views/passageiro_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_list_screen.dart';
 import 'package:sspmano_viagens/presentation/views/veiculo_selecionar_screen.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
+import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class ExcursoesDetalhesScreen extends StatefulWidget {
   final int excursaoId;
@@ -417,7 +418,7 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'CPF: ${item.pessoa.cpf}\nTelefone: ${item.pessoa.telefone}\nAssento: ${item.passageiro.numeroAssento}',
+                      'CPF: ${formatarCpf(item.pessoa.cpf)}\nTel: ${formatarTelefone(item.pessoa.telefone)}\nAssento: ${item.passageiro.numeroAssento}',
                       style: GoogleFonts.poppins(
                         color: CoresApp.branco,
                         fontSize: 15,

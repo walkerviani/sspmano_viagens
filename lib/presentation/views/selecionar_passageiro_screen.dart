@@ -175,7 +175,7 @@ class _SelecionarPassageiroScreenState
               style: GoogleFonts.poppins(fontSize: 16),
             ),
             Text(
-              'Tel: ${pessoa.telefone}',
+              'Tel: ${formatarTelefone(pessoa.telefone)}',
               style: GoogleFonts.poppins(fontSize: 16),
             ),
             const SizedBox(height: 15),

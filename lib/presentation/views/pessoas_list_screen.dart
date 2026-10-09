@@ -232,7 +232,7 @@ class _PessoasListScreenState extends State<PessoasListScreen> {
           ),
         ),
         subtitle: Text(
-          'CPF: ${formatarCpf(pessoa.cpf)}\nTel: ${pessoa.telefone}',
+          'CPF: ${formatarCpf(pessoa.cpf)}\nTel: ${formatarTelefone(pessoa.telefone)}',
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 17),
         ),
         trailing: Row(

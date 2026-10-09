@@ -224,7 +224,7 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
               ),
               TextSpan(
                 text:
-                    'CPF: ${formatarCpf(pessoa.cpf)}\nTel: ${pessoa.telefone}\n',
+                    'CPF: ${formatarCpf(pessoa.cpf)}\nTel: ${formatarTelefone(pessoa.telefone)}\n',
                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 15),
               ),
 

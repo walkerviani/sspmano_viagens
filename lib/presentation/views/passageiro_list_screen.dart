@@ -92,7 +92,7 @@ class _PassageiroListScreenState extends State<PassageiroListScreen> {
                     ),
                   ),
                   subtitle: Text(
-                    'CPF: ${formatarCpf(item.pessoa.cpf)}\nTel: ${item.pessoa.telefone}',
+                    'CPF: ${formatarCpf(item.pessoa.cpf)}\nTel: ${formatarTelefone(item.pessoa.telefone)}',
                     style: GoogleFonts.poppins(
                       color: CoresApp.branco,
                       fontSize: 15,

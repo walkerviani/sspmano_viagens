@@ -265,7 +265,7 @@ class _SelecionarPassageiroRelatorioScreenState
                   ),
                 ),
                 subtitle: Text(
-                  'CPF: ${formatarCpf(passageiro.pessoa.cpf)}\nTel: ${passageiro.pessoa.telefone}',
+                  'CPF: ${formatarCpf(passageiro.pessoa.cpf)}\nTel: ${formatarTelefone(passageiro.pessoa.telefone)}',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: CoresApp.branco,
