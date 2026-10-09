@@ -42,7 +42,7 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
     if (!mounted) return;
     _nomeController.text = viewmodel.pessoa!.nome;
     _cpfController.text = formatarCpf(viewmodel.pessoa!.cpf);
-    _telefoneController.text = viewmodel.pessoa!.telefone;
+    _telefoneController.text = formatarTelefone(viewmodel.pessoa!.telefone);
   }
 
   Future<void> _salvar() async {
@@ -53,7 +53,9 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
 
     final nome = _nomeController.text.trim();
     final cpf = UtilBrasilFields.removeCaracteres(_cpfController.text);
-    final telefone = _telefoneController.text.trim();
+    final telefone = UtilBrasilFields.removeCaracteres(
+      _telefoneController.text,
+    );
 
     final sucesso = await viewmodel.salvarPessoa(
       id: widget.pessoaId,
@@ -167,16 +169,15 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
               TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'O Telefone não pode estar vazio';
+                    return 'O telefone não pode estar vazio';
                   }
-                  final telefone = value.trim();
-                  if (telefone.length < 11 || telefone.length > 11) {
-                    return 'O telefone precisa ter 11 dígitos';
+                  final telefone = UtilBrasilFields.removeCaracteres(value);
+                  if (telefone.length != 10 && telefone.length != 11) {
+                    return 'O telefone precisa ter 10 ou 11 dígitos';
                   }
                   return null;
                 },
                 controller: _telefoneController,
-                maxLength: 11,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   alignLabelWithHint: true,
@@ -191,7 +192,10 @@ class _PessoasFormScreenState extends State<PessoasFormScreen> {
                   ),
                 ),
                 keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  TelefoneOuCelularInputFormatter(),
+                ],
               ),
 
               const SizedBox(height: 10),
