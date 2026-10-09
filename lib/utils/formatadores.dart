@@ -6,3 +6,12 @@ String formatarCpf(String cpf) {
       .formatEditUpdate(TextEditingValue.empty, TextEditingValue(text: cpf))
       .text;
 }
+
+String formatarTelefone(String telefone) {
+  return TelefoneOuCelularInputFormatter()
+      .formatEditUpdate(
+        TextEditingValue.empty,
+        TextEditingValue(text: telefone),
+      )
+      .text;
+}
