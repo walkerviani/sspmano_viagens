@@ -344,14 +344,16 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
                         ),
                       ),
                       TextSpan(
-                        text: '\n$data às $hora',
+                        text: '\n$data às $hora\n',
                         style: GoogleFonts.poppins(
                           color: CoresApp.grafite,
                           fontSize: 20,
                         ),
                       ),
                       TextSpan(
-                        text: '\n${viewmodel.passageiros.length} passageiros',
+                        text: viewmodel.passageiros.length == 1
+                            ? '${viewmodel.passageiros.length} passageiro'
+                            : '${viewmodel.passageiros.length} passageiros',
                         style: GoogleFonts.poppins(
                           color: CoresApp.grafite,
                           fontSize: 20,
