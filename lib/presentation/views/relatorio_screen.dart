@@ -18,75 +18,55 @@ class RelatorioScreen extends StatelessWidget {
         padding: EdgeInsets.all(12),
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        SelecionarExcursaoScreen(relatorioPassageiro: true),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.azulPetroleo,
-                foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+            _botaoMenu(
+              'Bilhetes de passageiro',
+              Icons.local_activity,
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      SelecionarExcursaoScreen(relatorioPassageiro: true),
                 ),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.local_activity, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Bilhetes de passageiro',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
               ),
             ),
 
             const SizedBox(height: 10),
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        SelecionarExcursaoScreen(relatorioPassageiro: false),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.azulPetroleo,
-                foregroundColor: CoresApp.branco,
-                minimumSize: Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+            _botaoMenu(
+              'Relatório da excursão',
+              Icons.explore,
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      SelecionarExcursaoScreen(relatorioPassageiro: false),
                 ),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.explore, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Relatório da excursão',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _botaoMenu(String texto, IconData icone, VoidCallback funcaoClique) {
+    return ElevatedButton(
+      onPressed: funcaoClique,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CoresApp.azulPetroleo,
+        foregroundColor: CoresApp.branco,
+        minimumSize: Size(double.infinity, 70),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      child: Row(
+        children: [
+          Icon(icone, size: 40),
+          const SizedBox(width: 10),
+          Text(
+            texto,
+            style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 20),
+          ),
+        ],
       ),
     );
   }
