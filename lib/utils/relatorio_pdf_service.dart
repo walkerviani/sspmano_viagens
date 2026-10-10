@@ -81,6 +81,7 @@ class RelatorioPdfService {
       );
 
       for (final passageiroDto in veiculoDto.passageiros) {
+        int index = 1;
         final passageiro = passageiroDto.passageiro;
         final pessoa = passageiroDto.pessoa;
         final strPago = passageiro.foiPago ? 'Pago' : 'Pendente';
@@ -94,20 +95,25 @@ class RelatorioPdfService {
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Text(
-                  '${pessoa.nome} ',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                pw.Row(
+                  children: [
+                    pw.Text(
+                      '$index# - ${pessoa.nome}',
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Text(
+                      ' / CPF: ${formatarCpf(pessoa.cpf)} / Tel: ${formatarTelefone(pessoa.telefone)}',
+                    ),
+                  ],
                 ),
                 pw.Text(
-                  'CPF: ${formatarCpf(pessoa.cpf)} — Telefone: ${formatarTelefone(pessoa.telefone)}'
-                  ' — Pagamento: $strPago'
-                  ' — Assento: ${passageiro.numeroAssento}'
-                  ' — Ingresso: $tipoIngressoStr',
+                  'Pagamento: $strPago / Assento: ${passageiro.numeroAssento} / Ingresso: $tipoIngressoStr',
                 ),
               ],
             ),
           ),
         );
+        index++;
       }
     }
 
