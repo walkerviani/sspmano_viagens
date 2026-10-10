@@ -1,6 +1,6 @@
 enum TipoIngresso {
-  inteira(1, 'INTEIRA'),
-  meia(2, 'MEIA');
+  inteira(1, 'Inteira'),
+  meia(2, 'Meia');
 
   final int id;
   final String tipoIngresso;
