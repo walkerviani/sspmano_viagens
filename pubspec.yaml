@@ -77,7 +77,8 @@ flutter:
   assets:
     - assets/icons/icon.png
     - assets/icons/sspmano_fundo-transparente.png
-
+    - assets/fonts/Poppins-Bold.ttf
+    - assets/fonts/Poppins-Regular.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

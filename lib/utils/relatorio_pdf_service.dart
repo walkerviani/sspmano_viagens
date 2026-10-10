@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 import 'package:sspmano_viagens/data/dto/excursao_relatorio_dto.dart';
 import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
 import 'package:sspmano_viagens/domain/entities/excursao.dart';
@@ -10,10 +9,14 @@ import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class RelatorioPdfService {
   Future<pw.ThemeData> _carregarTema() async {
-    final font = await PdfGoogleFonts.poppinsRegular();
-    final bold = await PdfGoogleFonts.poppinsBold();
+    final regular = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/Poppins-Regular.ttf'),
+    );
+    final bold = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/Poppins-Bold.ttf'),
+    );
 
-    return pw.ThemeData.withFont(base: font, bold: bold);
+    return pw.ThemeData.withFont(base: regular, bold: bold);
   }
 
   // Cria o cabeçalho com icone do app e título do relatório
