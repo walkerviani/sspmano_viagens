@@ -179,7 +179,9 @@ class _VeiculoListScreenState extends State<VeiculoListScreen> {
           ),
         ),
         subtitle: Text(
-          '${veiculo.capacidade} passageiros',
+          veiculo.capacidade == 1
+              ? '${veiculo.capacidade} passageiro'
+              : '${veiculo.capacidade} passageiros',
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 17),
         ),
         trailing: Row(
