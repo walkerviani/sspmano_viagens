@@ -137,7 +137,11 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
         ),
         subtitle: Text(
           '$data às $hora\n'
-          '${excursao.qtdAssentos == 0 ? 'Sem veículos vinculados' : '${excursao.qtdAssentos} passageiros'}',
+          '${excursao.qtdAssentos == 0
+              ? 'Sem veículos vinculados'
+              : excursao.qtdAssentos == 1
+              ? '${excursao.qtdAssentos} passageiro'
+              : '${excursao.qtdAssentos} passageiros'}',
           style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 16),
         ),
         trailing: IconButton(
