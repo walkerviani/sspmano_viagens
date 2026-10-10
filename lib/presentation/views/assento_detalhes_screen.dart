@@ -277,7 +277,7 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
             ElevatedButton(
               onPressed: () => _excluirPassageiro(passageiro.id!),
               style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.laranja,
+                backgroundColor: CoresApp.vermelhoClaro,
                 foregroundColor: CoresApp.branco,
                 minimumSize: Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
@@ -306,24 +306,45 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
         borderRadius: BorderRadius.circular(5),
+        color: CoresApp.azulPetroleo,
       ),
       child: Column(
         children: [
           Text(
             'Tipo do Ingresso',
-            style: GoogleFonts.poppins(color: Colors.black, fontSize: 18),
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
           DropdownMenu<TipoIngresso>(
             initialSelection: viewmodel.tipoIngresso,
-            width: double.infinity,
+            expandedInsets: EdgeInsets.zero,
             hintText: 'Tipo de ingresso',
             requestFocusOnTap: false,
-            textStyle: GoogleFonts.poppins(),
+            textStyle: GoogleFonts.poppins(color: CoresApp.branco),
+            menuStyle: MenuStyle(
+              backgroundColor: WidgetStateProperty.all(CoresApp.azulPetroleo),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: CoresApp.branco),
+              ),
+            ),
+            trailingIcon: Icon(Icons.arrow_drop_down, color: CoresApp.branco),
+            selectedTrailingIcon: Icon(
+              Icons.arrow_drop_up,
+              color: CoresApp.branco,
+            ),
             onSelected: _alterarTipoIngresso,
             dropdownMenuEntries: [
               for (final tipo in TipoIngresso.values)
-                DropdownMenuEntry(value: tipo, label: tipo.tipoIngresso),
+                DropdownMenuEntry(
+                  value: tipo,
+                  label: tipo.tipoIngresso,
+                  style: MenuItemButton.styleFrom(
+                    foregroundColor: CoresApp.branco,
+                    textStyle: GoogleFonts.poppins(fontSize: 16),
+                  ),
+                ),
             ],
           ),
         ],
