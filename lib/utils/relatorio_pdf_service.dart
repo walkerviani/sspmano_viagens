@@ -5,6 +5,7 @@ import 'package:printing/printing.dart';
 import 'package:sspmano_viagens/data/dto/excursao_relatorio_dto.dart';
 import 'package:sspmano_viagens/data/dto/passageiro_com_pessoa_dto.dart';
 import 'package:sspmano_viagens/domain/entities/excursao.dart';
+import 'package:sspmano_viagens/domain/enums/tipo_ingresso.dart';
 import 'package:sspmano_viagens/utils/formatadores.dart';
 
 class RelatorioPdfService {
@@ -83,6 +84,9 @@ class RelatorioPdfService {
         final passageiro = passageiroDto.passageiro;
         final pessoa = passageiroDto.pessoa;
         final strPago = passageiro.foiPago ? 'Pago' : 'Pendente';
+        String tipoIngressoStr =
+            TipoIngresso.deId(passageiro.tipoIngresso)?.tipoIngresso ??
+            'Não definido';
 
         itens.add(
           pw.Padding(
@@ -95,9 +99,10 @@ class RelatorioPdfService {
                   style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                 ),
                 pw.Text(
-                  'CPF: ${formatarCpf(pessoa.cpf)} | Telefone: ${formatarTelefone(pessoa.telefone)}'
-                  '\nStatus de pagamento: $strPago'
-                  '\nAssento: ${passageiro.numeroAssento}',
+                  'CPF: ${formatarCpf(pessoa.cpf)} — Telefone: ${formatarTelefone(pessoa.telefone)}'
+                  ' — Pagamento: $strPago'
+                  ' — Assento: ${passageiro.numeroAssento}'
+                  ' — Ingresso: $tipoIngressoStr',
                 ),
               ],
             ),
@@ -119,6 +124,9 @@ class RelatorioPdfService {
   ) {
     String data = DateFormat('dd/MM/yyyy').format(excursao.dataHora);
     String hora = DateFormat('HH:mm').format(excursao.dataHora);
+    String tipoIngressoStr =
+        TipoIngresso.deId(passageiro.passageiro.tipoIngresso)?.tipoIngresso ??
+        'Não definido';
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -150,6 +158,11 @@ class RelatorioPdfService {
           passageiro.passageiro.numeroAssento.toString(),
           style: pw.TextStyle(fontSize: 18),
         ),
+        pw.Text(
+          'Tipo de ingresso',
+          style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+        ),
+        pw.Text(tipoIngressoStr, style: pw.TextStyle(fontSize: 18)),
         pw.Text(
           'Pagamento',
           style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
