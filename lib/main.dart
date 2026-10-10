@@ -282,11 +282,7 @@ class _BackupPermissionGateState extends State<BackupPermissionGate> {
   @override
   Widget build(BuildContext context) {
     if (_verificando) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_permisionConcedida) {
@@ -341,131 +337,71 @@ class HomeScreen extends StatelessWidget {
         padding: EdgeInsets.all(12),
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => PessoasListScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.azulPetroleo,
-                foregroundColor: CoresApp.branco,
-                minimumSize: const Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
+            _botaoFuncao(
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => PessoasListScreen()),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.person, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Pessoas',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
+              Icons.person,
+              'Pessoas',
             ),
 
             const SizedBox(height: 10),
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => ExcursoesListScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.azulPetroleo,
-                foregroundColor: CoresApp.branco,
-                minimumSize: const Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
+            _botaoFuncao(
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ExcursoesListScreen()),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.directions_bus, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Excursões',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
+              Icons.directions_bus,
+              'Excursões',
             ),
 
             const SizedBox(height: 10),
 
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => RelatorioScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.azulPetroleo,
-                foregroundColor: CoresApp.branco,
-                minimumSize: const Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
+            _botaoFuncao(
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => RelatorioScreen()),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.content_paste, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Relatórios',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
+              Icons.content_paste,
+              'Relatórios',
             ),
+
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => BackupScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CoresApp.azulPetroleo,
-                foregroundColor: CoresApp.branco,
-                minimumSize: const Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
+
+            _botaoFuncao(
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => BackupScreen()),
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.backup_outlined, size: 40),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Backup',
-                    style: GoogleFonts.poppins(
-                      color: CoresApp.branco,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
+              Icons.backup_outlined,
+              'Backup',
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _botaoFuncao(VoidCallback funcao, IconData icone, String texto) {
+    return ElevatedButton(
+      onPressed: funcao,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CoresApp.azulPetroleo,
+        foregroundColor: CoresApp.branco,
+        minimumSize: const Size(double.infinity, 70),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      child: Row(
+        children: [
+          Icon(icone, size: 40),
+          const SizedBox(width: 10),
+          Text(
+            texto,
+            style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 20),
+          ),
+        ],
       ),
     );
   }
