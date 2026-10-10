@@ -28,7 +28,7 @@ class _PassageiroListScreenState extends State<PassageiroListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Passageiros', style: GoogleFonts.poppins(fontSize: 28)),
+        title: Text('Pagamentos', style: GoogleFonts.poppins(fontSize: 28)),
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),

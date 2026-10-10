@@ -90,10 +90,7 @@ class _VeiculoListScreenState extends State<VeiculoListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Gerenciar veículos',
-          style: GoogleFonts.poppins(fontSize: 28),
-        ),
+        title: Text('Veículos', style: GoogleFonts.poppins(fontSize: 28)),
         backgroundColor: CoresApp.vermelho,
         foregroundColor: CoresApp.branco,
       ),
