@@ -172,133 +172,74 @@ class _ExcursoesDetalhesScreenState extends State<ExcursoesDetalhesScreen> {
   Widget _detalhesAberto() {
     return Column(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => VeiculoSelecionarScreen(widget.excursaoId),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.azulPetroleo,
-            foregroundColor: CoresApp.branco,
-            minimumSize: Size(double.infinity, 70),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+        _botaoFuncao(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => VeiculoSelecionarScreen(widget.excursaoId),
             ),
           ),
-          child: Row(
-            children: [
-              Icon(Icons.chair, size: 40),
-              const SizedBox(width: 10),
-              Text(
-                'Ver assentos',
-                style: GoogleFonts.poppins(
-                  color: CoresApp.branco,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
+          Icons.chair,
+          'Assentos',
         ),
 
         const SizedBox(height: 10),
 
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => VeiculoListScreen(widget.excursaoId),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.azulPetroleo,
-            foregroundColor: CoresApp.branco,
-            minimumSize: Size(double.infinity, 70),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+        _botaoFuncao(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => VeiculoListScreen(widget.excursaoId),
             ),
           ),
-          child: Row(
-            children: [
-              Icon(Icons.airport_shuttle, size: 40),
-              const SizedBox(width: 10),
-              Text(
-                'Gerenciar veículos',
-                style: GoogleFonts.poppins(
-                  color: CoresApp.branco,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
+          Icons.airport_shuttle,
+          'Veículos',
         ),
 
         const SizedBox(height: 10),
 
-        ElevatedButton(
-          onPressed: () => _abrirFormulario(widget.excursaoId, true),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.azulPetroleo,
-            foregroundColor: CoresApp.branco,
-            minimumSize: Size(double.infinity, 70),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.directions_bus, size: 40),
-              const SizedBox(width: 10),
-              Text(
-                'Editar excursão',
-                style: GoogleFonts.poppins(
-                  color: CoresApp.branco,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
+        _botaoFuncao(
+          () => _abrirFormulario(widget.excursaoId, true),
+          Icons.edit,
+          'Editar excursão',
         ),
+
         const SizedBox(height: 10),
 
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) =>
-                    PassageiroListScreen(idExcursao: widget.excursaoId),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: CoresApp.azulPetroleo,
-            foregroundColor: CoresApp.branco,
-            minimumSize: Size(double.infinity, 70),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+        _botaoFuncao(
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  PassageiroListScreen(idExcursao: widget.excursaoId),
             ),
           ),
-          child: Row(
-            children: [
-              Icon(Icons.monetization_on, size: 40),
-              const SizedBox(width: 10),
-              Text(
-                'Verificar pagamentos',
-                style: GoogleFonts.poppins(
-                  color: CoresApp.branco,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
+          Icons.monetization_on,
+          'Verificar pagamentos',
         ),
       ],
+    );
+  }
+
+  Widget _botaoFuncao(VoidCallback funcao, IconData icone, String texto) {
+    return ElevatedButton(
+      onPressed: funcao,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CoresApp.azulPetroleo,
+        foregroundColor: CoresApp.branco,
+        minimumSize: const Size(double.infinity, 70),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      child: Row(
+        children: [
+          Icon(icone, size: 40),
+          const SizedBox(width: 10),
+          Text(
+            texto,
+            style: GoogleFonts.poppins(color: CoresApp.branco, fontSize: 20),
+          ),
+        ],
+      ),
     );
   }
 
