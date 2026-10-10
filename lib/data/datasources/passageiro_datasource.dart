@@ -10,6 +10,7 @@ extension PassageiroMapper on PassageiroData {
       idPessoa,
       numeroAssento,
       foiPago: foiPago,
+      tipoIngresso: tipoIngresso,
     );
   }
 }
@@ -22,6 +23,7 @@ extension PassageiroCompanionMapper on Passageiro {
       idPessoa: idPessoa != null ? Value(idPessoa!) : const Value.absent(),
       numeroAssento: numeroAssento,
       foiPago: foiPago,
+      tipoIngresso: Value(tipoIngresso),
     );
   }
 }

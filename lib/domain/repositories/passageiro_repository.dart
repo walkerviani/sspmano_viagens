@@ -9,9 +9,7 @@ abstract class PassageiroRepository {
   Future<Passageiro?> listarPorAssento(int idVeiculo, int numAssento);
   Future<List<Passageiro>> listarPorVeiculo(int idVeiculo);
   Future<List<PassageiroComPessoaDto>> listarPorExcursao(int idExcursao);
-  Future<List<PassageirosPorVeiculoDto>> listarAgrupadoPorVeiculo(
-    int idExcursao,
-  );
+  Future<List<PassageirosPorVeiculoDto>> listarAgrupadoPorVeiculo(int idExcursao);
   Future<List<PassageiroComPessoaDto>> listarComPessoaPorVeiculo(int idVeiculo);
   Future<List<int>> listarIdsPessoasNaExcursao(int idExcursao);
   Future<void> criar(Passageiro passageiro);
@@ -22,4 +20,5 @@ abstract class PassageiroRepository {
   Future<void> removerPessoa(int id, Pessoa pessoa);
   Future<void> definirStatusAssento(int id, int status);
   Future<void> definirStatusPagamento(int id, bool foiPago);
+  Future<void> definirTipoIngresso(int id, int idTipoIngresso);
 }

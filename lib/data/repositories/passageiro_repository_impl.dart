@@ -184,6 +184,14 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
   }
 
   @override
+  Future<void> definirTipoIngresso(int id, int idTipoIngresso) async {
+    final passageiro = await listarPorId(id);
+    if (passageiro == null) throw ArgumentError('Passageiro não encontrado');
+    passageiro.tipoIngresso = idTipoIngresso;
+    await atualizar(passageiro);
+  }
+
+  @override
   Future<void> atualizar(Passageiro passageiro) async {
     if (passageiro.id == null) {
       throw ArgumentError('Não é possível atualizar um passageiro sem id');
@@ -248,4 +256,6 @@ class PassageiroRepositoryImpl implements PassageiroRepository {
 
     await atualizar(passageiro);
   }
+
+  
 }

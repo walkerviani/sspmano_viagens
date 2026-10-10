@@ -5,6 +5,7 @@ class Passageiro {
   int? idPessoa;
   int numeroAssento;
   bool foiPago;
+  int tipoIngresso;
 
   // Construtor
   Passageiro(
@@ -13,6 +14,7 @@ class Passageiro {
     this.idPessoa,
     this.numeroAssento, {
     this.foiPago = false,
+    this.tipoIngresso = 1
   });
 
   // Getters
@@ -27,6 +29,7 @@ class Passageiro {
       'idPessoa': idPessoa,
       'numeroAssento': numeroAssento,
       'foiPago': foiPago,
+      'tipoIngresso': tipoIngresso,
     };
   }
 
@@ -37,6 +40,7 @@ class Passageiro {
       json['idPessoa'] as int?,
       json['numeroAssento'] as int,
       foiPago: json['foiPago'] as bool,
+      tipoIngresso: json['tipoIngresso'] as int,
     );
   }
 }

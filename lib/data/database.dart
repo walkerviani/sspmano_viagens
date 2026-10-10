@@ -20,13 +20,17 @@ class AppDatabase extends _$AppDatabase {
   }
   AppDatabase._internal() : super(_openConnection());
 
-  @override
-  int get schemaVersion => 1;
+  @override  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (Migrator m) async {
       await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.addColumn(passageiros, passageiros.tipoIngresso);
+      }
     },
   );
 }
