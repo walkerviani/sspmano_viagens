@@ -20,6 +20,8 @@ class SelecionarExcursaoScreen extends StatefulWidget {
 }
 
 class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +29,18 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
       final viewmodel = context.read<SelecionarExcursaoViewmodel>();
       viewmodel.carregarExcursoes();
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _executarPesquisa() {
+    context.read<SelecionarExcursaoViewmodel>().aplicarFiltro(
+      _searchController.text,
+    );
   }
 
   void _abrirSelecaoPassageiro(int idExcursao) async {
@@ -84,6 +98,42 @@ class _SelecionarExcursaoScreenState extends State<SelecionarExcursaoScreen> {
         padding: EdgeInsets.all(12),
         child: Column(
           children: [
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _searchController,
+              builder: (context, value, child) {
+                final possuiTexto = value.text.isNotEmpty;
+
+                return TextField(
+                  controller: _searchController,
+                  textInputAction: TextInputAction.search,
+                  onChanged: (_) => _executarPesquisa(),
+                  onSubmitted: (_) => _executarPesquisa(),
+                  decoration: InputDecoration(
+                    hintText: 'Digite o nome da excursão...',
+                    hintStyle: GoogleFonts.poppins(fontSize: 18),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        possuiTexto
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  _executarPesquisa();
+                                },
+                              )
+                            : IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: _executarPesquisa,
+                              ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 10),
             Expanded(
               child: Consumer<SelecionarExcursaoViewmodel>(
                 builder: (context, viewmodel, child) {

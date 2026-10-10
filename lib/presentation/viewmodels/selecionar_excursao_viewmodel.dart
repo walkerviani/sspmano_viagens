@@ -18,7 +18,9 @@ class SelecionarExcursaoViewmodel extends ChangeNotifier {
   );
   bool estaCarregando = false;
   String? mensagemErro;
+  List<Excursao> todasExcursoes = [];
   List<Excursao> excursoes = [];
+  String termoBusca = '';
 
   Future<void> carregarExcursoes() async {
     mensagemErro = null;
@@ -27,13 +29,26 @@ class SelecionarExcursaoViewmodel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      excursoes = await _repository.listarTodos();
+      todasExcursoes = await _repository.listarTodos();
+      aplicarFiltro(termoBusca);
     } catch (e) {
       mensagemErro = 'Erro ao carregar as excursões';
     } finally {
       estaCarregando = false;
       notifyListeners();
     }
+  }
+
+  void aplicarFiltro(String termo) {
+    termoBusca = termo.trim().toLowerCase();
+
+    excursoes = termoBusca.isEmpty
+        ? List.from(todasExcursoes)
+        : todasExcursoes.where((excursao) {
+            return excursao.nome.toLowerCase().contains(termoBusca);
+          }).toList();
+
+    notifyListeners();
   }
 
   Future<Uint8List?> gerarRelatorioExcursao(int idExcursao) async {
