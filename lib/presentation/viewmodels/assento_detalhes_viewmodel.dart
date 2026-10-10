@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sspmano_viagens/domain/entities/passageiro.dart';
 import 'package:sspmano_viagens/domain/entities/pessoa.dart';
+import 'package:sspmano_viagens/domain/enums/tipo_ingresso.dart';
 import 'package:sspmano_viagens/domain/repositories/passageiro_repository.dart';
 import 'package:sspmano_viagens/domain/repositories/pessoa_repository.dart';
 
@@ -14,6 +15,9 @@ class AssentoDetalhesViewmodel extends ChangeNotifier {
   String? mensagemErro;
   Passageiro? passageiro;
   Pessoa? pessoa;
+  TipoIngresso? _tipoIngresso;
+
+  TipoIngresso? get tipoIngresso => _tipoIngresso;
 
   Future<void> carregarPassageiro(int numAssento, int idVeiculo) async {
     mensagemErro = null;
@@ -26,6 +30,7 @@ class AssentoDetalhesViewmodel extends ChangeNotifier {
         idVeiculo,
         numAssento,
       );
+      _tipoIngresso = TipoIngresso.deId(passageiro?.tipoIngresso);
     } catch (e) {
       mensagemErro = 'Erro ao carregar o passageiro';
     } finally {
@@ -102,6 +107,27 @@ class AssentoDetalhesViewmodel extends ChangeNotifier {
       return false;
     } finally {
       estaAtualizandoPagamento = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> alterarTipoIngresso(TipoIngresso? valor) async {
+    if (valor == null || passageiro == null) return false;
+    if (valor == _tipoIngresso) return true;
+    final idPassageiro = passageiro!.id!;
+    mensagemErro = null;
+
+    try {
+      await _passageiroRepository.definirTipoIngresso(idPassageiro, valor.id);
+
+      final atualizado = await _passageiroRepository.listarPorId(idPassageiro);
+      passageiro = atualizado;
+      _tipoIngresso = TipoIngresso.deId(atualizado?.tipoIngresso);
+      return true;
+    } catch (e) {
+      mensagemErro = 'Erro ao atualizar o tipo de ingresso';
+      return false;
+    } finally {
       notifyListeners();
     }
   }

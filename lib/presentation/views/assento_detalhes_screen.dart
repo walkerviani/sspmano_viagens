@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sspmano_viagens/domain/enums/tipo_ingresso.dart';
 import 'package:sspmano_viagens/presentation/viewmodels/assento_detalhes_viewmodel.dart';
 import 'package:sspmano_viagens/utils/cores_app.dart';
 import 'package:sspmano_viagens/utils/formatadores.dart';
@@ -105,6 +106,23 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
     }
   }
 
+  Future<void> _alterarTipoIngresso(TipoIngresso? valor) async {
+    final viewModel = context.read<AssentoDetalhesViewmodel>();
+    final sucesso = await viewModel.alterarTipoIngresso(valor);
+    if (!mounted) return;
+    if (!sucesso) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            viewModel.mensagemErro ?? 'Erro ao alterar o tipo do ingresso',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewmodel = context.watch<AssentoDetalhesViewmodel>();
@@ -173,6 +191,10 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
                       ),
                     ),
             ),
+
+            const SizedBox(height: 15),
+
+            _campoTipoIngresso(),
           ],
         ),
       ),
@@ -272,6 +294,39 @@ class _AssentoDetalhesScreenState extends State<AssentoDetalhesScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _campoTipoIngresso() {
+    final viewmodel = context.watch<AssentoDetalhesViewmodel>();
+
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Tipo do Ingresso',
+            style: GoogleFonts.poppins(color: Colors.black, fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          DropdownMenu<TipoIngresso>(
+            initialSelection: viewmodel.tipoIngresso,
+            width: double.infinity,
+            hintText: 'Tipo de ingresso',
+            requestFocusOnTap: false,
+            textStyle: GoogleFonts.poppins(),
+            onSelected: _alterarTipoIngresso,
+            dropdownMenuEntries: [
+              for (final tipo in TipoIngresso.values)
+                DropdownMenuEntry(value: tipo, label: tipo.tipoIngresso),
+            ],
+          ),
+        ],
       ),
     );
   }
