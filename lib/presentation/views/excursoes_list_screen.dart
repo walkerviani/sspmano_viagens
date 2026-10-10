@@ -242,6 +242,8 @@ class _ExcursoesListScreenState extends State<ExcursoesListScreen> {
                     TextSpan(
                       text: excursao.qtdAssentos == 0
                           ? 'Sem veículos vinculados'
+                          : excursao.qtdAssentos == 1
+                          ? '${excursao.qtdAssentos} passageiro'
                           : '${excursao.qtdAssentos} passageiros',
                       style: GoogleFonts.poppins(
                         color: CoresApp.branco,
