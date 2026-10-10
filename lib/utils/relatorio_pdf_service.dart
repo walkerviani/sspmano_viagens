@@ -82,9 +82,8 @@ class RelatorioPdfService {
           ),
         ),
       );
-
+      int index = 1;
       for (final passageiroDto in veiculoDto.passageiros) {
-        int index = 1;
         final passageiro = passageiroDto.passageiro;
         final pessoa = passageiroDto.pessoa;
         final strPago = passageiro.foiPago ? 'Pago' : 'Pendente';
