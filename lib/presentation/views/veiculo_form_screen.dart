@@ -90,8 +90,6 @@ class _VeiculoFormScreenState extends State<VeiculoFormScreen> {
       if (confirmar != true) return;
     }
 
-    
-
     final sucesso = await viewmodel.salvarVeiculo(
       id: widget.veiculoId,
       idExcursao: widget.idExcursao,
@@ -110,7 +108,7 @@ class _VeiculoFormScreenState extends State<VeiculoFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.modoEdicao ? 'Editar Veículo' : 'Adicionar Veículo',
+          widget.modoEdicao ? 'Editar veículo' : 'Adicionar veículo',
           style: GoogleFonts.poppins(fontSize: 28),
         ),
         backgroundColor: CoresApp.vermelho,
