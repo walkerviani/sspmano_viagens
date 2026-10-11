@@ -49,14 +49,15 @@ class RelatorioPdfService {
       children: [
         pw.Text(
           'EXCURSÃO: ${excursao.excursao.nome}',
-          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
         ),
         pw.SizedBox(height: 8),
-        pw.Text('Data: $data às $hora'),
+        pw.Text('Data: $data às $hora', style: pw.TextStyle(fontSize: 15)),
         pw.Text(
           excursao.excursao.qtdAssentos == 0
               ? 'Sem veículos vinculados'
               : '${excursao.excursao.qtdAssentos} passageiros',
+          style: pw.TextStyle(fontSize: 15),
         ),
       ],
     );
@@ -78,7 +79,7 @@ class RelatorioPdfService {
           padding: const pw.EdgeInsets.only(top: 10, bottom: 4),
           child: pw.Text(
             'VEÍCULO ${indiceVeiculo + 1}',
-            style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 15),
           ),
         ),
       );
@@ -97,19 +98,18 @@ class RelatorioPdfService {
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                pw.Row(
-                  children: [
-                    pw.Text(
-                      '$index# - ${pessoa.nome}',
-                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                    ),
-                    pw.Text(
-                      ' / CPF: ${formatarCpf(pessoa.cpf)} / Tel: ${formatarTelefone(pessoa.telefone)}',
-                    ),
-                  ],
+                pw.Text(
+                  '$index# - ${pessoa.nome}',
+                  style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
                 pw.Text(
-                  'Pagamento: $strPago / Assento: ${passageiro.numeroAssento} / Ingresso: $tipoIngressoStr',
+                  '${formatarCpf(pessoa.cpf)} /'
+                  '${formatarTelefone(pessoa.telefone)} /'
+                  '$strPago / Assento ${passageiro.numeroAssento} / $tipoIngressoStr',
+                  style: pw.TextStyle(fontSize: 15),
                 ),
               ],
             ),
